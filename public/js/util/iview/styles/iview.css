@@ -10834,7 +10834,7 @@ textarea.ivu-page-options-elevator input {
 	border-radius: 4px;
 	box-shadow: 0 1px 6px rgba(0,0,0,.2);
 	position: absolute;
-	z-index: 900
+	z-index: 1000
 }
 
 .ivu-tooltip {

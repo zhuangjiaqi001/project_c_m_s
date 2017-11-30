@@ -16,20 +16,45 @@
 				<Form-item label="模板类名称">
 					<span>[[item.name]]</span>
 				</Form-item>
-				<Form-item label="备注" prop="description">
-					<span>[[item.description]]</span>
-				</Form-item>
 				<Form-item label="KEY" prop="key">
-					<i-input v-model="formValidate.key" type="text" placeholder="模板类KEY (唯一)" :maxlength="100"></i-input>
+					<span v-if="pageinfo.isEdit">{{formValidate.key}}</span>
+					<i-input v-if="!pageinfo.isEdit" v-model="formValidate.key" type="text" placeholder="模板类KEY (唯一)" :maxlength="100"></i-input>
 				</Form-item>
 				<Form-item label="标题" prop="title">
 					<i-input v-model="formValidate.title" type="text" placeholder="(不超过30个字)" :maxlength="30"></i-input>
 				</Form-item>
-
-				<Form-item label="编辑内容" prop="edit">
-					<div id="edit"></div>
+				<Form-item label="CSS">
+					<div id="edit_css"></div>
 				</Form-item>
-				
+				<Form-item label="HTML">
+					<div id="edit_html"></div>
+				</Form-item>
+				<Form-item label="JS">
+					<div id="edit_js"></div>
+				</Form-item>
+
+				<Form-item
+					v-for="(item, index) in formValidate.custemItems"
+					:label="'工具库' + (index + 1)">
+					<Row>
+						<i-col span="5">
+							<i-select v-model="item.name">
+								<i-option v-for="item in loadLib" :value="item.val">{{item.name}}</i-option>
+							</i-select>
+						</i-col>
+						<i-col span="4" offset="1">
+							<i-button type="ghost" @click="handleRemove(index)">删除</i-button>
+						</i-col>
+					</Row>
+				</Form-item>
+				<Form-item>
+					<Row>
+						<i-col span="12">
+							<i-button type="dashed" long @click="handleAdd" icon="plus-round">新增工具库</i-button>
+						</i-col>
+					</Row>
+				</Form-item>
+
 				<Form-item>
 					<i-button type="primary" @click="handleSubmit('formValidate')">提交</i-button>
 					<i-button type="ghost" style="margin-left: 8px" @click="handleReset('formValidate')">重置</i-button>
@@ -57,13 +82,17 @@ var ITEM = {
 tempcInfo = {
 	id:      '[[tempcInfo.id]]',
 	key:     '[[tempcInfo.key]]',
-	title:   '[[tempcInfo.title]]'
+	title:   '[[tempcInfo.title]]',
+	html:    '[[tempcInfo.html]]',
+	css:     '[[tempcInfo.css]]',
+	js:      '[[tempcInfo.js]]',
+	preview: '[[tempcInfo.preview]]'
 }
 if (tempcInfo.tempId) tempcInfo.tempId = tempcInfo.tempId
 </script>
 <script src="/js/util/iview/iview.min.js"></script>
 <script src="/js/util/ckeditor/ckeditor.js"></script>
-<script src="/js/util/ueditor/ueditor.config.js"></script>
+<script src="/js/util/ueditor/ueditor.config.null.js"></script>
 <script src="/js/util/ueditor/ueditor.all.js"></script>
 <script src="/js/temp/itemAdd.js"></script>
 {% endblock %}

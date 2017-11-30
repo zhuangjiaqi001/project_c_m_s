@@ -32,7 +32,11 @@ module.exports = function(sequelize, DataTypes) {
 		key:          { type: DataTypes.STRING(100), unique : true, comment: '模板内容KEY' },
 		title:        { type: DataTypes.STRING(100), unique : true, comment: '标题' },
 		type:         { type: DataTypes.INTEGER, defaultValue: 0, comment: '模板类型' },		// 0: 模块, 1: 内容
-		custemItems:  { type: DataTypes.STRING,  comment: '自定义字段' },
+		custemItems:  { type: DataTypes.STRING,  comment: '工具库' },
+		css:          { type: DataTypes.STRING,  comment: '样式' },
+		html:         { type: DataTypes.STRING,  comment: 'HTML文档' },
+		js:           { type: DataTypes.STRING,  comment: '脚本' },
+		preview:      { type: DataTypes.STRING,  comment: '预览' },
 		description:  { type: DataTypes.STRING,  comment: '模板描述' }
 	}, {
 		freezeTableName: false

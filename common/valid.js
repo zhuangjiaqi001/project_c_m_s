@@ -102,6 +102,9 @@ const rule = {
 		key:  RULE.imgrpKey,
 		name: RULE.imgrpName
 	},
+	tempc: {
+		title: RULE.imgrpName
+	},
 	tempUp: {
 		name: RULE.imgrpName
 	},

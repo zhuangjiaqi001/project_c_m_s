@@ -43,7 +43,7 @@
 					key: '',
 					render: (row, column, index) => {
 						return `<a class="text-blue" href="/temp/edit/${row.id}">编辑</i></a>
-								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a> `
+								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a>`
 					}
 				}
 			],

@@ -9,6 +9,7 @@
 				key:         tempcInfo.key,
 				name:        ITEM.name,
 				description: ITEM.description,
+				custemItems: tempcInfo.custemItems || [],
 				title:       tempcInfo.title
 			},
 			ruleValidate: {
@@ -23,18 +24,42 @@
 			},
 			uploadList: [],
 			visible: false,
+			loadLib: [
+				{ name: 'jQuery 1.12.4', val: 'jq_1_12_4' },
+				{ name: 'jQuery 2.2.4', val: 'jq_2_2_4' },
+				{ name: 'jQuery 3.2.1', val: 'jq_3_2_1' },
+				{ name: 'Zepto 1.0rc1', val: 'zepto_1_0rc1' },
+				{ name: 'AngularJS 1.2.1', val: 'ang_1_2_1' },
+				{ name: 'Vue 2.2.6', val: 'vue_2_2_6' }
+			]
 		},
 		methods: {
+			// 自定义字段
+			handleAdd: function(url) {
+				this.formValidate.custemItems.push({
+					name: 'jq_1_12_4',
+					plugins: ''
+				})
+			},
+			handleRemove: function(index) {
+				this.formValidate.custemItems.splice(index, 1)
+			},
 			// 表单相关
 			handleChange: function(data) {
 				this.birthday = data
 			},
 			handleSubmit: function(name) {
-				this.$refs[name].validate((valid) => {
-					CMS.dateToStr(this.formValidate.custemItems)
-					console.log(this.formValidate)
+				var me = this,
+					fv = me.formValidate
+				me.$refs[name].validate((valid) => {
+					CMS.dateToStr(fv.custemItems)
+					console.log(fv)
+					fv.css  = encodeURIComponent(css.getContentTxt()).trim()
+					fv.html = encodeURIComponent(html.getContentTxt()).trim()
+					fv.js   = encodeURIComponent(js.getContentTxt()).trim()
+					debugger
 					if (valid) {
-						CMS.http.post(API, this.formValidate, function(o) {
+						CMS.http.post(API, fv, function(o) {
 							console.log(o)
 							VUE.$Message.success('创建成功!')
 							location.href = '/temp/' + ITEM.tempId
@@ -43,13 +68,25 @@
 							console.log(err)
 						})
 					} else {
-						this.$Message.error('表单验证失败!')
+						me.$Message.error('表单验证失败!')
 					}
 				})
 			},
 			load: function() {
-				// global.ck = CMS.ckedit('edit')
-				global.ue = CMS.ueditor('edit')
+				var me = this
+				global.css  = CMS.ueditor('edit_css')
+				global.html = CMS.ueditor('edit_html')
+				global.js   = CMS.ueditor('edit_js')
+				global.css.execCommand('source')
+				global.html.execCommand('source')
+				global.js.execCommand('source')
+				if (me.pageinfo.isEdit) {
+					setTimeout(function() {
+						if(tempcInfo.html) global.html.setContent(tempcInfo.html)
+						if(tempcInfo.css)  global.css.setContent(tempcInfo.css)
+						if(tempcInfo.js)   global.js.setContent(tempcInfo.js)
+					}, 1000)
+				}
 			}
 		}
 	}))

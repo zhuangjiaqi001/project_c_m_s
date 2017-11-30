@@ -191,6 +191,9 @@ var Tools = {
 		var cfg = JSON.parse(JSON.stringify(config.redis))
 		cfg.db = db || 1
 		return cfg
+	},
+	getJSFrame: function() {
+		return Mapping.jsframe
 	}
 }
 

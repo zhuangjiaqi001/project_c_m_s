@@ -28,10 +28,10 @@
 			// 自定义字段
 			handleAdd (url) {
 				this.formValidate.custemItems.push({
-                    key:  '',
-                    name: '',
-                    type: 'String'	// String, Number, Boolean
-                })
+					key:  '',
+					name: '',
+					type: 'String'	// String, Number, Boolean
+				})
 			},
 			handleRemove (index) {
 				this.formValidate.custemItems.splice(index, 1)

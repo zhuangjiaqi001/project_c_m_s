@@ -18,5 +18,14 @@ module.exports = {
 		'0':      '保密',
 		'male':   '男',
 		'female': '女'
+	},
+	jsframe: {
+		'jq_1.9.1':  'http://mj-stc.mjmobi.com/common/js/lib/jquery1_12_4.js',
+		'jq_1_12_4': 'http://mj-stc.mjmobi.com/common/js/lib/jquery1_12_4.js',
+		'jq_2_2_4':  '',
+		'jq_3_2_1':  '',
+		'ang_1_2_1': '',
+		'vue_2_2_6': '',
+		'zepto_1_0rc1': ''
 	}
 };

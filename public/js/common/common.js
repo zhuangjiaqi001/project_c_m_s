@@ -1,5 +1,22 @@
 (function(global) {
 
+String.prototype.trim = function() {
+	return this.replace(/(^\s*)|(\s*$)/g, '')
+}
+String.prototype.htmlDecode = function() {
+	var text = this,
+		re = {
+			'&lt;': '<',
+			'&gt;': '>',
+			'&amp;': '&',
+			'&quot;': '"'
+		};
+	for (var i in re) {
+		text = text.replace(new RegExp(i, 'g'), re[i])
+	}
+	return text
+}
+
 if (!global.CMS) {
 	global.VM = {
 		el: '#vApp',

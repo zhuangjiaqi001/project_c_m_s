@@ -160,6 +160,7 @@ exports.getTempCByRpId = function(tempId, select, cb) {
  */
 exports.addTempC = function (opts, cb) {
 	delete opts.id
+	opts.custemItems = JSON.stringify(opts.custemItems)
 	return TempC.create(opts).then(rpc => {
 		cb(!rpc, rpc.dataValues)
 	})
