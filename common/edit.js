@@ -45,6 +45,9 @@ module.exports = {
 	},
 	TempC: {
 		title:       1,			// 标题
-		url:         1, 		// 链接
+		html:        1, 		// HTML
+		css:         1, 		// CSS
+		js:          1, 		// JS
+		custemItems: 1			// 工具库
 	}
 }

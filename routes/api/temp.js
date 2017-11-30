@@ -98,19 +98,22 @@ router.post('/addTempC', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		uploadAliyun(html, css, js, pathname, body, res, function(body) {
 			body.userId = id
-			debugger
 			Temp.addTempC(body, function (err) {
 				if (err) return Tools.errHandle('0123', res)
 				Tools.errHandle('0000', res)
 			})
 		})
-
 	})
 })
 router.post('/updateTempC', (req, res, next) => {
 	var body   = req.body,
 		tempId = body.tempId,
-		id     = body.id
+		id     = body.id,
+		key    = body.key,
+		html   = decodeURIComponent(body.html),
+		css    = decodeURIComponent(body.css),
+		js     = decodeURIComponent(body.js),
+		pathname = `tempc/${key}`
 
 	var bodyFilter = Tools.bodyFilter(tempcEdit, body)
 	body = bodyFilter.obj
@@ -121,9 +124,12 @@ router.post('/updateTempC', (req, res, next) => {
 			id: id
 		}, function(item) {
 			if (!item) return Tools.errHandle('0128', res)
-			Temp.updateTempC(id, body, function (err) {
-				if (err) return Tools.errHandle('0130', res)
-				Tools.errHandle('0000', res)
+			uploadAliyun(html, css, js, pathname, body, res, function(body) {
+				body.userId = id
+				Temp.updateTempC(id, body, function (err) {
+					if (err) return Tools.errHandle('0130', res)
+					Tools.errHandle('0000', res)
+				})
 			})
 		})
 	})
@@ -187,7 +193,7 @@ function uploadAliyun(html, css, js, pathname, body, res, cb) {
 		})
 	}
 }
-function createPrev(body, pathname, res, cb) {
+function createPrev(html, body, pathname, res, cb) {
 	var prev = tprev({
 		title:   `${body.title}_${body.name}`,
 		jsframe: Tools.getJSFrame(),

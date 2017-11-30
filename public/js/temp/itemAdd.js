@@ -81,12 +81,28 @@
 				global.html.execCommand('source')
 				global.js.execCommand('source')
 				if (me.pageinfo.isEdit) {
-					setTimeout(function() {
-						if(tempcInfo.html) global.html.setContent(tempcInfo.html)
-						if(tempcInfo.css)  global.css.setContent(tempcInfo.css)
-						if(tempcInfo.js)   global.js.setContent(tempcInfo.js)
-					}, 1000)
+					me.initHTML()
+					me.initCSS()
+					me.initJS()
 				}
+			},
+			initHTML: function() {
+				if(!tempcInfo.html) return
+				global.html.ready(function(){
+					global.html.setContent(tempcInfo.html)
+				})
+			},
+			initCSS: function() {
+				if(!tempcInfo.css) return
+				global.css.ready(function(){
+					global.css.setContent(tempcInfo.css)
+				})
+			},
+			initJS: function() {
+				if(!tempcInfo.js) return
+				global.js.ready(function(){
+					global.js.setContent(tempcInfo.js)
+				})
 			}
 		}
 	}))

@@ -166,6 +166,7 @@ exports.addTempC = function (opts, cb) {
 	})
 }
 exports.updateTempC = function (id, opts, cb) {
+	opts.custemItems = JSON.stringify(opts.custemItems)
 	return TempC.update(opts, { where: { id: id } }).then(rp => {
 		cb(!rp, rp[0])
 	})

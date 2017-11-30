@@ -6,12 +6,12 @@ var gulp        = require('gulp');
 /* html */
 var htmlmin     = require('gulp-htmlmin');		// html压缩
 /* css */
+var sourcemaps  = require('gulp-sourcemaps')
 var less        = require('gulp-less');			// less编译
 var csso        = require('gulp-csso');			// css压缩
 /* js */
 const babel     = require('gulp-babel')
 var str2hex     = require('gulp-str2hex');		// js压缩混淆
-var jshint      = require('gulp-jshint');		// js校验
 /* 文件操作 */
 var clean       = require('gulp-clean');		// 文件清除
 /* 工程相关 */

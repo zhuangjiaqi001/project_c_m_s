@@ -27,7 +27,6 @@ router.get('/edit/:id', (req, res, next) => {
 	var id = req.params.id
 	Temp.getTempById(id, function(o) {
 		if (!o) return Tools.permit('对不起！该模板类不存在！', res)
-		o.custemItems = JSON.stringify(o.custemItems)
 		res.render('temp/add', {
 			active: active,
 			title: '编辑模板类',
@@ -78,7 +77,6 @@ router.get('/:tempId/edit/:id', (req, res, next) => {
 			var key      = o2.key,
 				pathname = `tempc/${key}`
 			if (!o2) return Tools.permit('对不起！该模板类不存在！', res)
-			o2.custemItems = JSON.stringify(o2.custemItems)
 			getAliyun(o2, pathname, res, function(o2) {
 				res.render('temp/itemAdd', {
 					active: active,

@@ -50,7 +50,7 @@
 				<Form-item>
 					<Row>
 						<i-col span="12">
-							<i-button type="dashed" long @click="handleAdd" icon="plus-round">新增工具库</i-button>
+							<i-button type="dashed" long @click="handleAdd" icon="plus-round">新增 类库或框架</i-button>
 						</i-col>
 					</Row>
 				</Form-item>
@@ -86,9 +86,11 @@ tempcInfo = {
 	html:    '[[tempcInfo.html]]',
 	css:     '[[tempcInfo.css]]',
 	js:      '[[tempcInfo.js]]',
-	preview: '[[tempcInfo.preview]]'
+	preview: '[[tempcInfo.preview]]',
+	custemItems: {% autoescape false %}'[[tempcInfo.custemItems]]'{% endautoescape %}
 }
 if (tempcInfo.tempId) tempcInfo.tempId = tempcInfo.tempId
+if (tempcInfo.custemItems) tempcInfo.custemItems = JSON.parse(tempcInfo.custemItems)
 </script>
 <script src="/js/util/iview/iview.min.js"></script>
 <script src="/js/util/ckeditor/ckeditor.js"></script>
