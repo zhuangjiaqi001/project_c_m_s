@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		{% include "../globel/head_min.html" ignore missing %}
+		{% block css %}{% endblock %}
+	</head>
+	<body>
+		<!-- header-sub start -->
+		{% block header-sub %}{% endblock %}
+		<!-- header-sub end -->
+
+		<!-- wrapper start -->
+		{% block body %}{% endblock %}
+		<!-- wrapper end -->
+		{% block js %}{% endblock %}
+	</body>
+</html>

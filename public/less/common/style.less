@@ -1,0 +1,234 @@
+/*----------------------------------------------
+	SIDE STYLES
+----------------------------------------------*/
+.sidebar-collapse .user-panel .image img {
+	width: 30px;
+	height: 30px
+}
+/*----------------------------------------------
+	PROFILE STYLES
+----------------------------------------------*/
+.profile-user {
+	position: relative;
+	margin: 0 auto;
+	width: 100px;
+	height: 100px;
+	border-radius: 100%;
+	overflow: hidden;
+	.profile-avatar-edit {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		line-height: 100px;
+		font-size: 30px;
+		background-color: rgba(0, 0, 0, .4);
+		display: none;
+		text-align: center;
+		color: #fff;
+	}
+	&:hover {
+		.profile-avatar-edit {
+			display: block;
+			color: #fff;
+		}
+	}
+	.profile-avatar-input {
+		position: absolute;
+		top: 0;
+		left: 0;
+		opacity: 0;
+	}
+}
+/*----------------------------------------------
+	PHOTO STYLES
+----------------------------------------------*/
+.photo {
+	padding: 0;
+	li {
+		float: left;
+		padding: 8px;
+		a {
+			position: relative;
+			display: block;
+			width: 100%;
+			height: 100%;
+			background-position: center;
+			background-size: cover;
+			overflow: hidden;
+			&:hover {
+				span {
+					display: block;
+				}
+			}
+		}
+		span {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			display: none;
+			width: 100%;
+			height: 26px;
+			line-height: 26px;
+			padding: 0 10px;
+			background-color: rgba(0, 0, 0, .6);
+			color: #fff;
+			text-align: right;
+		}
+	}
+}
+.photo-list-2 li {
+	width: 50%;
+	height: 200px;
+}
+.photo-list-3 li {
+	width: 33.3333%;
+	height: 150px;
+}
+.photo-list-4 li {
+	width: 25%;
+	height: 100px;
+}
+.photo-list-5 li {
+	width: 20%;
+	height: 80px;
+}
+/*----------------------------------------------
+	UPLOAD LIST
+----------------------------------------------*/
+.upload-list {
+	display: block;
+	width: 100px;
+	text-align: center;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	overflow: hidden;
+	background: #fff;
+	position: relative;
+	box-shadow: 0 1px 1px rgba(0,0,0,.2);
+	margin-bottom: 6px;
+	.upload-list-cover {
+		display: none;
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		z-index: 1;
+		i {
+			color: #fff;
+			font-size: 20px;
+			cursor: pointer;
+			margin: 0 2px;
+		}
+	}
+	&:hover {
+		&::after {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: rgba(0,0,0,.6);
+		}
+		.upload-list-cover {
+			display: block;
+		}
+	}
+}
+.avatar-view img {
+	width: 100%;
+}
+.avatar-body {
+	padding-right: 15px;
+	padding-left: 15px;
+}
+.avatar-upload {
+	overflow: hidden;
+}
+.avatar-upload label {
+	display: block;
+	float: left;
+	clear: left;
+	width: 100px;
+}
+.avatar-upload input {
+	display: block;
+	margin-left: 110px;
+}
+.avater-alert {
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.avatar-wrapper {
+	height: 364px;
+	width: 100%;
+	margin-top: 15px;
+	box-shadow: inset 0 0 5px rgba(0,0,0,.25);
+	background-color: #fcfcfc;
+	overflow: hidden;
+}
+.avatar-wrapper img {
+	display: block;
+	height: auto;
+	max-width: 100%;
+}
+.avatar-preview {
+	float: left;
+	margin-top: 15px;
+	margin-right: 15px;
+	border: 1px solid #eee;
+	border-radius: 4px;
+	background-color: #fff;
+	overflow: hidden;
+}
+.avatar-preview:hover {
+	border-color: #ccf;
+	box-shadow: 0 0 5px rgba(0,0,0,.15);
+}
+.avatar-preview img {
+	width: 100%;
+}
+.preview-lg {
+	height: 184px;
+	width: 184px;
+	margin-top: 15px;
+}
+.preview-md {
+	height: 100px;
+	width: 100px;
+}
+.preview-sm {
+	height: 50px;
+	width: 50px;
+}
+@media (min-width: 992px) {
+	.avatar-preview {
+		float: none;
+	}
+}
+.avatar-btns {
+	margin-top: 30px;
+	margin-bottom: 15px;
+}
+.avatar-btns .btn-group {
+	margin-right: 5px;
+}
+.loading {
+	display: none;
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: #fff url(../img/img-loading.gif) no-repeat center center;
+	opacity: .75;
+	z-index: 20140628;
+}
+.ivu-message {
+	z-index: 1200!important;
+}

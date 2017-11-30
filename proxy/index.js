@@ -1,0 +1,5 @@
+exports.User  = require('./user')
+exports.Img   = require('./img')
+exports.ImgRP = require('./imgrp')
+exports.TxtRP = require('./txtrp')
+exports.Temp  = require('./temp')

@@ -1,0 +1,26 @@
+<aside class="main-sidebar">
+	<!-- sidebar: style can be found in sidebar.less -->
+	<section class="sidebar">
+		<!-- Sidebar user panel -->
+		<div class="user-panel">
+			<div class="pull-left image">
+				<a href="/user/profile"><img :src="user.avatar" class="img-circle" alt="用户头像"></a>
+			</div>
+			<div class="pull-left info">
+				<p v-html="user.nickname || user.loginname"></p>
+				<a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+			</div>
+		</div>
+		<!-- sidebar menu: : style can be found in sidebar.less -->
+		<ul class="sidebar-menu">
+			{% for s in config.sidebar %}
+			{% if s.type %}
+			<li id="sb_[[s.key]]"><a href="[[s.url]]"><i class="fa fa-[[s.icon]]"></i> <span>[[s.name]]</span></a></li>
+			{% else %}
+			<li class="header">[[s.name]]</li>
+			{% endif %}
+			{% endfor %}
+		</ul>
+	</section>
+	<!-- /.sidebar -->
+</aside>

@@ -1,0 +1,42 @@
+{% extends '../layout/layout.html' %}
+
+{% block body %}
+
+<div class="row">
+	<div class="col-md-4">
+		<!-- 用户信息 start -->
+		{% include "partials/profile.html" ignore missing %}
+		<!-- 用户信息 end -->
+	</div>
+	<div class="col-md-8">
+		<div class="nav-tabs-custom">
+			<ul class="nav nav-tabs">
+				<li class="active"><a href="#timeline" data-toggle="tab">时间线</a></li>
+				<li><a href="#photo" data-toggle="tab">图片管理</a></li>
+				<li><a href="#settings" data-toggle="tab">编辑</a></li>
+			</ul>
+			<div class="tab-content">
+				<div class="active tab-pane" id="timeline">
+					{% include "partials/timeline.html" ignore missing %}
+				</div>
+				<div class="tab-pane" id="photo">
+					{% include "partials/photo.html" ignore missing %}
+				</div>
+				<div class="tab-pane" id="settings">
+					{% include "partials/settings.html" ignore missing %}
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block js %}
+<script src="/js/util/iview/iview.js"></script>
+<script src="/js/util/cropper/cropper.js"></script>
+<script src="/js/user/profile.js"></script>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'layout/layoutError.html' %}
+
+{% block body %}
+<div class="page-error clearfix">
+	<img src="/img/img-permit.png">
+	<div class="e-msg">
+		<p>[[title || '对不起！您没有该页面的访问权限！']]<br>请联系管理员！</p>
+		<a href="javascript:history.back();"><i class="icon-return"></i>返回</a>
+	</div>
+</div>
+{% endblock %}

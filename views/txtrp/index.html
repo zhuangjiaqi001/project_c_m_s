@@ -1,0 +1,58 @@
+{% extends '../layout/layout.html' %}
+
+{% block body %}
+
+<div class="box">
+	<div class="box-header">
+		<h3 class="box-title">文字推荐位列表</h3>
+	</div>
+	<div class="box-body">
+
+		<div class="row form-group">
+			<div class="col-md-12">
+				<a class="btn btn-warning" href="/txtrp/add">新建</a>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-3">
+				<i-input v-model="search.name" placeholder="推荐位名称" @on-enter="searchList"></i-input>
+			</div>
+			<div class="col-md-3">
+				<i-input v-model="search.key" placeholder="推荐位KEY" @on-enter="searchList"></i-input>
+			</div>
+			<div class="col-md-2">
+				<i-button type="warning" @click="searchList"><i class="fa fa-search"></i></i-button>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12">
+				<i-table :columns="columns" :data="dataList" @on-sort-change="sortList"></i-table>
+				<div style="margin: 10px;overflow: hidden">
+					<div style="float: right;">
+						<Page :total="total" :page-size="pageSize" :current="current" @on-change="changePage" @on-page-size-change="changePageSize" show-total></Page>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 确认 删除|发布|下线|链接 模态框 -->
+		<Modal v-model="Modal" @on-ok="handleCtrl">
+			<p v-if="ModalName === 'remove'">确认删除该推荐位吗?</p>
+			<p v-if="ModalName === 'release'">确认发布该推荐位吗?</p>
+			<p v-if="ModalName === 'refresh'">确认刷新该推荐位吗?</p>
+			<p v-if="ModalName === 'offline'">确认下线该推荐位吗?</p>
+			<p v-if="ModalName === 'link'"><a :href="api" target="_blank">{{api}}</a></p>
+		</Modal>
+
+	</div>
+</div>
+
+
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block js %}
+<script src="/js/util/iview/iview.min.js"></script>
+<script src="/js/txtrp/index.js"></script>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends '../layout/layout.html' %}
+
+{% block body %}
+
+<div class="box">
+	<div class="box-header"></div>
+	<div class="box-body">
+
+		<div class="col-md-8 col-md-offset-2">
+			<i-form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
+				<Form-item label="推荐位KEY" prop="key">
+					<span v-if="pageinfo.isEdit">{{formValidate.key}}</span>
+					<i-input v-if="!pageinfo.isEdit" v-model="formValidate.key" placeholder="推荐位KEY (唯一) 例: 2010_dsp_index_banner"></i-input>
+				</Form-item>
+				<Form-item label="推荐位名称" prop="name">
+					<i-input v-model="formValidate.name" placeholder="推荐位名称 (唯一)"></i-input>
+				</Form-item>
+				<Form-item label="备注" prop="description">
+					<i-input v-model="formValidate.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="备注信息 (图片尺寸等)"></i-input>
+				</Form-item>
+				<Form-item
+					v-for="(item, index) in formValidate.custemItems"
+					:label="'自定义字段' + (index + 1)">
+					<Row>
+						<i-col span="6">
+							<Form-item
+								:prop="'custemItems.' + index + '.key'"
+								:rules="{required: true, message: '字段KEY不能为空', trigger: 'blur'}"
+							>
+								<i-input type="text" v-model="item.key" placeholder="字段KEY"></i-input>
+							</Form-item>
+						</i-col>
+						<i-col span="6" offset="1">
+							<Form-item
+								:prop="'custemItems.' + index + '.name'"
+								:rules="{required: true, message: '名称不能为空', trigger: 'blur'}"
+							>
+								<i-input type="text" v-model="item.name" placeholder="字段名称"></i-input>
+							</Form-item>
+						</i-col>
+						<i-col span="5" offset="1">
+							<i-select v-model="item.type">
+								<i-option value="String">文本</i-option>
+								<i-option value="Boolean">布尔值</i-option>
+								<i-option value="Date">日期</i-option>
+							</i-select>
+						</i-col>
+						<i-col span="4" offset="1">
+							<i-button type="ghost" @click="handleRemove(index)">删除</i-button>
+						</i-col>
+					</Row>
+				</Form-item>
+				<Form-item>
+					<Row>
+						<i-col span="12">
+							<i-button type="dashed" long @click="handleAdd" icon="plus-round">新增</i-button>
+						</i-col>
+					</Row>
+				</Form-item>
+				<Form-item>
+					<i-button type="primary" @click="handleSubmit('formValidate')">提交</i-button>
+					<i-button type="ghost" style="margin-left: 8px" @click="handleReset('formValidate')">重置</i-button>
+				</Form-item>
+			</i-form>
+		</div>
+
+	</div>
+</div>
+
+
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block js %}
+<script src="/js/util/iview/iview.min.js"></script>
+<script>
+var rpInfo = {
+	id:   '[[rpInfo.id]]',
+	key:  '[[rpInfo.key]]',
+	name: '[[rpInfo.name]]',
+	description: '[[rpInfo.description]]',
+	custemItems: {% autoescape false %}'[[rpInfo.custemItems]]'{% endautoescape %}
+}
+if (rpInfo.id) rpInfo.id = rpInfo.id*1
+if (rpInfo.custemItems) rpInfo.custemItems = JSON.parse(rpInfo.custemItems)
+console.log(rpInfo)
+</script>
+<script src="/js/imgrp/add.js"></script>
+{% endblock %}

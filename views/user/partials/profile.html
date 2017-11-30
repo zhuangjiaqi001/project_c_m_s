@@ -1,0 +1,57 @@
+<div class="box box-solid">
+	<div class="box-header with-border">
+		<h3 class="box-title">用户信息</h3>
+	</div>
+	
+	<div class="box-body box-profile">
+		<div class="profile-user">
+			<div class="profile-user-img img-circle">
+				<a href="/user/profile">
+					<img class="img-responsive img-circle" :src="user.avatar" alt="用户头像">
+				</a>
+			</div>
+			{% if avatarEdit %}
+			<a class="profile-avatar-edit">
+				<i class="fa fa-edit"></i>
+				<input class="profile-avatar-input" type="file" accept="image/png,image/jpeg,image/gif">
+			</a>
+			{% endif %}
+		</div>
+
+		<h3 class="profile-username text-center" v-html="user.nickname || user.loginname"></h3>
+
+		<p class="text-muted text-center" v-html="user.email"></p>
+
+		<p class="text-muted text-center" v-html="user.levelName"></p>
+
+		<ul class="list-group list-group-unbordered">
+			<li class="list-group-item">
+				<b>图片推荐位</b> <a class="pull-right">1,322</a>
+			</li>
+			<li class="list-group-item">
+				<b>文字推荐位</b> <a class="pull-right">543</a>
+			</li>
+			<li class="list-group-item">
+				<b>落地页</b> <a class="pull-right">13,287</a>
+			</li>
+			<li v-if="user.birthday" class="list-group-item">
+				<b>生日</b> <a class="pull-right" v-html="user.birthday"></a>
+			</li>
+			<li v-if="user.gender" class="list-group-item">
+				<b>性别</b> <a class="pull-right" v-html="user.genderName"></a>
+			</li>
+			<li v-if="user.zodiac" class="list-group-item">
+				<b>星座</b> <a class="pull-right" v-html="user.zodiac"></a>
+			</li>
+			<li v-if="user.zodiac_china" class="list-group-item">
+				<b>属相</b> <a class="pull-right" v-html="user.zodiac_china"></a>
+			</li>
+			<li v-if="user.blood_type" class="list-group-item">
+				<b>血型</b> <a class="pull-right" v-html="user.blood_type + '型'"></a>
+			</li>
+			<li class="list-group-item">
+				<b>注册日期</b> <a class="pull-right" v-html="user.createdAt"></a>
+			</li>
+		</ul>
+	</div>
+</div>

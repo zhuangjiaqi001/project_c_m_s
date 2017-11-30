@@ -1,0 +1,42 @@
+{% extends '../layout/layout.html' %}
+
+{% block body %}
+
+<!-- 总体数据 start -->
+{% include "partials/info.html" ignore missing %}
+<!-- 总体数据 end -->
+
+
+<div class="row">
+	<div class="col-md-4">
+		<!-- 用户信息 start -->
+		{% include "../user/partials/profile.html" ignore missing %}
+		<!-- 用户信息 end -->
+
+		<!-- 网站 start -->
+		{% include "partials/website.html" ignore missing %}
+		<!-- 网站 end -->
+	</div>
+	<div class="col-md-8">
+		<div class="box box-solid">
+			<div class="box-header with-border">
+				<h3 class="box-title">操作记录</h3>
+			</div>
+			
+			<div class="box-body box-profile">
+			<!-- 时间线 start -->
+			{% include "../user/partials/timeline.html" ignore missing %}
+			<!-- 时间线 end -->
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block js %}
+<script src="/js/index.js"></script>
+{% endblock %}

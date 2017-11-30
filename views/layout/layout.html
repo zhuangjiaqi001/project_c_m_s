@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% include "../globel/head.html" ignore missing %}
+	{% block css %}{% endblock %}
+</head>
+<body class="hold-transition skin-yellow sidebar-mini">
+	<div id="vApp" class="fixed">
+		<!-- header start -->
+		{% include "../globel/header.html" ignore missing %}
+		<!-- header end -->
+		
+		<!-- sidebar start -->
+		{% include "../globel/sidebar.html" ignore missing %}
+		<!-- sidebar end -->
+
+		<div class="content-wrapper">
+			<!-- header-sub start -->
+			{% block header-sub %}{% endblock %}
+			<!-- header-sub end -->
+
+			<!-- content header start -->
+			{% include "../globel/content-header.html" ignore missing %}
+			<!-- content header end -->
+
+			<!-- main-content start -->
+			<section class="content">
+				{% block body %}{% endblock %}
+			</section>
+			<!-- main-content end -->
+		</div>
+
+		<!-- footer start -->
+		{% include "../globel/footer.html" ignore missing %}
+		<!-- footer end -->
+	</div>
+
+	{% include "../globel/script.html" ignore missing %}
+	{% block js %}{% endblock %}
+</body>
+</html>

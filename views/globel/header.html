@@ -1,0 +1,22 @@
+<header class="main-header">
+	<!-- Logo -->
+	<a href="/dashboard" class="logo">
+		<span class="logo-mini"><b>C</b></span>
+		<span class="logo-lg"><b>CMS</b></span>
+	</a>
+	<!-- 头部导航 -->
+	<nav class="navbar navbar-static-top">
+		<!-- 侧边栏切换按钮 -->
+		<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"></a>
+
+		<div class="navbar-custom-menu">
+			<ul class="nav navbar-nav">
+				<!-- 通知 -->
+				{% include "partials/header/notifications.html" ignore missing %}
+
+				<!-- 用户信息 -->
+				{% include "partials/header/profile.html" ignore missing %}
+			</ul>
+		</div>
+	</nav>
+</header>

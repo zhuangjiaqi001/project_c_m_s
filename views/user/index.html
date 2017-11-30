@@ -1,0 +1,47 @@
+{% extends '../layout/layout.html' %}
+
+{% block body %}
+
+<div class="box">
+	<div class="box-header">
+		<h3 class="box-title">用户列表</h3>
+	</div>
+	<div class="box-body">
+
+		<div class="row form-group">
+			<div class="col-md-3">
+				<i-input v-model="search.loginname" placeholder="用户名" @on-enter="searchList"></i-input>
+			</div>
+			<div class="col-md-3">
+				<i-input v-model="search.email" placeholder="邮箱" @on-enter="searchList"></i-input>
+			</div>
+			<div class="col-md-2">
+				<i-button type="warning" @click="searchList"><i class="fa fa-search"></i></i-button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12">
+				<i-table :columns="columns" :data="dataList" @on-sort-change="sortList"></i-table>
+				<div style="margin: 10px;overflow: hidden">
+					<div style="float: right;">
+						<Page :total="total" :page-size="pageSize" :current="current" @on-change="changePage" @on-page-size-change="changePageSize" show-total></Page>
+					</div>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/js/util/iview/styles/iview.css">
+{% endblock %}
+
+{% block js %}
+<!-- <script src="/js/component/j-table.js"></script> -->
+<script src="/js/util/iview/iview.js"></script>
+<script src="/js/user/index.js"></script>
+{% endblock %}

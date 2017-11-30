@@ -1,0 +1,11 @@
+<ul class="photo photo-list-4 clearfix">
+	<li v-for="img of imgs">
+		<a :style="{ 'background-image': 'url(' + img.url + ')' }" @click="handleView(img.url)">
+			<span>{{ img.createdAt }}</span>
+		</a>
+	</li>
+</ul>
+
+<Modal title="查看图片" v-model="visibleImg">
+	<img :src="imgPrev" v-if="visibleImg" style="width: 100%">
+</Modal>

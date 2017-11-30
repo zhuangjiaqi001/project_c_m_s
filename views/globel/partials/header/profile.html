@@ -1,0 +1,26 @@
+<li class="dropdown user user-menu" :class="{ open: drop.user }" @click="handleMenuDrop('user')">
+	<!-- <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown"> -->
+	<a class="dropdown-toggle">
+		<img :src="user.avatar" class="user-image">
+		<span class="hidden-xs" v-html="user.nickname || user.loginname"></span>
+	</a>
+	<ul class="dropdown-menu">
+		<!-- 用户头像 -->
+		<li class="user-header">
+			<img :src="user.avatar" class="img-circle">
+			<p>
+				{{user.nickname || user.loginname}} - {{user.levelName}}
+				<small>{{user.createTime}}</small>
+			</p>
+		</li>
+		<!-- 菜单底部 -->
+		<li class="user-footer">
+			<div class="pull-left">
+				<a href="/user/profile" class="btn btn-default btn-flat">个人信息</a>
+			</div>
+			<div class="pull-right">
+				<a href="/logout" class="btn btn-default btn-flat">登出</a>
+			</div>
+		</li>
+	</ul>
+</li>

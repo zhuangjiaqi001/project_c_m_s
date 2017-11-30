@@ -1,0 +1,34 @@
+{% extends '../layout/layout.html' %}
+
+{% block body %}
+
+<!-- 总体数据 start -->
+{% include "../partials/index/info.html" ignore missing %}
+<!-- 总体数据 end -->
+
+
+<div class="row">
+	<div class="col-md-4">
+		<!-- 用户信息 start -->
+		{% include "../partials/index/profile.html" ignore missing %}
+		<!-- 用户信息 end -->
+
+		<!-- 网站 start -->
+		{% include "../partials/index/website.html" ignore missing %}
+		<!-- 网站 end -->
+	</div>
+	<div class="col-md-8">
+		<!-- 时间线 start -->
+		{% include "../partials/index/timeline.html" ignore missing %}
+		<!-- 时间线 end -->
+	</div>
+</div>
+
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block js %}
+<script src="/js/index.js"></script>
+{% endblock %}

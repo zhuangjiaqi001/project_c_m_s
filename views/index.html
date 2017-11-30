@@ -1,0 +1,78 @@
+{% extends 'layout/layoutLogin.html' %}
+
+{% block body %}
+<!-- banner -->
+<div class="banner swiper-container">
+	<div class="swiper-wrapper">
+		<div class="swiper-slide" style="background-image: url(/img/banner/1.jpg);">
+			<b>What's this?</b>
+		</div>
+		<div class="swiper-slide" style="background-image: url(/img/banner/2.jpg);">
+			<b>What's this?</b>
+		</div>
+		<div class="swiper-slide" style="background-image: url(/img/banner/3.jpg);">
+			<b>What's this?</b>
+		</div>
+		<div class="swiper-slide" style="background-image: url(/img/banner/4.jpg);">
+			<b>What's this?</b>
+		</div>
+		<div class="swiper-slide" style="background-image: url(/img/banner/5.jpg);">
+			<b>What's this?</b>
+		</div>
+		<div class="swiper-slide" style="background-image: url(/img/banner/6.jpg);">
+			<b>What's this?</b>
+		</div>
+	</div>
+</div>
+
+<!-- 主内容 -->
+<div class="main">
+	<!-- logo -->
+	<a class="logo">
+		<img width="32" src="/img/img-logo.png">
+		CMS
+	</a>
+	<a class="btn-register"></a>
+
+	<!-- 登录 -->
+	<form id="formLogin" class="form-login" method="post" action="/">
+		<p><input type="text" name="loginname" class="fm-text fm-ln" placeholder="用户名"></p>
+		<p><input type="password" name="password" class="fm-text fm-ln" placeholder="密码"></p>
+		<p>
+			<label class="remember fm-left">
+				<input type="checkbox" name="remember"> 记住我
+			</label>
+			<input id="lSubmit" type="submit" value="登录" class="fm-btn fm-right">
+		</p>
+	</form>
+
+	<!-- 注册 -->
+	<div class="register">
+		<div class="r-content">
+			<form id="formRegister" class="form-register" method="post" action="/register">
+				<p><input type="text" name="loginname" class="fm-text fm-ln" placeholder="用户名"></p>
+				<p><input type="text" name="email" class="fm-text fm-ln" placeholder="邮箱"></p>
+				<p><input type="password" name="password" class="fm-text fm-ln" placeholder="密码"></p>
+				<p><input type="password" name="passwordR" class="fm-text fm-ln" placeholder="再次输入密码"></p>
+				<p><input id="rSubmit" type="submit" value="注册" class="fm-btn fm-right"></p>
+			</form>
+		</div>
+		<div class="r-mask"></div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="/js/util/swiper/swiper.css">
+{% endblock %}
+
+{% block js %}
+<script>
+var message = '[[message]]';
+</script>
+<!-- <script src="/js/??lib/jquery.js,util/swiper/swiper.js,login.js"></script> -->
+<script src="/js/lib/jquery.min.js"></script>
+<script src="/js/util/swiper/swiper.js"></script>
+<script src="/js/login.js"></script>
+{% endblock %}

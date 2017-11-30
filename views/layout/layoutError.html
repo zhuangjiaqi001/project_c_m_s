@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>[[title]]</title>
+<meta charset="utf-8">
+<meta content="yes" name="apple-mobile-web-app-capable">
+<meta content="yes" name="apple-touch-fullscreen">
+<meta content="telephone=no,email=no" name="format-detection">
+<meta name="App-Config" content="fullscreen=yes,useHistoryState=yes,transition=yes">
+<meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+<meta name="renderer" content="webkit">
+<link rel="shortcut icon" href="/favicon.ico">
+<style>
+* {
+	margin: 0;
+	padding: 0;
+}
+a {
+	text-decoration: none;
+}
+.page-error {
+	width: 520px;
+	margin: 100px auto 0;
+}
+.page-error img {
+	float: left;
+	margin-right: 30px;
+}
+.page-error .e-msg {
+	float: left;
+	margin-top: 20px;
+	line-height: 32px;
+	color: #a0a0a0;
+	font-size: 20px;
+	text-align: center;
+}
+.page-error i {
+	margin-right: 4px;
+	font-size: 28px;
+	vertical-align: middle;
+}
+.page-error a {
+	color: #a0a0a0;
+}
+</style>
+</head>
+<body>
+	<!-- main-content start -->
+	{% block body %}{% endblock %}
+	<!-- main-content end -->
+</body>
+</html>

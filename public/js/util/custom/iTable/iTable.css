@@ -1,0 +1,73 @@
+/* iTable plugin
+----------------------------------- */
+
+.iTable {
+	width: 100%;
+	margin: 0 auto;
+	clear: both;
+}
+/* iTable info */
+.iTable-info {
+	clear: both;
+	float: left;
+	padding: 15px 0 0!important;
+}
+/* iTable page */
+.iTable-page {
+	float: right;
+	text-align: right;
+	padding: 15px 0 0!important;
+	margin-bottom: 15px;
+}
+.iTable-page span {
+	float: left;
+}
+.iTable-page b {
+	float: left;
+	height: 32px;
+	padding: 0 5px;
+	line-height: 26px;
+	border-right: 1px solid #dde2ef;
+}
+.iTable-page a {
+	float: left;
+	display: block;
+	height: 32px;
+	line-height: 22px;
+	border: 1px solid #dde2ef;
+	border-left: 0;
+	cursor: pointer;
+	color: #405066;
+	padding: 5px 15px;
+}
+.iTable-page a:hover,
+.iTable-page a.current {
+	color: #fff;
+	background-color: #5bc0de;
+}
+.iTable-page a.disabled {
+	color: #c7c7c7;
+}
+.iTable-page a.disabled:hover {
+	color: #c7c7c7;
+	background: #fff;
+	border-color: #ddd;
+	cursor: no-drop;
+}
+.iTable-page a:nth-child(1) {
+	border-left: 1px solid #dde2ef;
+}
+.iTable-page a i {
+	font-size: 12px;
+}
+.iTable-page a.iTable-page-prev,
+.iTable-page a.iTable-page-next {
+	padding: 5px 10px;
+	line-height: 20px;
+}
+.iTable-page a.iTable-page-prev {
+	border-right: 0;
+}
+.iTable-page-next {
+
+}
