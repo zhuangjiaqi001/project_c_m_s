@@ -21,13 +21,13 @@ module.exports = [
 		url:  '/user',
 		icon: 'user'
 	},
-	{
-		type: 1,
-		key:  'permit',
-		name: '权限管理',
-		url:  '/permit',
-		icon: 'sitemap'
-	},
+	// {
+	// 	type: 1,
+	// 	key:  'permit',
+	// 	name: '权限管理',
+	// 	url:  '/permit',
+	// 	icon: 'sitemap'
+	// },
 	{
 		type: 0,
 		name: '推荐位管理'
@@ -53,7 +53,7 @@ module.exports = [
 	{
 		type: 1,
 		key:  'temp',
-		name: '模板管理',
+		name: '公共模块管理',
 		url:  '/temp',
 		icon: 'th'
 	},

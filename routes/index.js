@@ -14,7 +14,6 @@ router.get('/', (req, res, next) => {
 	})
 })
 
-
 router.post('/', (req, res, next) => {
 	var body      = req.body,
 		loginname = body.loginname,

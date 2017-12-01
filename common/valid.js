@@ -108,6 +108,16 @@ const rule = {
 	tempUp: {
 		name: RULE.imgrpName
 	},
+	page: {
+		key:  RULE.imgrpKey,
+		name: RULE.imgrpName
+	},
+	pagec: {
+		title: RULE.imgrpName
+	},
+	pageUp: {
+		name: RULE.imgrpName
+	},
 }
 
 var Valid = {

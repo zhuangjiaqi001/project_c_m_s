@@ -20,7 +20,7 @@ module.exports = function(app) {
 	app.use('/',          require('./routes/index'))		// 首页登录注册
 	app.use('/dashboard', require('./routes/dashboard'))	// 仪表板 (总体数据)
 	app.use('/user',      require('./routes/user'))			// 用户管理
-	app.use('/permit',    require('./routes/permit'))		// 权限管理
+	// app.use('/permit',    require('./routes/permit'))		// 权限管理
 	app.use('/imgrp',     require('./routes/imgrp'))		// 图片推荐位
 	app.use('/txtrp',     require('./routes/txtrp'))		// 文字推荐位
 	app.use('/temp',      require('./routes/temp'))			// 模板管理

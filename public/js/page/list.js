@@ -1,7 +1,7 @@
 (function(global, VM, CMS) {
 	var API = {
-		list: '/temp/getTempCList',
-		remove: '/temp/removeTempC'
+		list: '/page/getPageCList',
+		remove: '/page/removePageC'
 	}
 
 	var VUE = new Vue(CMS.extend(VM, {
@@ -25,9 +25,9 @@
 					title: '操作',
 					key: '',
 					render: (row, column, index) => {
-						return `<a class="text-blue" href="/temp/${row.tempId}/edit/${row.id}">编辑</a>
-								<a class="text-blue" @click="handleModal(row.tempId, row.id)">删除</a>
-								${row.preview? '<a class="text-blue" target="_blank" href="${row.preview}">预览</a>': ''}`
+						return `<a class="text-blue" href="/page/${row.pageId}/edit/${row.id}">编辑</a>
+								<a class="text-blue" @click="handleModal(row.pageId, row.id)">删除</a>`+
+								(row.preview? `<a class="text-blue" target="_blank" href="${row.preview}">预览</a>`: ``)
 					}
 				}
 			],
@@ -37,22 +37,22 @@
 			pageSize: 10,
 			current: 1,
 			search: {
-				$tempId: tempId,
+				$pageId: pageId,
 				title: ''
 			},
 			sort: '',
-			tempId: '',
+			pageId: '',
 			id: ''
 		},
 		methods: {
-			handleModal (tempId, id) {
+			handleModal (pageId, id) {
 				this.removeModal = true
-				this.tempId = tempId
+				this.pageId = pageId
 				this.id     = id
 			},
 			handleRemove () {
 				CMS.http.post(API.remove, {
-					tempId: this.tempId,
+					pageId: this.pageId,
 					id: this.id
 				}, function(o) {
 					console.log(o)

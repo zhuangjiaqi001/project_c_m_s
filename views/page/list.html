@@ -4,21 +4,18 @@
 
 <div class="box">
 	<div class="box-header">
-		<h3 class="box-title">落地页列表</h3>
+		<h3 class="box-title">[[item.name]] <small>[[item.key]]</small></h3>
 	</div>
 	<div class="box-body">
 
 		<div class="row form-group">
 			<div class="col-md-12">
-				<a class="btn btn-warning" href="/page/add">新建</a>
+				<a class="btn btn-warning" href="/page/[[id]]/add">新建</a>
 			</div>
 		</div>
 		<div class="row form-group">
 			<div class="col-md-3">
-				<i-input v-model="search.name" placeholder="落地页列表名称" @on-enter="searchList"></i-input>
-			</div>
-			<div class="col-md-3">
-				<i-input v-model="search.key" placeholder="落地页列表KEY" @on-enter="searchList"></i-input>
+				<i-input v-model="search.title" placeholder="标题" @on-enter="searchList"></i-input>
 			</div>
 			<div class="col-md-2">
 				<i-button type="warning" @click="searchList"><i class="fa fa-search"></i></i-button>
@@ -34,10 +31,19 @@
 				</div>
 			</div>
 		</div>
-		<!-- 确认 删除|发布|下线|链接 模态框 -->
-		<Modal v-model="Modal" @on-ok="handleCtrl">
-			<p v-if="ModalName === 'remove'">确认删除该落地页列表吗?</p>
-			<p v-if="ModalName === 'link'"><a :href="api" target="_blank">{{api}}</a></p>
+
+		<!-- 确认删除 模态框 -->
+		<Modal v-model="removeModal" width="360">
+			<p slot="header" style="color: #f60; text-align: center">
+				<Icon type="information-circled"></Icon>
+				<span>删除确认该模板吗?</span>
+			</p>
+			<div style="text-align:center">
+				<p>删除该模板后不可恢复</p>
+			</div>
+			<div slot="footer">
+				<i-button type="error" size="large" @click="handleRemove">删除</i-button>
+			</div>
 		</Modal>
 
 	</div>
@@ -47,9 +53,13 @@
 {% endblock %}
 
 {% block css %}
+<link rel="stylesheet" href="/js/util/iview/styles/iview.css">
 {% endblock %}
 
 {% block js %}
 <script src="/js/util/iview/iview.min.js"></script>
-<script src="/js/page/index.js"></script>
+<script>
+var pageId = [[id]]
+</script>
+<script src="/js/page/list.js"></script>
 {% endblock %}

@@ -18,5 +18,6 @@ router.use('/imgrp', require('./api/imgrp'))
 router.use('/txtrp', require('./api/txtrp'))
 router.use('/img',   require('./api/img'))
 router.use('/temp',  require('./api/temp'))
+router.use('/page',  require('./api/page'))
 
 module.exports = router

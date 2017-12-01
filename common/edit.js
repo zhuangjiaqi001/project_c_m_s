@@ -49,5 +49,13 @@ module.exports = {
 		css:         1, 		// CSS
 		js:          1, 		// JS
 		custemItems: 1			// 工具库
-	}
+	},
+	Page: {
+		name:        1,			// 名称
+		description: 1,			// 描述
+	},
+	PageC: {
+		title:       1,			// 标题
+		url:         1, 		// 链接
+	},
 }

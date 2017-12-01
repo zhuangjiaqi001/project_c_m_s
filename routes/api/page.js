@@ -1,63 +1,62 @@
 const router  = require('express').Router()
 const Cache   = require('../../models/cache')
 const proxy   = require('../../proxy')
-const Temp    = proxy.Temp
+const Page    = proxy.Page
 const Aliyun  = require('../../common/aliyun')
 const Tools   = require('../../common/tools')
 const Valid   = require('../../common/valid')
 const Edit    = require('../../common/edit')
 const swig    = require('swig')
-const tempEdit  = Edit.Temp
-const tempcEdit = Edit.TempC
+const pageEdit  = Edit.Page
+const pagecEdit = Edit.PageC
 const tpl       = swig.compileFile('template/t0.html', { autoescape: false })
 const tprev     = swig.compileFile('template/tp.html', { autoescape: false })
 
 // 创建推荐位
-router.post('/addTemp', (req, res, next) => {
+router.post('/addPage', (req, res, next) => {
 	var id   = req.signedCookies.id,
 		body = req.body,
 		key  = body.key,
 		name = body.name,
 		description = body.description
-	Valid.run(res, 'temp', body, function() {
-		Temp.getTempByQuery({
+	Valid.run(res, 'page', body, function() {
+		Page.getPageByQuery({
 			'key':  key,
 			'name': name
 		}, function (item) {
 			if (item) return Tools.errHandle('0123', res)
-
-			Temp.addTemp(key, name, description, custemItems, id, function (err) {
+			Page.addPage(key, name, description, id, function (err) {
 				if (err) return Tools.errHandle('0124', res)
 				Tools.errHandle('0000', res)
 			})
 		})
 	})
 })
-router.post('/updateTemp', (req, res, next) => {
+router.post('/updatePage', (req, res, next) => {
 	var body = req.body,
 		id   = body.id
 
-	var bodyFilter = Tools.bodyFilter(tempEdit, body)
+	var bodyFilter = Tools.bodyFilter(pageEdit, body)
 	body = bodyFilter.obj
 
-	Valid.run(res, 'tempUp', body, function() {
-		Temp.getTempById(id, function (item) {
+	Valid.run(res, 'pageUp', body, function() {
+		Page.getPageById(id, function (item) {
 			if (!item) return Tools.errHandle('0128', res)
-			Temp.updateTemp(id, body, function (err) {
+			Page.updatePage(id, body, function (err) {
 				if (err) return Tools.errHandle('0130', res)
 				Tools.errHandle('0000', res)
 			})
 		})
 	})
 })
-router.post('/removeTemp', (req, res, next) => {
+router.post('/removePage', (req, res, next) => {
 	var body = req.body,
 		id   = body.id
 
-	Temp.getTempById(id, function (item) {
+	Page.getPageById(id, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		if (item.active)  return Tools.errHandle('0134', res)
-		Temp.removeTemp(id, function (err) {
+		Page.removePage(id, function (err) {
 			if (err) return Tools.errHandle('0130', res)
 			Tools.errHandle('0000', res)
 		})
@@ -66,11 +65,11 @@ router.post('/removeTemp', (req, res, next) => {
 
 
 // 获取推荐位列表
-router.get('/getTempList', (req, res, next) => {
+router.get('/getPageList', (req, res, next) => {
 	var query  = req.query,
 		select = ['key', 'name', 'description', 'id', 'createdAt', 'updatedAt']
 
-	Temp.getTempList(query, select, function (items, pageInfo) {
+	Page.getPageList(query, select, function (items, pageInfo) {
 
 		Tools.errHandle('0000', res, {
 			list: Tools.dateToStr(items),
@@ -81,68 +80,58 @@ router.get('/getTempList', (req, res, next) => {
 
 
 // 创建推荐位内容
-router.post('/addTempC', (req, res, next) => {
+router.post('/addPageC', (req, res, next) => {
 	var body   = req.body,
 		id     = req.signedCookies.id,
-		tempId = body.tempId,
+		pageId = body.pageId,
 		key    = body.key,
 		html   = decodeURIComponent(body.html),
 		css    = decodeURIComponent(body.css),
-		js     = decodeURIComponent(body.js),
-		pathname = `tempc/${key}`
+		js     = decodeURIComponent(body.js)
+		pathname = `pagec/${key}`
 
-	body.custemItems = body.custemItems || []
+	if (!pageId) return Tools.errHandle('0126', res)
 
-	if (!tempId) return Tools.errHandle('0126', res)
-
-	Temp.getTempById(tempId, function(item) {
+	Page.getPageById(pageId, function(item) {
 		if (!item) return Tools.errHandle('0128', res)
 		uploadAliyun(html, css, js, pathname, body, res, function(body) {
 			body.userId = id
-			Temp.addTempC(body, function (err) {
+			debugger
+			Page.addPageC(body, function (err) {
 				if (err) return Tools.errHandle('0123', res)
+				Tools.errHandle('0000', res)
+			})
+		})
+
+	})
+})
+router.post('/updatePageC', (req, res, next) => {
+	var body   = req.body,
+		pageId = body.pageId,
+		id     = body.id
+
+	var bodyFilter = Tools.bodyFilter(pagecEdit, body)
+	body = bodyFilter.obj
+
+	Valid.run(res, 'pagec', body, function() {
+		Page.getPageCByQuery({
+			pageId: pageId,
+			id: id
+		}, function(item) {
+			if (!item) return Tools.errHandle('0128', res)
+			Page.updatePageC(id, body, function (err) {
+				if (err) return Tools.errHandle('0130', res)
 				Tools.errHandle('0000', res)
 			})
 		})
 	})
 })
-router.post('/updateTempC', (req, res, next) => {
-	var body   = req.body,
-		tempId = body.tempId,
-		id     = body.id,
-		key    = body.key,
-		html   = decodeURIComponent(body.html),
-		css    = decodeURIComponent(body.css),
-		js     = decodeURIComponent(body.js),
-		pathname = `tempc/${key}`
-
-	body.custemItems = body.custemItems || []
-	
-	var bodyFilter = Tools.bodyFilter(tempcEdit, body)
-	body = bodyFilter.obj
-
-	Valid.run(res, 'tempc', body, function() {
-		Temp.getTempCByQuery({
-			tempId: tempId,
-			id: id
-		}, function(item) {
-			if (!item) return Tools.errHandle('0128', res)
-			uploadAliyun(html, css, js, pathname, body, res, function(body) {
-				body.userId = id
-				Temp.updateTempC(id, body, function (err) {
-					if (err) return Tools.errHandle('0130', res)
-					Tools.errHandle('0000', res)
-				})
-			})
-		})
-	})
-})
-router.post('/removeTempC', (req, res, next) => {
+router.post('/removePageC', (req, res, next) => {
 	var body = req.body
 
-	Temp.getTempCByQuery(body, function (item) {
+	Page.getPageCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
-		Temp.removeTempC(body.id, function (err) {
+		Page.removePageC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
 			Tools.errHandle('0000', res)
 		})
@@ -151,10 +140,10 @@ router.post('/removeTempC', (req, res, next) => {
 
 
 // 获取推荐位内容列表
-router.get('/getTempCList', (req, res, next) => {
+router.get('/getPageCList', (req, res, next) => {
 	var query  = req.query
-	var select = ['tempId', 'key', 'title', 'preview', 'createdAt', 'updatedAt']
-	Temp.getTempCList(query, select, function (items, pageInfo) {
+	var select = ['pageId', 'key', 'title', 'preview', 'createdAt', 'updatedAt']
+	Page.getPageCList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
 			list: Tools.dateToStr(items),
 			pageInfo: pageInfo
@@ -196,7 +185,7 @@ function uploadAliyun(html, css, js, pathname, body, res, cb) {
 		})
 	}
 }
-function createPrev(html, body, pathname, res, cb) {
+function createPrev(body, pathname, res, cb) {
 	var prev = tprev({
 		title:   `${body.title}_${body.name}`,
 		jsframe: Tools.getJSFrame(),
