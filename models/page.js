@@ -40,7 +40,8 @@ module.exports = function(sequelize, DataTypes) {
 		html:        { type: DataTypes.STRING,  comment: 'HTML文档' },
 		js:          { type: DataTypes.STRING,  comment: '脚本' },
 		preview:     { type: DataTypes.STRING,  comment: '预览' },
-		description: { type: DataTypes.STRING,  comment: '落地页描述' }
+		description: { type: DataTypes.STRING,  comment: '落地页描述' },
+		active:      { type: DataTypes.BOOLEAN, defaultValue: false, comment: '是否激活' }
 	}, {
 		freezeTableName: false
 		// freezeTableName: true,

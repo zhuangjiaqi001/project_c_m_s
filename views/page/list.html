@@ -32,18 +32,13 @@
 			</div>
 		</div>
 
-		<!-- 确认删除 模态框 -->
-		<Modal v-model="removeModal" width="360">
-			<p slot="header" style="color: #f60; text-align: center">
-				<Icon type="information-circled"></Icon>
-				<span>删除确认该模板吗?</span>
-			</p>
-			<div style="text-align:center">
-				<p>删除该模板后不可恢复</p>
-			</div>
-			<div slot="footer">
-				<i-button type="error" size="large" @click="handleRemove">删除</i-button>
-			</div>
+		<!-- 确认 删除|发布|下线|链接 模态框 -->
+		<Modal v-model="Modal" @on-ok="handleCtrl">
+			<p v-if="ModalName === 'remove'">确认删除该落地页吗?</p>
+			<p v-if="ModalName === 'release'">确认发布该落地页吗?</p>
+			<p v-if="ModalName === 'refresh'">确认刷新该落地页吗?</p>
+			<p v-if="ModalName === 'offline'">确认下线该落地页吗?</p>
+			<p v-if="ModalName === 'link'"><a :href="api" target="_blank">{{api}}</a></p>
 		</Modal>
 
 	</div>

@@ -152,7 +152,7 @@ router.post('/removePageC', (req, res, next) => {
 // 获取推荐位内容列表
 router.get('/getPageCList', (req, res, next) => {
 	var query  = req.query
-	var select = ['pageId', 'key', 'title', 'preview', 'createdAt', 'updatedAt']
+	var select = ['pageId', 'key', 'title', 'preview', 'active', 'createdAt', 'updatedAt']
 	Page.getPageCList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
 			list: Tools.dateToStr(items),

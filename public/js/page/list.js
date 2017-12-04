@@ -4,6 +4,13 @@
 		remove: '/page/removePageC'
 	}
 
+	var Modal = {
+		release: 'handleRelease',
+		refresh: 'handleRelease',
+		remove:  'handleRemove',
+		offline: 'handleOffline'
+	}
+
 	var VUE = new Vue(CMS.extend(VM, {
 		data: {
 			columns: [
@@ -26,7 +33,9 @@
 					key: '',
 					render: (row, column, index) => {
 						return `<a class="text-blue" href="/page/${row.pageId}/edit/${row.id}">编辑</a>
-								<a class="text-blue" @click="handleModal(row.pageId, row.id)">删除</a>`+
+								<a class="text-blue" @click="handleModal(`+(row.active? `'refresh'`: `'release'`)+`, row.id, row.hash)">`+(row.active? `刷新`: `发布`)+`</a>
+								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a> `+
+								(row.active? `<a class="text-blue" @click="handleModal('offline', row.id)">下线</a>`) +
 								(row.preview? `<a class="text-blue" target="_blank" href="${row.preview}">预览</a>`: ``)
 					}
 				}
