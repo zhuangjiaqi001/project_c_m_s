@@ -27,7 +27,7 @@
 					render: (row, column, index) => {
 						return `<a class="text-blue" href="/temp/${row.tempId}/edit/${row.id}">编辑</a>
 								<a class="text-blue" @click="handleModal(row.tempId, row.id)">删除</a>
-								${row.preview? '<a class="text-blue" target="_blank" href="${row.preview}">预览</a>': ''}`
+								${row.preview? '<a class="text-blue" target="_blank" href="'+row.preview+'">预览</a>': ''}`
 					}
 				}
 			],

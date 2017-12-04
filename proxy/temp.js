@@ -39,12 +39,11 @@ exports.getTempList = function(query, select, cb) {
  * @param {String}   id 创建者
  * @param {Function} cb 回调函数
  */
-exports.addTemp = function (key, name, description, custemItems, id, cb) {
+exports.addTemp = function (key, name, description, id, cb) {
 	var imgrp = {
 		key: key,
 		name: name,
 		description: description,
-		custemItems: custemItems,
 		userId: id,
 		hash: Tools.hmac(key)
 	}
@@ -139,6 +138,17 @@ exports.getTempCByQuery = function (query, cb) {
 exports.getTempCByRpId = function(tempId, select, cb) {
 	TempC.findAndCountAll({
 		where: { tempId: tempId },
+		attributes:  select
+	}).then(function(items) {
+		cb(items.rows, items.count)
+	})
+};
+
+exports.getTempCByRpIds = function(ids, select, cb) {
+	TempC.findAndCountAll({
+		where: {
+			id: ids
+		},
 		attributes:  select
 	}).then(function(items) {
 		cb(items.rows, items.count)

@@ -82,12 +82,13 @@ router.get('/getPageList', (req, res, next) => {
 // 创建推荐位内容
 router.post('/addPageC', (req, res, next) => {
 	var body   = req.body,
-		id     = req.signedCookies.id,
+		userId = req.signedCookies.id,
+		id     = body.id,
 		pageId = body.pageId,
-		key    = body.key,
-		html   = decodeURIComponent(body.html),
-		css    = decodeURIComponent(body.css),
-		js     = decodeURIComponent(body.js)
+		key    = Date.now() + userId,
+		html   = body.html? decodeURIComponent(body.html): '',
+		css    = body.css?  decodeURIComponent(body.css):  '',
+		js     = body.js?   decodeURIComponent(body.js):   '',
 		pathname = `pagec/${key}`
 
 	if (!pageId) return Tools.errHandle('0126', res)
@@ -95,20 +96,25 @@ router.post('/addPageC', (req, res, next) => {
 	Page.getPageById(pageId, function(item) {
 		if (!item) return Tools.errHandle('0128', res)
 		uploadAliyun(html, css, js, pathname, body, res, function(body) {
-			body.userId = id
+			body.userId = userId
 			debugger
 			Page.addPageC(body, function (err) {
 				if (err) return Tools.errHandle('0123', res)
 				Tools.errHandle('0000', res)
 			})
 		})
-
 	})
 })
 router.post('/updatePageC', (req, res, next) => {
 	var body   = req.body,
 		pageId = body.pageId,
-		id     = body.id
+		userId = req.signedCookies.id,
+		key    = body.key,
+		id     = body.id,
+		html   = body.html? decodeURIComponent(body.html): '',
+		css    = body.css?  decodeURIComponent(body.css):  '',
+		js     = body.js?   decodeURIComponent(body.js):   '',
+		pathname = `pagec/${key}`
 
 	var bodyFilter = Tools.bodyFilter(pagecEdit, body)
 	body = bodyFilter.obj
@@ -119,10 +125,14 @@ router.post('/updatePageC', (req, res, next) => {
 			id: id
 		}, function(item) {
 			if (!item) return Tools.errHandle('0128', res)
-			Page.updatePageC(id, body, function (err) {
-				if (err) return Tools.errHandle('0130', res)
-				Tools.errHandle('0000', res)
+			uploadAliyun(html, css, js, pathname, body, res, function(body) {
+				body.userId = userId
+				Page.updatePageC(id, body, function (err) {
+					if (err) return Tools.errHandle('0130', res)
+					Tools.errHandle('0000', res)
+				})
 			})
+			
 		})
 	})
 })
@@ -152,6 +162,9 @@ router.get('/getPageCList', (req, res, next) => {
 })
 
 
+function datafilter() {
+	// body...
+}
 function uploadAliyun(html, css, js, pathname, body, res, cb) {
 	var len = 0, now = 0
 	body.html = body.css = body.js = ''
@@ -165,7 +178,7 @@ function uploadAliyun(html, css, js, pathname, body, res, cb) {
 			if (err) return Tools.errHandle('0115', res)
 			body.html = url
 			++now
-			if (now === len) createPrev(html, body, pathname, res, cb)
+			if (now === len) cb(body)
 		})
 	}
 	if (css) {
@@ -173,7 +186,7 @@ function uploadAliyun(html, css, js, pathname, body, res, cb) {
 			if (err) return Tools.errHandle('0116', res)
 			body.css = url
 			++now
-			if (now === len) createPrev(html, body, pathname, res, cb)
+			if (now === len) cb(body)
 		})
 	}
 	if (js) {
@@ -181,7 +194,7 @@ function uploadAliyun(html, css, js, pathname, body, res, cb) {
 			if (err) return Tools.errHandle('0117', res)
 			body.js = url
 			++now
-			if (now === len) createPrev(html, body, pathname, res, cb)
+			if (now === len) cb(body)
 		})
 	}
 }

@@ -119,9 +119,7 @@ gulp.task('build:localhost', function() {
 	return runSequence(
 		'clean:init',	// 初始化清除文件
 		'less:lo',		// 编译less
-		'clean:end',	// 结束清除文件
-		'nodemon',		// 代码部署
-		'browser-sync'
+		'clean:end'		// 结束清除文件
 	)();
 });
 

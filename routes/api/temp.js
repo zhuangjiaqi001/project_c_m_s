@@ -26,7 +26,7 @@ router.post('/addTemp', (req, res, next) => {
 		}, function (item) {
 			if (item) return Tools.errHandle('0123', res)
 
-			Temp.addTemp(key, name, description, custemItems, id, function (err) {
+			Temp.addTemp(key, name, description, id, function (err) {
 				if (err) return Tools.errHandle('0124', res)
 				Tools.errHandle('0000', res)
 			})
@@ -86,17 +86,20 @@ router.post('/addTempC', (req, res, next) => {
 		id     = req.signedCookies.id,
 		tempId = body.tempId,
 		key    = body.key,
-		html   = decodeURIComponent(body.html),
-		css    = decodeURIComponent(body.css),
-		js     = decodeURIComponent(body.js),
+		html   = body.html? decodeURIComponent(body.html): '',
+		css    = body.css?  decodeURIComponent(body.css):  '',
+		js     = body.js?   decodeURIComponent(body.js):   '',
 		pathname = `tempc/${key}`
 
 	body.custemItems = body.custemItems || []
 
 	if (!tempId) return Tools.errHandle('0126', res)
 
-	Temp.getTempById(tempId, function(item) {
-		if (!item) return Tools.errHandle('0128', res)
+	Temp.getTempCByQuery({
+		key: key
+	}, function(item) {
+	// Temp.getTempById(tempId, function(item) {
+		if (item) return Tools.errHandle('0163', res)
 		uploadAliyun(html, css, js, pathname, body, res, function(body) {
 			body.userId = id
 			Temp.addTempC(body, function (err) {
@@ -104,16 +107,18 @@ router.post('/addTempC', (req, res, next) => {
 				Tools.errHandle('0000', res)
 			})
 		})
+	// })
 	})
 })
 router.post('/updateTempC', (req, res, next) => {
 	var body   = req.body,
-		tempId = body.tempId,
 		id     = body.id,
+		userId = req.signedCookies.id,
+		tempId = body.tempId,
 		key    = body.key,
-		html   = decodeURIComponent(body.html),
-		css    = decodeURIComponent(body.css),
-		js     = decodeURIComponent(body.js),
+		html   = body.html? decodeURIComponent(body.html): '',
+		css    = body.css?  decodeURIComponent(body.css):  '',
+		js     = body.js?   decodeURIComponent(body.js):   '',
 		pathname = `tempc/${key}`
 
 	body.custemItems = body.custemItems || []
@@ -124,11 +129,11 @@ router.post('/updateTempC', (req, res, next) => {
 	Valid.run(res, 'tempc', body, function() {
 		Temp.getTempCByQuery({
 			tempId: tempId,
-			id: id
+			key: key
 		}, function(item) {
-			if (!item) return Tools.errHandle('0128', res)
+			if (!item) return Tools.errHandle('0163', res)
 			uploadAliyun(html, css, js, pathname, body, res, function(body) {
-				body.userId = id
+				body.userId = userId
 				Temp.updateTempC(id, body, function (err) {
 					if (err) return Tools.errHandle('0130', res)
 					Tools.errHandle('0000', res)
@@ -170,7 +175,6 @@ function uploadAliyun(html, css, js, pathname, body, res, cb) {
 	if (css)  ++len
 	if (js)   ++len
 	if (!len) cb(body)
-
 	if (html) {
 		Aliyun.uploadFile(html, '0.html', pathname, function(err, url) {
 			if (err) return Tools.errHandle('0115', res)

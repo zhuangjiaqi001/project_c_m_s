@@ -178,17 +178,18 @@ if (!global.CMS) {
 			}
 		},
 		// 获取列表
-		getDataList: function(api) {
+		getDataList: function(api, path) {
+			var data = path? VM.data[path]: VM.data
 			var da = {
-				page: VM.data.current || 1,
-				pageSize: VM.data.pageSize || 10,
+				page: data.current || 1,
+				pageSize: data.pageSize || 10,
 			}
-			this.merge(VM.data.search || {}, da)
-			if (VM.data.sort) da.sort = VM.data.sort
+			this.merge(data.search || {}, da)
+			if (data.sort) da.sort = data.sort
 			this.http.get(api, da, function(d) {
-				VM.data.dataList = d.data.list
-				VM.data.total    = d.data.pageInfo.total
-				VM.data.current  = d.data.pageInfo.current
+				data.dataList = d.data.list
+				data.total    = d.data.pageInfo.total
+				data.current  = d.data.pageInfo.current
 			})
 		},
 		// 日期格式化

@@ -2,6 +2,7 @@ const router  = require('express').Router()
 const proxy   = require('../proxy')
 const Tools   = require('../common/tools')
 const Page    = proxy.Page
+const Temp    = proxy.Temp
 const Aliyun  = require('../common/aliyun')
 
 // 落地页列表
@@ -63,21 +64,43 @@ router.get('/:id/add', (req, res, next) => {
 		})
 	})
 })
+
 // 落地页列表内容编辑
 router.get('/:pageId/edit/:id', (req, res, next) => {
 	var params   = req.params,
 		pageId   = params.pageId,
-		id       = params.id
+		id       = params.id,
+		ids      = [],
+		temps    = {}
 	Page.getPageById(pageId, function(o) {
 		if (!o) return Tools.permit('对不起！该落地页列表不存在！', res)
 		Page.getPageCByQuery({
 			pageId: pageId,
 			id: id
 		}, function(o2) {
-			var key      = o2.key,
-				pathname = `pagec/${key}`
 			if (!o2) return Tools.permit('对不起！该落地页列表不存在！', res)
-			getAliyun(o2, pathname, res, function(o2) {
+
+			if (o2.modelItems) {
+				o2.modelItems = JSON.parse(o2.modelItems)
+				ids = JSON.parse(JSON.stringify(o2.modelItems))
+			}
+			if (o2.header) ids.push(o2.header)
+			if (o2.footer) ids.push(o2.footer)
+
+			Temp.getTempCByRpIds(Tools.unique(ids), ['id', 'title'], function(items, count) {
+				items.map(function(i) {
+					temps[i.dataValues.id] = i.dataValues
+				})
+				if (o2.header) o2.header = JSON.stringify(temps[o2.header])
+				if (o2.footer) o2.footer = JSON.stringify(temps[o2.footer])
+				if (o2.modelItems) {
+					var mi = []
+					o2.modelItems.map(function(i) {
+						mi.push(temps[i])
+					})
+					o2.modelItems = JSON.stringify(mi)
+				}
+
 				res.render('page/itemAdd', {
 					active: active,
 					title: '编辑内容',

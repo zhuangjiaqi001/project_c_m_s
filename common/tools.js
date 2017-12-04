@@ -194,6 +194,16 @@ var Tools = {
 	},
 	getJSFrame: function() {
 		return Mapping.jsframe
+	},
+	unique: function(array) {
+		var res = [], json = {}
+		for(var i = 0, l = array.length; i < l; i++) {
+			if(!json[array[i]]) {
+				res.push(array[i])
+				json[array[i]] = 1
+			}
+		}
+		return res
 	}
 }
 

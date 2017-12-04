@@ -158,19 +158,30 @@ exports.getPageCByRpId = function(tempId, select, cb) {
  */
 exports.addPageC = function (opts, cb) {
 	delete opts.id
-	opts.custemItems = JSON.stringify(opts.custemItems)
-	opts.modelItems  = JSON.stringify(opts.modelItems)
-	opts.header = JSON.stringify(opts.header)
-	opts.footer = JSON.stringify(opts.footer)
+	opts.custemItems = JSON.stringify(opts.custemItems || [])
+
+	if (opts.modelItems) {
+		var mod = []
+		opts.modelItems.map(function(i) { mod.push(i.id) })
+		opts.modelItems = JSON.stringify(Tools.unique(mod))
+	}
+	if (opts.header) opts.header = opts.header.id
+	if (opts.footer) opts.footer = opts.footer.id
+
 	return PageC.create(opts).then(rpc => {
 		cb(!rpc, rpc.dataValues)
 	})
 }
 exports.updatePageC = function (id, opts, cb) {
 	opts.custemItems = JSON.stringify(opts.custemItems)
-	opts.modelItems  = JSON.stringify(opts.modelItems)
-	opts.header = JSON.stringify(opts.header)
-	opts.footer = JSON.stringify(opts.footer)
+	
+	if (opts.modelItems) {
+		var mod = []
+		opts.modelItems.map(function(i) { mod.push(i.id) })
+		opts.modelItems = JSON.stringify(Tools.unique(mod))
+	}
+	if (opts.header) opts.header = opts.header.id
+	if (opts.footer) opts.footer = opts.footer.id
 	return PageC.update(opts, { where: { id: id } }).then(rp => {
 		cb(!rp, rp[0])
 	})

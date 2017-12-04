@@ -57,5 +57,9 @@ module.exports = {
 	PageC: {
 		title:       1,			// 标题
 		url:         1, 		// 链接
+		custemItems: 1,
+		header:      1,
+		footer:      1,
+		modelItems:  1,
 	},
 }

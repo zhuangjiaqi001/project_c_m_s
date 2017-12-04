@@ -1,7 +1,7 @@
 (function(global, VM, CMS) {
 	var API = {
-		list:    '/page/getPageList',
-		remove:  '/page/removePage',
+		list:		'/page/getPageList',
+		remove:		'/page/removePage',
 	}
 
 	CMS.getDataList(API.list)
