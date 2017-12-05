@@ -1,14 +1,19 @@
 (function(global, VM, CMS) {
-	var API = tempInfo.id? '/temp/updateTemp': '/temp/addTemp'
+	var API = {
+		get:    '/temp/get',
+		submit: '/temp/addTemp'
+	},
+	id = location.pathname.match(/edit\/(\d+)/)
+	id = id? id[1]: ''
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
 			birthday: '',
 			formValidate: {
-				id:   tempInfo.id,
-				key:  tempInfo.key,
-				name: tempInfo.name,
-				description: tempInfo.description
+				id:   id || '',
+				key:  '',
+				name: '',
+				description: ''
 			},
 			ruleValidate: {
 				key: [
@@ -31,7 +36,7 @@
 				this.$refs[name].validate((valid) => {
 					if (valid) {
 						console.log(this.formValidate)
-						CMS.http.post(API, this.formValidate, function(o) {
+						CMS.http.post(API.submit, this.formValidate, function(o) {
 							VUE.$Message.success('提交成功!')
 							location.href = '/temp'
 						}, function(err) {
@@ -45,6 +50,21 @@
 			},
 			handleReset: function(name) {
 				this.$refs[name].resetFields()
+			},
+			getTemp: function() {
+				var me = this
+				CMS.http.get(API.get, { id: id }, function(o) {
+					CMS.merge2(me.formValidate, o.data)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
+			load: function() {
+				if (this.pageinfo.isEdit) {
+					API.submit = '/temp/updateTemp'
+					this.getTemp()
+				}
 			}
 		}
 	}))

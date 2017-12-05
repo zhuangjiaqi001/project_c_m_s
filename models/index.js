@@ -41,7 +41,7 @@ User.hasMany(Page,   { foreignKey: 'userId', targetKey: 'id', as: 'Page' })		// 
 User.hasMany(PageC,  { foreignKey: 'userId', targetKey: 'id', as: 'PageC' })	// 用户关联落地页内容
 Page.hasMany(PageC,  { foreignKey: 'pageId', targetKey: 'id', as: 'PageC' })	// 列表类关联内容
 
-sequelize.sync()
+// sequelize.sync()
 
 
 exports.User   = User

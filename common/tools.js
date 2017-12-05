@@ -215,7 +215,35 @@ var Tools = {
 		if (body.footer) ids.push(body.footer)
 
 		cb && cb(Tools.unique(ids), body)
+	},
+	__getClass: function(obj) {
+		return Object.prototype.toString.call(obj).match(/^\[object\s(.*)\]$/)[1]
+	},
+	dataToJSON: function(data) {
+		var type = this.__getClass(data)
+		if (type === 'Object') {
+			return objToJSON(data)
+		} else if (type === 'Array') {
+			data.map((i, _i) => {
+				data[_i] = objToJSON(i)
+			})
+			return data
+		}
 	}
+}
+
+function objToJSON(obj) {
+	var da = obj.dataValues
+	if (da.custemItems) da.custemItems = JSON.parse(da.custemItems)
+	if (da.modelItems)  da.modelItems  = JSON.parse(da.modelItems)
+	if (da.header)    da.header    = JSON.parse(da.header)
+	if (da.footer)    da.footer    = JSON.parse(da.footer)
+	if (da.createdAt) da.createdAt = Tools.formatDate(da.createdAt)
+	if (da.updatedAt) da.updatedAt = Tools.formatDate(da.updatedAt)
+	if (da.startTime) da.startTime = Tools.formatDate(da.startTime)
+	if (da.endTime)   da.endTime   = Tools.formatDate(da.endTime)
+	if (da.levelName) da.levelName = Mapping.level[da.level] || Mapping.level[0]
+	return da
 }
 
 module.exports = Tools

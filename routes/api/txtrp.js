@@ -72,7 +72,7 @@ router.post('/releaseTxtRP', (req, res, next) => {
 		TxtRP.updateTxtRP(id, { active: 1 })
 		TxtRP.getTxtRPCByRpId(id, select, (items, count) => {
 			Cache.set({ key: key, db: 2, data: Tools.sendHandle('0000', {
-					list:  Tools.dateToStr(items),
+					list:  items,
 					total: count
 				}),
 				cb: (e, o) => {
@@ -107,7 +107,7 @@ router.get('/getTxtRPList', (req, res, next) => {
 	TxtRP.getTxtRPList(query, select, function (items, pageInfo) {
 
 		Tools.errHandle('0000', res, {
-			list: Tools.dateToStr(items),
+			list: items,
 			pageInfo: pageInfo
 		})
 	})
@@ -173,7 +173,7 @@ router.get('/getTxtRPCList', (req, res, next) => {
 	var select = ['rpId', 'title', 'createdAt', 'updatedAt']
 	TxtRP.getTxtRPCList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
-			list: Tools.dateToStr(items),
+			list: items,
 			pageInfo: pageInfo
 		})
 	})

@@ -13,6 +13,18 @@ const tpl       = swig.compileFile('template/t0.html', { autoescape: false })
 const tprev     = swig.compileFile('template/tp.html', { autoescape: false })
 
 // 创建推荐位
+router.get('/get', (req, res, next) => {
+	var q      = req.query,
+		id     = q.id,
+		userId = req.signedCookies.id
+
+	Temp.getTempByQuery({
+		'id':  id
+	}, function (item) {
+		if (!item) return Tools.errHandle('0128', res)
+		Tools.errHandle('0000', res, item)
+	})
+})
 router.post('/addTemp', (req, res, next) => {
 	var id   = req.signedCookies.id,
 		body = req.body,
@@ -73,7 +85,7 @@ router.get('/getTempList', (req, res, next) => {
 	Temp.getTempList(query, select, function (items, pageInfo) {
 
 		Tools.errHandle('0000', res, {
-			list: Tools.dateToStr(items),
+			list: items,
 			pageInfo: pageInfo
 		})
 	})
@@ -81,6 +93,24 @@ router.get('/getTempList', (req, res, next) => {
 
 
 // 创建推荐位内容
+router.get('/getC', (req, res, next) => {
+	var q      = req.query,
+		id     = q.id,
+		tempId = q.tempId,
+		userId = req.signedCookies.id
+
+	Temp.getTempCByQuery({
+		tempId: tempId,
+		id: id
+	}, function(o) {
+		var key      = o.key,
+			pathname = `tempc/${key}`
+		if (!o) return Tools.permit('对不起！该模板类不存在！', res)
+		getAliyun(o, pathname, res, function(o) {
+			Tools.errHandle('0000', res, o)
+		})
+	})
+})
 router.post('/addTempC', (req, res, next) => {
 	var body   = req.body,
 		id     = req.signedCookies.id,
@@ -116,9 +146,9 @@ router.post('/updateTempC', (req, res, next) => {
 		userId = req.signedCookies.id,
 		tempId = body.tempId,
 		key    = body.key,
-		html   = body.html? decodeURIComponent(body.html): '',
-		css    = body.css?  decodeURIComponent(body.css):  '',
-		js     = body.js?   decodeURIComponent(body.js):   '',
+		html   = body.html || '',
+		css    = body.css  || '',
+		js     = body.js   || '',
 		pathname = `tempc/${key}`
 
 	body.custemItems = body.custemItems || []
@@ -161,13 +191,47 @@ router.get('/getTempCList', (req, res, next) => {
 	var select = ['tempId', 'key', 'title', 'preview', 'createdAt', 'updatedAt']
 	Temp.getTempCList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
-			list: Tools.dateToStr(items),
+			list: items,
 			pageInfo: pageInfo
 		})
 	})
 })
+function getAliyun(body, pathname, res, cb) {
+	var len  = 0,
+		now  = 0,
+		html = body.html,
+		css  = body.css,
+		js   = body.js
+	if (html) ++len
+	if (css)  ++len
+	if (js)   ++len
+	if (!len) cb(body)
 
-
+	if (html) {
+		Aliyun.getFile(`${pathname}/0.html`, function(err, result) {
+			if (err) return Tools.errHandle('0105', res)
+			body.html = result
+			++now
+			if (now === len) cb(body)
+		})
+	}
+	if (css) {
+		Aliyun.getFile(`${pathname}/0.css`, function(err, result) {
+			if (err) return Tools.errHandle('0106', res)
+			body.css = result
+			++now
+			if (now === len) cb(body)
+		})
+	}
+	if (js) {
+		Aliyun.getFile(`${pathname}/0.js`, function(err, result) {
+			if (err) return Tools.errHandle('0107', res)
+			body.js = result
+			++now
+			if (now === len) cb(body)
+		})
+	}
+}
 function uploadAliyun(html, css, js, pathname, body, res, cb) {
 	var len = 0, now = 0
 	body.html = body.css = body.js = ''

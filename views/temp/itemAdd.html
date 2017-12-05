@@ -24,13 +24,16 @@
 					<i-input v-model="formValidate.title" type="text" placeholder="(不超过30个字)" :maxlength="30"></i-input>
 				</Form-item>
 				<Form-item label="CSS">
-					<div id="edit_css"></div>
+					<!-- <div id="edit_css"></div> -->
+					<i-input v-model="formValidate.css" type="textarea" :rows="6" placeholder="(不超过10000个字)" :maxlength="10000"></i-input>
 				</Form-item>
 				<Form-item label="HTML">
-					<div id="edit_html"></div>
+					<!-- <div id="edit_html"></div> -->
+					<i-input v-model="formValidate.html" type="textarea" :rows="6" placeholder="(不超过10000个字)" :maxlength="10000"></i-input>
 				</Form-item>
 				<Form-item label="JS">
-					<div id="edit_js"></div>
+					<i-input v-model="formValidate.js" type="textarea" :rows="6" placeholder="(不超过10000个字)" :maxlength="10000"></i-input>
+					<!-- <div id="edit_js"></div> -->
 				</Form-item>
 
 				<Form-item
@@ -72,29 +75,9 @@
 {% endblock %}
 
 {% block js %}
-<script>
-var ITEM = {
-	key:    '[[item.key]]',
-	name:   '[[item.name]]',
-	tempId: [[item.id]],
-	description: '[[item.description]]'
-},
-tempcInfo = {
-	id:      '[[tempcInfo.id]]',
-	key:     '[[tempcInfo.key]]',
-	title:   '[[tempcInfo.title]]',
-	html:    '[[tempcInfo.html]]',
-	css:     '[[tempcInfo.css]]',
-	js:      '[[tempcInfo.js]]',
-	preview: '[[tempcInfo.preview]]',
-	custemItems: {% autoescape false %}'[[tempcInfo.custemItems]]'{% endautoescape %}
-}
-if (tempcInfo.tempId) tempcInfo.tempId = tempcInfo.tempId
-if (tempcInfo.custemItems) tempcInfo.custemItems = JSON.parse(tempcInfo.custemItems)
-</script>
 <script src="/js/util/iview/iview.min.js"></script>
-<script src="/js/util/ckeditor/ckeditor.js"></script>
+<!-- <script src="/js/util/ckeditor/ckeditor.js"></script>
 <script src="/js/util/ueditor/ueditor.config.null.js"></script>
-<script src="/js/util/ueditor/ueditor.all.js"></script>
+<script src="/js/util/ueditor/ueditor.all.js"></script> -->
 <script src="/js/temp/itemAdd.js"></script>
 {% endblock %}

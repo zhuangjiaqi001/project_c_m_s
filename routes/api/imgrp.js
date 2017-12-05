@@ -72,7 +72,7 @@ router.post('/releaseImgRP', (req, res, next) => {
 		ImgRP.updateImgRP(id, { active: 1 })
 		ImgRP.getImgRPCByRpId(id, select, (items, count) => {
 			Cache.set({ key: key, db: 1, data: Tools.sendHandle('0000', {
-					list:  Tools.dateToStr(items),
+					list:  items,
 					total: count
 				}),
 				cb: (e, o) => {
@@ -107,7 +107,7 @@ router.get('/getImgRPList', (req, res, next) => {
 	ImgRP.getImgRPList(query, select, function (items, pageInfo) {
 
 		Tools.errHandle('0000', res, {
-			list: Tools.dateToStr(items),
+			list: items,
 			pageInfo: pageInfo
 		})
 	})
@@ -170,7 +170,7 @@ router.get('/getImgRPCList', (req, res, next) => {
 	var select = ['rpId', 'title', 'imageUrl', 'createdAt', 'updatedAt']
 	ImgRP.getImgRPCList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
-			list: Tools.dateToStr(items),
+			list: items,
 			pageInfo: pageInfo
 		})
 	})

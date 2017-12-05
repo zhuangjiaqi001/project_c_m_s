@@ -18,9 +18,9 @@ const Tools  = require('../common/tools')
  */
 exports.getImgRPList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
-	ImgRP.findAndCountAll(qs.opts).then(function(users) {
-		cb(users.rows, {
-			total: users.count,
+	ImgRP.findAndCountAll(qs.opts).then(function(items) {
+		cb(Tools.dataToJSON(items.rows), {
+			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
 		})
@@ -31,7 +31,7 @@ exports.getImgRPList = function(query, select, cb) {
  * 根据内容创建推荐位
  * Callback:
  * - err, 数据库异常
- * - users, 用户列表
+ * - items, 用户列表
  * @param {String}   key 推荐位KEY
  * @param {String}   name 推荐位名称
  * @param {String}   description 推荐位备注
@@ -91,7 +91,7 @@ exports.removeImgRP = function (id, cb) {
  */
 exports.getImgRPByQuery = function (query, cb) {
 	return ImgRP.findOne({ where: query }).then(item => {
-		cb(item? item.dataValues: null)
+		cb(item? Tools.dataToJSON(item): null)
 	})
 }
 
@@ -105,7 +105,7 @@ exports.getImgRPByQuery = function (query, cb) {
  */
 exports.getImgRPById = function (id, cb) {
 	ImgRP.findById(id).then(item => {
-		cb(item? item.dataValues: null)
+		cb(item? Tools.dataToJSON(item): null)
 	})
 }
 
@@ -121,9 +121,9 @@ exports.getImgRPById = function (id, cb) {
  */
 exports.getImgRPCList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
-	ImgRPC.findAndCountAll(qs.opts).then(function(users) {
-		cb(users.rows, {
-			total: users.count,
+	ImgRPC.findAndCountAll(qs.opts).then(function(items) {
+		cb(Tools.dataToJSON(items.rows), {
+			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
 		})
@@ -132,7 +132,7 @@ exports.getImgRPCList = function(query, select, cb) {
 // 根据条件查找推荐位内容
 exports.getImgRPCByQuery = function (query, cb) {
 	return ImgRPC.findOne({ where: query }).then(item => {
-		cb(item? item.dataValues: null)
+		cb(item? Tools.dataToJSON(item): null)
 	})
 }
 
@@ -141,7 +141,7 @@ exports.getImgRPCByRpId = function(rpId, select, cb) {
 		where: { rpId: rpId },
 		attributes:  select
 	}).then(function(items) {
-		cb(items.rows, items.count)
+		cb(Tools.dataToJSON(items.rows), items.count)
 	})
 };
 
@@ -150,7 +150,7 @@ exports.getImgRPCByRpId = function(rpId, select, cb) {
  * 根据内容创建推荐位
  * Callback:
  * - err, 数据库异常
- * - users, 用户列表
+ * - items, 用户列表
  * @param {String}   key 推荐位KEY
  * @param {String}   name 推荐位名称
  * @param {String}   description 推荐位备注
@@ -161,7 +161,7 @@ exports.getImgRPCByRpId = function(rpId, select, cb) {
 exports.addImgRPC = function (opts, cb) {
 	delete opts.id
 	return ImgRPC.create(opts).then(rpc => {
-		cb(!rpc, rpc.dataValues)
+		cb(rpc? Tools.dataToJSON(rpc): null)
 	})
 }
 exports.updateImgRPC = function (id, opts, cb) {

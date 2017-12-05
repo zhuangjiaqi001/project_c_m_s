@@ -51,9 +51,9 @@ router.get('/list', (req, res, next) => {
 	var query  = req.query
 	var select = ['loginname', 'email', 'level', 'levelName', 'createdAt', 'avatar']
 
-	User.getUserList(query, select, function (users, pageInfo) {
+	User.getUserList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
-			list: Tools.dateToStr(users),
+			list: items,
 			pageInfo: pageInfo
 		})
 	})
@@ -80,10 +80,10 @@ router.post('/update', (req, res, next) => {
 	if (!bodyFilter.length) return Tools.errHandle('0041', res)
 
 	if (nid && mid != nid) {
-		User.getUsersByIds([mid, nid], function (err, users) {
+		User.getUsersByIds([mid, nid], function (err, items) {
 			if (err) return Tools.errHandle('0010', res)
-			var muser  = getUserById(mid, users),
-				nuser  = getUserById(nid, users),
+			var muser  = getUserById(mid, items),
+				nuser  = getUserById(nid, items),
 				mlevel = muser.level,
 				nlevel = nuser.level
 
@@ -102,9 +102,9 @@ router.post('/update', (req, res, next) => {
 	}
 })
 
-function getUserById(id, users) {
+function getUserById(id, items) {
 	var o = ''
-	users.map((_) => {
+	items.map((_) => {
 		if (id === _.id) o = _
 	})
 	return o

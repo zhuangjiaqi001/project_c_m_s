@@ -18,9 +18,9 @@ const Tools  = require('../common/tools')
  */
 exports.getPageList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
-	Page.findAndCountAll(qs.opts).then(function(users) {
-		cb(users.rows, {
-			total: users.count,
+	Page.findAndCountAll(qs.opts).then(function(items) {
+		cb(Tools.dataToJSON(items.rows), {
+			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
 		})
@@ -31,7 +31,7 @@ exports.getPageList = function(query, select, cb) {
  * 根据内容创建推荐位
  * Callback:
  * - err, 数据库异常
- * - users, 用户列表
+ * - items, 用户列表
  * @param {String}   key 推荐位KEY
  * @param {String}   name 推荐位名称
  * @param {String}   description 推荐位备注
@@ -89,7 +89,7 @@ exports.removePage = function (id, cb) {
  */
 exports.getPageByQuery = function (query, cb) {
 	return Page.findOne({ where: query }).then(item => {
-		cb(item? item.dataValues: null)
+		cb(item? Tools.dataToJSON(items): null)
 	})
 }
 
@@ -103,7 +103,7 @@ exports.getPageByQuery = function (query, cb) {
  */
 exports.getPageById = function (id, cb) {
 	Page.findById(id).then(item => {
-		cb(item? item.dataValues: null)
+		cb(item? Tools.dataToJSON(items): null)
 	})
 }
 
@@ -119,9 +119,9 @@ exports.getPageById = function (id, cb) {
  */
 exports.getPageCList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
-	PageC.findAndCountAll(qs.opts).then(function(users) {
-		cb(users.rows, {
-			total: users.count,
+	PageC.findAndCountAll(qs.opts).then(function(items) {
+		cb(Tools.dataToJSON(items.rows), {
+			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
 		})
@@ -130,7 +130,7 @@ exports.getPageCList = function(query, select, cb) {
 // 根据条件查找推荐位内容
 exports.getPageCByQuery = function (query, cb) {
 	return PageC.findOne({ where: query }).then(item => {
-		cb(item? item.dataValues: null)
+		cb(item? Tools.dataToJSON(items): null)
 	})
 }
 
@@ -139,7 +139,7 @@ exports.getPageCById = function(id, select, cb) {
 		where: { id: id },
 		attributes:  select
 	}).then(item => {
-		cb(item? item.dataValues: null)
+		cb(item? Tools.dataToJSON(item): null)
 	})
 };
 
@@ -148,7 +148,7 @@ exports.getPageCById = function(id, select, cb) {
  * 根据内容创建推荐位
  * Callback:
  * - err, 数据库异常
- * - users, 用户列表
+ * - items, 用户列表
  * @param {String}   key 推荐位KEY
  * @param {String}   name 推荐位名称
  * @param {String}   description 推荐位备注

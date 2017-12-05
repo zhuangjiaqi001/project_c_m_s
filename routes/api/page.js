@@ -73,7 +73,7 @@ router.get('/getPageList', (req, res, next) => {
 	Page.getPageList(query, select, function (items, pageInfo) {
 
 		Tools.errHandle('0000', res, {
-			list: Tools.dateToStr(items),
+			list: items,
 			pageInfo: pageInfo
 		})
 	})
@@ -188,7 +188,7 @@ router.get('/getPageCList', (req, res, next) => {
 	var select = ['pageId', 'key', 'title', 'url', 'active', 'createdAt', 'updatedAt']
 	Page.getPageCList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
-			list: Tools.dateToStr(items),
+			list: items,
 			pageInfo: pageInfo
 		})
 	})

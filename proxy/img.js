@@ -15,7 +15,7 @@ const Tools  = require('../common/tools')
 exports.getImgList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
 	Img.findAndCountAll(qs.opts).then(function(items) {
-		cb(items.rows, {
+		cb(Tools.dataToJSON(items.rows), {
 			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit

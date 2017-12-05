@@ -18,9 +18,9 @@ const Tools  = require('../common/tools')
  */
 exports.getTempList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
-	Temp.findAndCountAll(qs.opts).then(function(users) {
-		cb(users.rows, {
-			total: users.count,
+	Temp.findAndCountAll(qs.opts).then(function(items) {
+		cb(Tools.dataToJSON(items.rows), {
+			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
 		})
@@ -59,7 +59,6 @@ exports.updateTemp = function (id, opts, cb) {
 exports.removeTemp = function (id, cb) {
 	Temp.findById(id).then(item => {
 		item.getTempC().then(rpc => {
-			console.log(rpc)
 			var l = rpc.length
 			if (l) {
 				var ids = []
@@ -90,7 +89,7 @@ exports.removeTemp = function (id, cb) {
  */
 exports.getTempByQuery = function (query, cb) {
 	return Temp.findOne({ where: query }).then(item => {
-		cb(item? item.dataValues: null)
+		cb(item? Tools.dataToJSON(item): null)
 	})
 }
 
@@ -104,7 +103,7 @@ exports.getTempByQuery = function (query, cb) {
  */
 exports.getTempById = function (id, cb) {
 	Temp.findById(id).then(item => {
-		cb(item? item.dataValues: null)
+		cb(item? Tools.dataToJSON(item): null)
 	})
 }
 
@@ -120,9 +119,9 @@ exports.getTempById = function (id, cb) {
  */
 exports.getTempCList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
-	TempC.findAndCountAll(qs.opts).then(function(users) {
-		cb(users.rows, {
-			total: users.count,
+	TempC.findAndCountAll(qs.opts).then(function(items) {
+		cb(Tools.dataToJSON(items.rows), {
+			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
 		})
@@ -131,7 +130,7 @@ exports.getTempCList = function(query, select, cb) {
 // 根据条件查找推荐位内容
 exports.getTempCByQuery = function (query, cb) {
 	return TempC.findOne({ where: query }).then(item => {
-		cb(item? item.dataValues: null)
+		cb(item? Tools.dataToJSON(item): null)
 	})
 }
 
@@ -140,7 +139,7 @@ exports.getTempCByRpId = function(tempId, select, cb) {
 		where: { tempId: tempId },
 		attributes:  select
 	}).then(function(items) {
-		cb(items.rows, items.count)
+		cb(Tools.dataToJSON(items.rows), items.count)
 	})
 };
 
@@ -151,7 +150,7 @@ exports.getTempCByRpIds = function(ids, select, cb) {
 		},
 		attributes:  select
 	}).then(function(items) {
-		cb(items.rows, items.count)
+		cb(Tools.dataToJSON(items.rows), items.count)
 	})
 };
 

@@ -177,6 +177,11 @@ if (!global.CMS) {
 				if (org[v]) now[v] = org[v]
 			}
 		},
+		merge2: function(org, now) {
+			for (var v in org) {
+				if (now[v]) org[v] = now[v]
+			}
+		},
 		// 获取列表
 		getDataList: function(api, path) {
 			var data = path? VM.data[path]: VM.data

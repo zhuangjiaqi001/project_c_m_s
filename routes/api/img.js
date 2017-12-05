@@ -15,7 +15,7 @@ router.get('/list', (req, res, next) => {
 	query.userId = userId
 	Img.getImgList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
-			list: Tools.dateToStr(items),
+			list: items,
 			pageInfo: pageInfo
 		})
 	})

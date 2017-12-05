@@ -1,16 +1,25 @@
 (function(global, VM, CMS) {
-	var API = tempcInfo.id? '/temp/updateTempC': '/temp/addTempC'
+	var API = {
+		get:    '/temp/getC',
+		submit: '/temp/addTempC'
+	},
+	mt = location.pathname.match(/temp\/(\d+)\/edit\/(\d+)/),
+	id     = mt? mt[1]: '',
+	tempId = mt? mt[2]: ''
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
 			formValidate: {
-				tempId:      ITEM.tempId,
-				id:          tempcInfo.id || '',
-				key:         tempcInfo.key,
-				name:        ITEM.name,
-				description: ITEM.description,
-				custemItems: tempcInfo.custemItems || [],
-				title:       tempcInfo.title
+				tempId:      tempId || '',
+				id:          id     || '',
+				key:         '',
+				name:        '',
+				description: '',
+				custemItems: [],
+				title:       '',
+				html:        '',
+				css:         '',
+				js:          ''
 			},
 			ruleValidate: {
 				key: [
@@ -53,16 +62,11 @@
 					fv = me.formValidate
 				me.$refs[name].validate((valid) => {
 					CMS.dateToStr(fv.custemItems)
-					console.log(fv)
-					fv.css  = encodeURIComponent(css.getContentTxt()).trim()
-					fv.html = encodeURIComponent(html.getContentTxt()).trim()
-					fv.js   = encodeURIComponent(js.getContentTxt()).trim()
-					debugger
 					if (valid) {
-						CMS.http.post(API, fv, function(o) {
+						CMS.http.post(API.submit, fv, function(o) {
 							console.log(o)
 							VUE.$Message.success('创建成功!')
-							location.href = '/temp/' + ITEM.tempId
+							location.href = '/temp/' + tempId
 						}, function(err) {
 							VUE.$Message.warning(err.message)
 							console.log(err)
@@ -72,37 +76,20 @@
 					}
 				})
 			},
-			load: function() {
+			getTempC: function() {
 				var me = this
-				global.css  = CMS.ueditor('edit_css')
-				global.html = CMS.ueditor('edit_html')
-				global.js   = CMS.ueditor('edit_js')
-				global.css.execCommand('source')
-				global.html.execCommand('source')
-				global.js.execCommand('source')
-				if (me.pageinfo.isEdit) {
-					me.initHTML()
-					me.initCSS()
-					me.initJS()
+				CMS.http.get(API.get, { id: id, tempId: tempId }, function(o) {
+					CMS.merge2(me.formValidate, o.data)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
+			load: function() {
+				if (this.pageinfo.isEdit) {
+					API.submit = '/temp/updateTempC'
+					this.getTempC()
 				}
-			},
-			initHTML: function() {
-				if(!tempcInfo.html) return
-				global.html.ready(function(){
-					global.html.setContent(tempcInfo.html)
-				})
-			},
-			initCSS: function() {
-				if(!tempcInfo.css) return
-				global.css.ready(function(){
-					global.css.setContent(tempcInfo.css)
-				})
-			},
-			initJS: function() {
-				if(!tempcInfo.js) return
-				global.js.ready(function(){
-					global.js.setContent(tempcInfo.js)
-				})
 			}
 		}
 	}))
