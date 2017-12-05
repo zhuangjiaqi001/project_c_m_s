@@ -1,3 +1,4 @@
+const Tools = require('../common/tools')
 module.exports = function(sequelize, DataTypes) {
 	// 推荐位内容列表数据
 	const ImgRPC = sequelize.define('cms_img_rpc', {
@@ -20,14 +21,18 @@ module.exports = function(sequelize, DataTypes) {
 		url:          { type: DataTypes.STRING, comment: '链接地址' },
 		startTime:    { type: DataTypes.STRING, comment: '开始时间' },
 		endTime:      { type: DataTypes.STRING, comment: '结束时间' },
-		custemItems:  { type: DataTypes.STRING,   comment: '自定义字段' }
+		custemItems:  { type: DataTypes.STRING, comment: '自定义字段' }
 	}, {
-		freezeTableName: false
-		// freezeTableName: true,
-		// tableName: 'cms_img_rpc',
-		// comment: '图片推荐位信息',
-		// charset: 'utf8',
-		// collate: 'utf8_general_ci',
+		freezeTableName: false,
+		setterMethods: {
+			custemItems: function(val) {
+				return this.setDataValue('custemItems', JSON.stringify(val))
+			}
+		},
+	})
+
+	ImgRPC.afterFind(function(val) {
+		return Tools.dataToJSON(val)
 	})
 
 	return ImgRPC

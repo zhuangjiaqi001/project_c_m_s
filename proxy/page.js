@@ -19,7 +19,7 @@ const Tools  = require('../common/tools')
 exports.getPageList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
 	Page.findAndCountAll(qs.opts).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), {
+		cb(items.rows, {
 			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
@@ -89,7 +89,7 @@ exports.removePage = function (id, cb) {
  */
 exports.getPageByQuery = function (query, cb) {
 	return Page.findOne({ where: query }).then(item => {
-		cb(item? Tools.dataToJSON(items): null)
+		cb(item? items: null)
 	})
 }
 
@@ -103,7 +103,7 @@ exports.getPageByQuery = function (query, cb) {
  */
 exports.getPageById = function (id, cb) {
 	Page.findById(id).then(item => {
-		cb(item? Tools.dataToJSON(items): null)
+		cb(item? item: null)
 	})
 }
 
@@ -120,7 +120,7 @@ exports.getPageById = function (id, cb) {
 exports.getPageCList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
 	PageC.findAndCountAll(qs.opts).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), {
+		cb(items.rows, {
 			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
@@ -130,7 +130,7 @@ exports.getPageCList = function(query, select, cb) {
 // 根据条件查找推荐位内容
 exports.getPageCByQuery = function (query, cb) {
 	return PageC.findOne({ where: query }).then(item => {
-		cb(item? Tools.dataToJSON(items): null)
+		cb(item? item: null)
 	})
 }
 
@@ -139,7 +139,7 @@ exports.getPageCById = function(id, select, cb) {
 		where: { id: id },
 		attributes:  select
 	}).then(item => {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 };
 
@@ -158,12 +158,11 @@ exports.getPageCById = function(id, select, cb) {
  */
 exports.addPageC = function (opts, cb) {
 	delete opts.id
-	opts.custemItems = JSON.stringify(opts.custemItems || [])
 
 	if (opts.modelItems) {
 		var mod = []
 		opts.modelItems.map(function(i) { mod.push(i.id) })
-		opts.modelItems = JSON.stringify(Tools.unique(mod))
+		opts.modelItems = Tools.unique(mod)
 	}
 	if (opts.header) opts.header = opts.header.id
 	if (opts.footer) opts.footer = opts.footer.id
@@ -173,12 +172,10 @@ exports.addPageC = function (opts, cb) {
 	})
 }
 exports.updatePageC = function (id, opts, cb) {
-	opts.custemItems = JSON.stringify(opts.custemItems)
-	
 	if (opts.modelItems) {
 		var mod = []
 		opts.modelItems.map(function(i) { mod.push(i.id) })
-		opts.modelItems = JSON.stringify(Tools.unique(mod))
+		opts.modelItems = Tools.unique(mod)
 	}
 	if (opts.header) opts.header = opts.header.id
 	if (opts.footer) opts.footer = opts.footer.id

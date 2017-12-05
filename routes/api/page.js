@@ -200,7 +200,7 @@ function datafilter(item, select, res, cb) {
 		Temp.getTempCByRpIds(ids, ['id', 'title', 'html', 'css', 'js', 'custemItems'], function(items, count) {
 			var temps = {}, js = [], css = []
 			items.map(function(i) {
-				temps[i.dataValues.id] = i.dataValues
+				temps[i.id] = i
 			})
 			if (item.html) temps['body'] = { html: item.html }
 			getAliyunHTML(temps, res, function(temps) {
@@ -223,8 +223,7 @@ function datafilter(item, select, res, cb) {
 }
 // 模块过滤
 function modelfilter(obj, js, css) {
-	var cis  = obj.custemItems,
-	cis = JSON.parse(cis)
+	var cis  = obj.custemItems
 	if (cis.length) {
 		cis.map(function(i) {
 			js.push(jsframe[i.name])
@@ -294,8 +293,8 @@ function createPage(body, res, cb) {
 		css:     body.css,
 		js:      body.js,
 		model:   body.modelItems,
-		header:  body.header.html || '',
-		footer:  body.footer.html || '',
+		header:  body.header? body.header.html || '': '',
+		footer:  body.footer? body.footer.html || '': '',
 		width:   body.width || '1000'
 	})
 	cb && cb(prev)

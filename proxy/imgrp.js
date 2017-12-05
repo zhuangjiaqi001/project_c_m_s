@@ -19,7 +19,7 @@ const Tools  = require('../common/tools')
 exports.getImgRPList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
 	ImgRP.findAndCountAll(qs.opts).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), {
+		cb(items.rows, {
 			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
@@ -44,7 +44,7 @@ exports.addImgRP = function (key, name, description, custemItems, id, cb) {
 		key: key,
 		name: name,
 		description: description,
-		custemItems: JSON.stringify(custemItems),
+		custemItems: custemItems,
 		userId: id,
 		hash: Tools.hmac(key)
 	}
@@ -91,7 +91,7 @@ exports.removeImgRP = function (id, cb) {
  */
 exports.getImgRPByQuery = function (query, cb) {
 	return ImgRP.findOne({ where: query }).then(item => {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 }
 
@@ -105,7 +105,7 @@ exports.getImgRPByQuery = function (query, cb) {
  */
 exports.getImgRPById = function (id, cb) {
 	ImgRP.findById(id).then(item => {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 }
 
@@ -122,7 +122,7 @@ exports.getImgRPById = function (id, cb) {
 exports.getImgRPCList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
 	ImgRPC.findAndCountAll(qs.opts).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), {
+		cb(items.rows, {
 			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
@@ -132,7 +132,7 @@ exports.getImgRPCList = function(query, select, cb) {
 // 根据条件查找推荐位内容
 exports.getImgRPCByQuery = function (query, cb) {
 	return ImgRPC.findOne({ where: query }).then(item => {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 }
 
@@ -141,7 +141,7 @@ exports.getImgRPCByRpId = function(rpId, select, cb) {
 		where: { rpId: rpId },
 		attributes:  select
 	}).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), items.count)
+		cb(items.rows, items.count)
 	})
 };
 
@@ -161,7 +161,7 @@ exports.getImgRPCByRpId = function(rpId, select, cb) {
 exports.addImgRPC = function (opts, cb) {
 	delete opts.id
 	return ImgRPC.create(opts).then(rpc => {
-		cb(rpc? Tools.dataToJSON(rpc): null)
+		cb(rpc? rpc: null)
 	})
 }
 exports.updateImgRPC = function (id, opts, cb) {

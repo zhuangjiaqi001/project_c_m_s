@@ -3,9 +3,9 @@
 		get:    '/temp/getC',
 		submit: '/temp/addTempC'
 	},
-	mt = location.pathname.match(/temp\/(\d+)\/edit\/(\d+)/),
-	id     = mt? mt[1]: '',
-	tempId = mt? mt[2]: ''
+	mt = location.pathname.match(/temp\/(\d+)\/(add|edit)\/?(\d+)?$/),
+	tempId = mt? mt[1]: '',
+	id     = mt? mt[3]: ''
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {

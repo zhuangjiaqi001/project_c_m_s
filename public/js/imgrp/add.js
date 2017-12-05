@@ -1,15 +1,20 @@
 (function(global, VM, CMS) {
-	var API = rpInfo.id? '/imgrp/updateImgRP': '/imgrp/addImgRP'
+	var API = {
+		get:    '/imgrp/get',
+		submit: '/imgrp/addImgRP'
+	},
+	id = location.pathname.match(/edit\/(\d+)/)
+	id = id? id[1]: ''
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
 			birthday: '',
 			formValidate: {
-				id:   rpInfo.id,
-				key:  rpInfo.key,
-				name: rpInfo.name,
-				description: rpInfo.description,
-				custemItems: rpInfo.custemItems || []
+				id:   id,
+				key:  '',
+				name: '',
+				description: '',
+				custemItems: []
 			},
 			ruleValidate: {
 				key: [
@@ -44,7 +49,7 @@
 				this.$refs[name].validate((valid) => {
 					if (valid) {
 						console.log(this.formValidate)
-						CMS.http.post(API, this.formValidate, function(o) {
+						CMS.http.post(API.submit, this.formValidate, function(o) {
 							VUE.$Message.success('提交成功!')
 							location.href = '/imgrp'
 						}, function(err) {
@@ -58,6 +63,21 @@
 			},
 			handleReset: function(name) {
 				this.$refs[name].resetFields()
+			},
+			getData: function() {
+				var me = this
+				CMS.http.get(API.get, { id: id }, function(o) {
+					CMS.merge2(me.formValidate, o.data)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
+			load: function() {
+				if (this.pageinfo.isEdit) {
+					API.submit = '/imgrp/updateImgRP'
+					this.getData()
+				}
 			}
 		}
 	}))

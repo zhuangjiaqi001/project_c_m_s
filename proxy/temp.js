@@ -19,7 +19,7 @@ const Tools  = require('../common/tools')
 exports.getTempList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
 	Temp.findAndCountAll(qs.opts).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), {
+		cb(items.rows, {
 			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
@@ -89,7 +89,7 @@ exports.removeTemp = function (id, cb) {
  */
 exports.getTempByQuery = function (query, cb) {
 	return Temp.findOne({ where: query }).then(item => {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 }
 
@@ -103,7 +103,7 @@ exports.getTempByQuery = function (query, cb) {
  */
 exports.getTempById = function (id, cb) {
 	Temp.findById(id).then(item => {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 }
 
@@ -120,7 +120,7 @@ exports.getTempById = function (id, cb) {
 exports.getTempCList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
 	TempC.findAndCountAll(qs.opts).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), {
+		cb(items.rows, {
 			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
@@ -130,7 +130,7 @@ exports.getTempCList = function(query, select, cb) {
 // 根据条件查找推荐位内容
 exports.getTempCByQuery = function (query, cb) {
 	return TempC.findOne({ where: query }).then(item => {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 }
 
@@ -139,7 +139,7 @@ exports.getTempCByRpId = function(tempId, select, cb) {
 		where: { tempId: tempId },
 		attributes:  select
 	}).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), items.count)
+		cb(items.rows, items.count)
 	})
 };
 
@@ -150,7 +150,7 @@ exports.getTempCByRpIds = function(ids, select, cb) {
 		},
 		attributes:  select
 	}).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), items.count)
+		cb(items.rows, items.count)
 	})
 };
 
@@ -169,13 +169,11 @@ exports.getTempCByRpIds = function(ids, select, cb) {
  */
 exports.addTempC = function (opts, cb) {
 	delete opts.id
-	opts.custemItems = JSON.stringify(opts.custemItems)
 	return TempC.create(opts).then(rpc => {
 		cb(!rpc, rpc.dataValues)
 	})
 }
 exports.updateTempC = function (id, opts, cb) {
-	opts.custemItems = JSON.stringify(opts.custemItems)
 	return TempC.update(opts, { where: { id: id } }).then(rp => {
 		cb(!rp, rp[0])
 	})

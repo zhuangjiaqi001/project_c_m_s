@@ -36,9 +36,9 @@
 					render: (row, column, index) => {
 						return `<a class="text-blue" href="/page/${row.pageId}/edit/${row.id}">编辑</a>
 								<a class="text-blue" @click="handleModal(`+(row.active? `'refresh'`: `'release'`)+`, row.id)">`+(row.active? `刷新`: `发布`)+`</a>
-								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a> `+
-								(row.active? `<a class="text-blue" @click="handleModal('offline', row.id)">下线</a>`: ``) +
-								(row.preview? `<a class="text-blue" target="_blank" href="${row.preview}">预览</a>`: ``)
+								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a>`+
+								(row.active? ` <a class="text-blue" @click="handleModal('offline', row.id)">下线</a>`: ``) +
+								(row.url? ` <a class="text-blue" target="_blank" href="${row.url}">链接</a>`: ``)
 					}
 				}
 			],
@@ -106,8 +106,6 @@
 				CMS.http.post(API.release, { id: this.pageId }, function(o) {
 					console.log(o)
 					VUE.$Message.success('成功!')
-					VUE.Modal = true
-					VUE.ModalName = 'link'
 					CMS.getDataList(API.list)
 				}, function(err) {
 					VUE.$Message.warning(err.message)

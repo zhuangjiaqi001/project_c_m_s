@@ -1,3 +1,4 @@
+const Tools = require('../common/tools')
 module.exports = function(sequelize, DataTypes) {
 	// 推荐位列表数据
 	const ImgRP = sequelize.define('cms_img_rp', {
@@ -13,12 +14,16 @@ module.exports = function(sequelize, DataTypes) {
 		hash:         { type: DataTypes.STRING, comment: 'KEY对应的HASH' },
 		active:       { type: DataTypes.BOOLEAN, defaultValue: false, comment: '是否激活' }
 	}, {
-		freezeTableName: false
-		// freezeTableName: true,
-		// tableName: 'cms_img_rp',
-		// comment: '图片推荐位',
-		// charset: 'utf8',
-		// collate: 'utf8_general_ci'
+		freezeTableName: false,
+		setterMethods: {
+			custemItems: function(val) {
+				return this.setDataValue('custemItems', JSON.stringify(val))
+			}
+		},
+	})
+
+	ImgRP.afterFind(function(val) {
+		return Tools.dataToJSON(val)
 	})
 
 	return ImgRP

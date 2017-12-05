@@ -19,7 +19,7 @@ const Tools  = require('../common/tools')
 exports.getTxtRPList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
 	TxtRP.findAndCountAll(qs.opts).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), {
+		cb(items.rows, {
 			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
@@ -44,7 +44,7 @@ exports.addTxtRP = function (key, name, description, custemItems, id, cb) {
 		key: key,
 		name: name,
 		description: description,
-		custemItems: JSON.stringify(custemItems),
+		custemItems: custemItems,
 		userId: id,
 		hash: Tools.hmac(key)
 	}
@@ -91,7 +91,7 @@ exports.removeTxtRP = function (id, cb) {
  */
 exports.getTxtRPByQuery = function (query, cb) {
 	return TxtRP.findOne({ where: query }).then(item => {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 }
 
@@ -105,7 +105,7 @@ exports.getTxtRPByQuery = function (query, cb) {
  */
 exports.getTxtRPById = function (id, cb) {
 	TxtRP.findById(id).then(item => {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 }
 
@@ -122,7 +122,7 @@ exports.getTxtRPById = function (id, cb) {
 exports.getTxtRPCList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
 	TxtRPC.findAndCountAll(qs.opts).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), {
+		cb(items.rows, {
 			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
@@ -132,7 +132,7 @@ exports.getTxtRPCList = function(query, select, cb) {
 // 根据条件查找推荐位内容
 exports.getTxtRPCByQuery = function (query, cb) {
 	return TxtRPC.findOne({ where: query }).then(item => {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 }
 
@@ -141,7 +141,7 @@ exports.getTxtRPCByRpId = function(rpId, select, cb) {
 		where: { rpId: rpId },
 		attributes:  select
 	}).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), items.count)
+		cb(items.rows, items.count)
 	})
 };
 

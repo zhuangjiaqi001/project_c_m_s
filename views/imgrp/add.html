@@ -75,17 +75,5 @@
 
 {% block js %}
 <script src="/js/util/iview/iview.min.js"></script>
-<script>
-var rpInfo = {
-	id:   '[[rpInfo.id]]',
-	key:  '[[rpInfo.key]]',
-	name: '[[rpInfo.name]]',
-	description: '[[rpInfo.description]]',
-	custemItems: {% autoescape false %}'[[rpInfo.custemItems]]'{% endautoescape %}
-}
-if (rpInfo.id) rpInfo.id = rpInfo.id*1
-if (rpInfo.custemItems) rpInfo.custemItems = JSON.parse(rpInfo.custemItems)
-console.log(rpInfo)
-</script>
 <script src="/js/imgrp/add.js"></script>
 {% endblock %}

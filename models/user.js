@@ -1,3 +1,4 @@
+const Tools = require('../common/tools')
 module.exports = function(sequelize, DataTypes) {
 	const User = sequelize.define('cms_users', {
 		id:           { type: DataTypes.BIGINT(11), primaryKey : true, autoIncrement: true, unique : true },
@@ -23,11 +24,10 @@ module.exports = function(sequelize, DataTypes) {
 		accessToken:  { type: DataTypes.STRING,  comment: 'token' }
 	}, {
 		freezeTableName: false
-		// freezeTableName: true,
-		// tableName: 'cms_users',
-		// comment: '用户',
-		// charset: 'utf8',
-		// collate: 'utf8_general_ci'
+	})
+
+	User.afterFind(function(val) {
+		return Tools.dataToJSON(val)
 	})
 
 	return User

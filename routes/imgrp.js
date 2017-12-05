@@ -23,14 +23,8 @@ router.get('/add', (req, res, next) => {
 })
 // 编辑
 router.get('/edit/:id', (req, res, next) => {
-	var id = req.params.id
-	ImgRP.getImgRPById(id, function(o) {
-		if (!o) return Tools.permit('对不起！该推荐位不存在！', res)
-		res.render('imgrp/add', {
-			active: active,
-			title: '编辑图片推荐位',
-			rpInfo: o
-		})
+	res.render('imgrp/add', {
+		title: '编辑图片推荐位'
 	})
 })
 

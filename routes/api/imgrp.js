@@ -9,6 +9,16 @@ const rpEdit  = Edit.ImgRP
 const rpcEdit = Edit.ImgRPC
 
 // 创建推荐位
+router.get('/get', (req, res, next) => {
+	var q      = req.query,
+		id     = q.id,
+		userId = req.signedCookies.id
+
+	ImgRP.getImgRPById(id, function (item) {
+		if (!item) return Tools.errHandle('0128', res)
+		Tools.errHandle('0000', res, item)
+	})
+})
 router.post('/addImgRP', (req, res, next) => {
 	var id   = req.signedCookies.id,
 		body = req.body,

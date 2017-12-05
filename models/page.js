@@ -1,3 +1,4 @@
+const Tools = require('../common/tools')
 module.exports = function(sequelize, DataTypes) {
 	// 落地页列表
 	const Page = sequelize.define('cms_page', {
@@ -11,11 +12,6 @@ module.exports = function(sequelize, DataTypes) {
 		description:  { type: DataTypes.STRING, comment: '落地页列表描述' }
 	}, {
 		freezeTableName: false
-		// freezeTableName: true,
-		// tableName: 'cms_page',
-		// comment: '落地页列表管理',
-		// charset: 'utf8',
-		// collate: 'utf8_general_ci'
 	})
 
 	// 落地页内容
@@ -44,12 +40,23 @@ module.exports = function(sequelize, DataTypes) {
 		active:      { type: DataTypes.BOOLEAN, defaultValue: false, comment: '是否激活' },
 		width:       { type: DataTypes.STRING, defaultValue: '1000', comment: '页面宽度' }
 	}, {
-		freezeTableName: false
-		// freezeTableName: true,
-		// tableName: 'cms_page_c',
-		// comment: '落地页内容',
-		// charset: 'utf8',
-		// collate: 'utf8_general_ci'
+		freezeTableName: false,
+		setterMethods: {
+			custemItems: function(val) {
+				return this.setDataValue('custemItems', JSON.stringify(val))
+			},
+			modelItems: function(val) {
+				return this.setDataValue('modelItems', JSON.stringify(val))
+			}
+		},
+	})
+
+	Page.afterFind(function(val) {
+		return Tools.dataToJSON(val)
+	})
+
+	Pagec.afterFind(function(val) {
+		return Tools.dataToJSON(val)
 	})
 
 	return {

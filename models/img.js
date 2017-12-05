@@ -1,3 +1,4 @@
+const Tools = require('../common/tools')
 module.exports = function(sequelize, DataTypes) {
 	const Img = sequelize.define('cms_img', {
 		id:     { type: DataTypes.BIGINT(11), primaryKey : true, autoIncrement: true, unique : true },
@@ -14,6 +15,10 @@ module.exports = function(sequelize, DataTypes) {
 		// comment: '图片',
 		// charset: 'utf8',
 		// collate: 'utf8_general_ci'
+	})
+
+	Img.afterFind(function(val) {
+		return Tools.dataToJSON(val)
 	})
 
 	return Img

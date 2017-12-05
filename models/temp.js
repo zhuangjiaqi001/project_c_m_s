@@ -1,3 +1,4 @@
+const Tools = require('../common/tools')
 module.exports = function(sequelize, DataTypes) {
 	// 模板类列表
 	const Temp = sequelize.define('cms_temp', {
@@ -11,11 +12,6 @@ module.exports = function(sequelize, DataTypes) {
 		description:  { type: DataTypes.STRING,  comment: '模板描述' }
 	}, {
 		freezeTableName: false
-		// freezeTableName: true,
-		// tableName: 'cms_temp',
-		// comment: '模板类管理',
-		// charset: 'utf8',
-		// collate: 'utf8_general_ci'
 	})
 
 	// 模板内容
@@ -39,14 +35,21 @@ module.exports = function(sequelize, DataTypes) {
 		preview:      { type: DataTypes.STRING,  comment: '预览' },
 		description:  { type: DataTypes.STRING,  comment: '模板描述' }
 	}, {
-		freezeTableName: false
-		// freezeTableName: true,
-		// tableName: 'cms_temp_c',
-		// comment: '模板内容',
-		// charset: 'utf8',
-		// collate: 'utf8_general_ci'
+		freezeTableName: false,
+		setterMethods: {
+			custemItems: function(val) {
+				return this.setDataValue('custemItems', JSON.stringify(val))
+			}
+		},
 	})
 
+	Temp.afterFind(function(val) {
+		return Tools.dataToJSON(val)
+	})
+	Tempc.afterFind(function(val) {
+		return Tools.dataToJSON(val)
+	})
+	
 	return {
 		Temp: Temp,
 		Tempc: Tempc

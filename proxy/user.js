@@ -18,7 +18,7 @@ const config  = require('../config')
 exports.getUserList = function(query, select, cb) {
 	var qs = Tools.querySearch(query, select)
 	User.findAndCountAll(qs.opts).then(function(items) {
-		cb(Tools.dataToJSON(items.rows), {
+		cb(items.rows, {
 			total: items.count,
 			current: qs.page,
 			pageSize: qs.opts.limit
@@ -44,7 +44,7 @@ exports.getUserByLogin = function (loginname, password, cb) {
 	else if (isP) query.mobile    = loginname
 	else query.loginname = loginname
 	return User.findOne({ where: query }).then(function(item) {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 }
 
@@ -60,7 +60,7 @@ exports.getUserById = function (id, select, cb) {
 	var opts = { where: { id: id } }
 	if (select.length) opts.attributes = select
 	return User.findOne(opts).then(function(item) {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 }
 
@@ -73,7 +73,7 @@ exports.getUserById = function (id, select, cb) {
  */
 exports.getUserByQuery = function (query, cb) {
 	return User.findOne({ where: query }).then(function(item) {
-		cb(item? Tools.dataToJSON(item): null)
+		cb(item? item: null)
 	})
 }
 
