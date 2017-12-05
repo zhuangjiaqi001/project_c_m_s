@@ -70,7 +70,6 @@ router.get('/:pageId/edit/:id', (req, res, next) => {
 	var params   = req.params,
 		pageId   = params.pageId,
 		id       = params.id,
-		ids      = [],
 		temps    = {}
 	Page.getPageById(pageId, function(o) {
 		if (!o) return Tools.permit('对不起！该落地页列表不存在！', res)
@@ -80,39 +79,36 @@ router.get('/:pageId/edit/:id', (req, res, next) => {
 		}, function(o2) {
 			if (!o2) return Tools.permit('对不起！该落地页列表不存在！', res)
 
-			if (o2.modelItems) {
-				o2.modelItems = JSON.parse(o2.modelItems)
-				ids = JSON.parse(JSON.stringify(o2.modelItems))
-			}
-			if (o2.header) ids.push(o2.header)
-			if (o2.footer) ids.push(o2.footer)
-
-			Temp.getTempCByRpIds(Tools.unique(ids), ['id', 'title'], function(items, count) {
-				items.map(function(i) {
-					temps[i.dataValues.id] = i.dataValues
-				})
-				if (o2.header) o2.header = JSON.stringify(temps[o2.header])
-				if (o2.footer) o2.footer = JSON.stringify(temps[o2.footer])
-				if (o2.modelItems) {
-					var mi = []
-					o2.modelItems.map(function(i) {
-						mi.push(temps[i])
+			Tools.getTempById(o2, function(ids, o2) {
+				Temp.getTempCByRpIds(ids, ['id', 'title'], function(items, count) {
+					items.map(function(i) {
+						temps[i.dataValues.id] = i.dataValues
 					})
-					o2.modelItems = JSON.stringify(mi)
-				}
+					if (o2.header) o2.header = JSON.stringify(temps[o2.header])
+					if (o2.footer) o2.footer = JSON.stringify(temps[o2.footer])
+					if (o2.modelItems) {
+						var mi = []
+						o2.modelItems.map(function(i) {
+							mi.push(temps[i])
+						})
+						o2.modelItems = JSON.stringify(mi)
+					}
 
-				res.render('page/itemAdd', {
-					active: active,
-					title: '编辑内容',
-					item: o,
-					pagecInfo: o2
+					getAliyun(o2, res, function(o2) {
+						res.render('page/itemAdd', {
+							active: active,
+							title: '编辑内容',
+							item: o,
+							pagecInfo: o2
+						})
+					})
 				})
 			})
 		})
 	})
 })
 
-function getAliyun(body, pathname, res, cb) {
+function getAliyun(body, res, cb) {
 	var len  = 0,
 		now  = 0,
 		html = body.html,
@@ -124,7 +120,8 @@ function getAliyun(body, pathname, res, cb) {
 	if (!len) cb(body)
 
 	if (html) {
-		Aliyun.getFile(`${pathname}/0.html`, function(err, result) {
+		var hmt = html.match(/(tempc|pagec)[\S]*html$/)[0]
+		Aliyun.getFile(hmt, function(err, result) {
 			if (err) return Tools.errHandle('0105', res)
 			body.html = result
 			++now
@@ -132,7 +129,8 @@ function getAliyun(body, pathname, res, cb) {
 		})
 	}
 	if (css) {
-		Aliyun.getFile(`${pathname}/0.css`, function(err, result) {
+		var cmt = css.match(/(tempc|pagec)[\S]*css$/)[0]
+		Aliyun.getFile(cmt, function(err, result) {
 			if (err) return Tools.errHandle('0106', res)
 			body.css = result
 			++now
@@ -140,7 +138,8 @@ function getAliyun(body, pathname, res, cb) {
 		})
 	}
 	if (js) {
-		Aliyun.getFile(`${pathname}/0.js`, function(err, result) {
+		var jmt = js.match(/(tempc|pagec)[\S]*js$/)[0]
+		Aliyun.getFile(jmt, function(err, result) {
 			if (err) return Tools.errHandle('0107', res)
 			body.js = result
 			++now

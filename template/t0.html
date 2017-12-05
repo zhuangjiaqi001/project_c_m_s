@@ -10,25 +10,50 @@
 <meta name="viewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
 <meta name="renderer" content="webkit">
 <link rel="shortcut icon" href="/favicon.ico">
-<!-- css -->
+<style>
+.content {
+	width: 1000px;
+	margin: 30px auto;
+	font-size: 16px
+}
+.content p {
+	margin: 5px 0
+}
+.content img {
+	display: inline
+}
+</style>
 {% block css %}{% endblock %}
+{% if css %}
+{% for c in css %}
+{% autoescape false %}
+<link rel="stylesheet" href="[[c]]">
+{% endautoescape %}
+{% endfor %}
+{% endif %}
 </head>
 <body>
 <section>
-	<!-- header start -->
-	{% include "../globel/header.html" ignore missing %}
-	<!-- header end -->
+	[[header]]
 
-	<!-- main-content start -->
-	<section class="content">
-		{% block body %}{% endblock %}
+	<section class="content" style="width: [[width]]px;">[[body]]</section>
+
+	<section class="model">
+		{% if model %}
+		{% for m in model %}
+		{% autoescape false %}[[m.html]]{% endautoescape %}
+		{% endfor %}
+		{% endif %}
 	</section>
-	<!-- main-content end -->
 
-	<!-- footer start -->
-	{% include "../globel/footer.html" ignore missing %}
-	<!-- footer end -->
+	[[footer]]
 </section>
-{% block js %}{% endblock %}
+{% if js %}
+{% for j in js %}
+{% autoescape false %}
+<script src="[[j]]"></script>
+{% endautoescape %}
+{% endfor %}
+{% endif %}
 </body>
 </html>

@@ -204,6 +204,17 @@ var Tools = {
 			}
 		}
 		return res
+	},
+	getTempById: function(body, cb) {
+		var ids = []
+		if (body.modelItems) {
+			body.modelItems = JSON.parse(body.modelItems)
+			ids = JSON.parse(JSON.stringify(body.modelItems))
+		}
+		if (body.header) ids.push(body.header)
+		if (body.footer) ids.push(body.footer)
+
+		cb && cb(Tools.unique(ids), body)
 	}
 }
 

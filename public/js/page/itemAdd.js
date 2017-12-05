@@ -40,17 +40,18 @@
 				custemItems: pagecInfo.custemItems || [],
 				modelItems:  pagecInfo.modelItems  || [],
 				title:       pagecInfo.title,
+				width:       pagecInfo.width || 1000,
 				header:      pagecInfo.header || {},
 				footer:      pagecInfo.footer || {}
 			},
 			ruleValidate: {
-				key: [
-					{ required: true, message: 'KEY不能为空', trigger: 'blur' },
-					{ type: 'string', min: 15, message: 'KEY不能少于15字', trigger: 'blur' }
-				],
 				title: [
 					{ required: true, message: '标题不能为空', trigger: 'blur' },
 					{ type: 'string', min: 1, max: 30, message: '不超过30个字', trigger: 'blur' }
+				],
+				width: [
+					{ required: true, message: '页面宽度不能为空', trigger: 'blur' },
+					{ validator: widthCheck, min: 640, max: 1600, message: '数值超出范围', trigger: 'blur' }
 				]
 			},
 			pageTemp: {
@@ -79,7 +80,7 @@
 				me.$refs[name].validate((valid) => {
 					CMS.dateToStr(fv.modelItems)
 					console.log(fv)
-					fv.html = encodeURIComponent(html.getContentTxt()).trim()
+					fv.html = encodeURIComponent(html.getContent())
 					debugger
 					if (valid) {
 						CMS.http.post(API.pageC, fv, function(o) {
@@ -182,4 +183,9 @@ function handleCSel(item) {
 }
 function selModel(item) {
 	VUE.selModel(item)
+}
+function widthCheck(rule, val, cb) {
+	if (!/^\d+$/.test(val)) cb(new Error(`值必须为正整数`))
+	else if (val < rule.min || val > rule.max) cb(new Error(`值必须在 ${rule.min} 和 ${rule.max} 之间`))
+	else cb()
 }

@@ -1,7 +1,7 @@
 const router  = require('express').Router()
-const Cache   = require('../../models/cache')
 const proxy   = require('../../proxy')
 const Page    = proxy.Page
+const Temp    = proxy.Temp
 const Aliyun  = require('../../common/aliyun')
 const Tools   = require('../../common/tools')
 const Valid   = require('../../common/valid')
@@ -11,6 +11,7 @@ const pageEdit  = Edit.Page
 const pagecEdit = Edit.PageC
 const tpl       = swig.compileFile('template/t0.html', { autoescape: false })
 const tprev     = swig.compileFile('template/tp.html', { autoescape: false })
+const jsframe   = Tools.getJSFrame()
 
 // 创建推荐位
 router.post('/addPage', (req, res, next) => {
@@ -91,15 +92,15 @@ router.post('/addPageC', (req, res, next) => {
 		js     = body.js?   decodeURIComponent(body.js):   '',
 		pathname = `pagec/${key}`
 
-	if (!pageId) return Tools.errHandle('0126', res)
+	if (!pageId) return Tools.errHandle('0176', res)
 
 	Page.getPageById(pageId, function(item) {
-		if (!item) return Tools.errHandle('0128', res)
+		if (!item) return Tools.errHandle('0178', res)
 		uploadAliyun(html, css, js, pathname, body, res, function(body) {
 			body.userId = userId
-			debugger
+			body.key = key
 			Page.addPageC(body, function (err) {
-				if (err) return Tools.errHandle('0123', res)
+				if (err) return Tools.errHandle('0173', res)
 				Tools.errHandle('0000', res)
 			})
 		})
@@ -116,6 +117,7 @@ router.post('/updatePageC', (req, res, next) => {
 		js     = body.js?   decodeURIComponent(body.js):   '',
 		pathname = `pagec/${key}`
 
+	body.modelItems = body.modelItems || []
 	var bodyFilter = Tools.bodyFilter(pagecEdit, body)
 	body = bodyFilter.obj
 
@@ -128,11 +130,10 @@ router.post('/updatePageC', (req, res, next) => {
 			uploadAliyun(html, css, js, pathname, body, res, function(body) {
 				body.userId = userId
 				Page.updatePageC(id, body, function (err) {
-					if (err) return Tools.errHandle('0130', res)
+					if (err) return Tools.errHandle('0170', res)
 					Tools.errHandle('0000', res)
 				})
 			})
-			
 		})
 	})
 })
@@ -147,12 +148,44 @@ router.post('/removePageC', (req, res, next) => {
 		})
 	})
 })
+router.post('/releasePageC', (req, res, next) => {
+	var body     = req.body,
+		id       = body.id,
+		select   = ['key', 'title', 'width', 'header', 'footer', 'html', 'css', 'js', 'modelItems', 'active']
+	Page.getPageCById(id, select, (item) => {
+		if (!item) return Tools.errHandle('0178', res)
+		var pathname = `pagec/${item.key}`
+		datafilter(item, ['id', 'title', 'html', 'css', 'js', 'custemItems'], res, function(html) {
+			Aliyun.uploadFile(html, 'ol.html', pathname, function(err, url) {
+				if (err) return Tools.errHandle('0118', res)
+				Page.updatePageC(id, { active: 1, url: url }, function(err) {
+					if (err) return Tools.errHandle('0170', res)
+					Tools.errHandle('0000', res)
+				})
+			})
+		})
+	})
+})
+router.post('/offlinePageC', (req, res, next) => {
+	var body = req.body,
+		id   = body.id,
+		select = ['title', 'html', 'css', 'js', 'modelItems', 'active']
+	PageC.getPageCById(id, (item) => {
+		if (!item) return Tools.errHandle('0128', res)
+		var key = Tools.hmac(item.key)
+		PageC.updatePageC(id, { active: 0 })
+		Cache.del({ key: key, db: 1, cb: (e, o) => {
+			if (e) return Tools.errHandle('0142', res)
+			Tools.errHandle('0000', res)
+		}})
+	})
+})
 
 
 // 获取推荐位内容列表
 router.get('/getPageCList', (req, res, next) => {
 	var query  = req.query
-	var select = ['pageId', 'key', 'title', 'preview', 'active', 'createdAt', 'updatedAt']
+	var select = ['pageId', 'key', 'title', 'url', 'active', 'createdAt', 'updatedAt']
 	Page.getPageCList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
 			list: Tools.dateToStr(items),
@@ -161,9 +194,46 @@ router.get('/getPageCList', (req, res, next) => {
 	})
 })
 
-
-function datafilter() {
-	// body...
+// 数据过滤
+function datafilter(item, select, res, cb) {
+	Tools.getTempById(item, function(ids, item) {
+		Temp.getTempCByRpIds(ids, ['id', 'title', 'html', 'css', 'js', 'custemItems'], function(items, count) {
+			var temps = {}, js = [], css = []
+			items.map(function(i) {
+				temps[i.dataValues.id] = i.dataValues
+			})
+			if (item.html) temps['body'] = { html: item.html }
+			getAliyunHTML(temps, res, function(temps) {
+				if (item.header) item.header = modelfilter(temps[item.header], js, css)
+				if (item.modelItems) {
+					var mi = []
+					item.modelItems.map(function(i) {
+						mi.push(modelfilter(temps[i], js, css))
+					})
+					item.modelItems = mi
+				}
+				if (item.footer) item.footer = modelfilter(temps[item.footer], js, css)
+				item.js  = Tools.unique(js)
+				item.css = Tools.unique(css)
+				if (temps.body) item.html = temps['body'].html
+				createPage(item, res, cb)
+			})
+		})
+	})
+}
+// 模块过滤
+function modelfilter(obj, js, css) {
+	var cis  = obj.custemItems,
+	cis = JSON.parse(cis)
+	if (cis.length) {
+		cis.map(function(i) {
+			js.push(jsframe[i.name])
+		})
+	}
+	if (obj.css) css.push(obj.css)
+	return {
+		html: obj.html
+	}
 }
 function uploadAliyun(html, css, js, pathname, body, res, cb) {
 	var len = 0, now = 0
@@ -198,20 +268,37 @@ function uploadAliyun(html, css, js, pathname, body, res, cb) {
 		})
 	}
 }
-function createPrev(body, pathname, res, cb) {
-	var prev = tprev({
-		title:   `${body.title}_${body.name}`,
-		jsframe: Tools.getJSFrame(),
-		items:   body.custemItems,
-		body:    html,
+function getAliyunHTML(temps, res, cb) {
+	var len  = 0,
+		now  = 0
+	for (let p in temps) {
+		if (!temps[p].html) return
+		++len
+		var mt = temps[p].html.match(/(tempc|pagec)[\S]*html$/)
+		if (!mt) return
+		var path = mt[0]
+		Aliyun.getFile(path, function(err, result) {
+			if (err) return Tools.errHandle('0105', res)
+			temps[p].html = result
+			++now
+			if (now === len) return cb(temps)
+		})
+	}
+	if (!len) return cb(temps)
+}
+// 创建页面
+function createPage(body, res, cb) {
+	var prev = tpl({
+		title:   `${body.title}`,
+		body:    body.html,
 		css:     body.css,
-		js:      body.js
+		js:      body.js,
+		model:   body.modelItems,
+		header:  body.header.html || '',
+		footer:  body.footer.html || '',
+		width:   body.width || '1000'
 	})
-	Aliyun.uploadFile(prev, 'prev.html', pathname, function(err, url) {
-		if (err) return Tools.errHandle('0118', res)
-		body.preview = url
-		cb(body)
-	})
+	cb && cb(prev)
 }
 
 module.exports = router

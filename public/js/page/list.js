@@ -1,7 +1,9 @@
 (function(global, VM, CMS) {
 	var API = {
-		list: '/page/getPageCList',
-		remove: '/page/removePageC'
+		list:    '/page/getPageCList',
+		remove:  '/page/removePageC',
+		release: '/page/releasePageC',
+		offline: '/page/offlinePageC'
 	}
 
 	var Modal = {
@@ -33,9 +35,9 @@
 					key: '',
 					render: (row, column, index) => {
 						return `<a class="text-blue" href="/page/${row.pageId}/edit/${row.id}">编辑</a>
-								<a class="text-blue" @click="handleModal(`+(row.active? `'refresh'`: `'release'`)+`, row.id, row.hash)">`+(row.active? `刷新`: `发布`)+`</a>
+								<a class="text-blue" @click="handleModal(`+(row.active? `'refresh'`: `'release'`)+`, row.id)">`+(row.active? `刷新`: `发布`)+`</a>
 								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a> `+
-								(row.active? `<a class="text-blue" @click="handleModal('offline', row.id)">下线</a>`) +
+								(row.active? `<a class="text-blue" @click="handleModal('offline', row.id)">下线</a>`: ``) +
 								(row.preview? `<a class="text-blue" target="_blank" href="${row.preview}">预览</a>`: ``)
 					}
 				}
@@ -51,7 +53,9 @@
 			},
 			sort: '',
 			pageId: '',
-			id: ''
+			id: '',
+			Modal: false,
+			ModalName: '',
 		},
 		methods: {
 			handleModal (pageId, id) {
@@ -86,6 +90,48 @@
 			searchList: function() {
 				this.current = 1
 				CMS.getDataList(API)
+			},
+			handleModal: function(name, pageId) {
+				this.ModalName = name
+				this.pageId    = pageId
+				this.Modal     = true
+			},
+			// 模态框操作 (发布|删除|下线)
+			handleCtrl: function() {
+				var fn = this[Modal[this.ModalName]]
+				fn && fn()
+			},
+			// 发布|刷新
+			handleRelease: function() {
+				CMS.http.post(API.release, { id: this.pageId }, function(o) {
+					console.log(o)
+					VUE.$Message.success('成功!')
+					VUE.Modal = true
+					VUE.ModalName = 'link'
+					CMS.getDataList(API.list)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+				})
+			},
+			// 删除
+			handleRemove: function() {
+				CMS.http.post(API.remove, { id: this.pageId }, function(o) {
+					console.log(o)
+					VUE.$Message.success('成功!')
+					CMS.getDataList(API.list)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+				})
+			},
+			// 下线
+			handleOffline: function() {
+				CMS.http.post(API.offline, { id: this.pageId }, function(o) {
+					console.log(o)
+					VUE.$Message.success('成功!')
+					CMS.getDataList(API.list)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+				})
 			},
 			// 排序
 			sortList: function(opts) {

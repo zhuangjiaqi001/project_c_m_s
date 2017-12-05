@@ -60,6 +60,7 @@ module.exports = {
 		custemItems: 1,
 		header:      1,
 		footer:      1,
+		width:       1,
 		modelItems:  1,
 	},
 }

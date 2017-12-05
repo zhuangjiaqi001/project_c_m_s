@@ -39,9 +39,10 @@ module.exports = function(sequelize, DataTypes) {
 		css:         { type: DataTypes.STRING,  comment: '样式' },
 		html:        { type: DataTypes.STRING,  comment: 'HTML文档' },
 		js:          { type: DataTypes.STRING,  comment: '脚本' },
-		preview:     { type: DataTypes.STRING,  comment: '预览' },
+		url:         { type: DataTypes.STRING,  comment: '预览' },
 		description: { type: DataTypes.STRING,  comment: '落地页描述' },
-		active:      { type: DataTypes.BOOLEAN, defaultValue: false, comment: '是否激活' }
+		active:      { type: DataTypes.BOOLEAN, defaultValue: false, comment: '是否激活' },
+		width:       { type: DataTypes.STRING, defaultValue: '1000', comment: '页面宽度' }
 	}, {
 		freezeTableName: false
 		// freezeTableName: true,

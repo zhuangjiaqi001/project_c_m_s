@@ -134,12 +134,12 @@ exports.getPageCByQuery = function (query, cb) {
 	})
 }
 
-exports.getPageCByRpId = function(tempId, select, cb) {
-	PageC.findAndCountAll({
-		where: { tempId: tempId },
+exports.getPageCById = function(id, select, cb) {
+	PageC.findOne({
+		where: { id: id },
 		attributes:  select
-	}).then(function(items) {
-		cb(items.rows, items.count)
+	}).then(item => {
+		cb(item? item.dataValues: null)
 	})
 };
 

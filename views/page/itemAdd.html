@@ -19,10 +19,14 @@
 				<Form-item label="标题" prop="title">
 					<i-input v-model="formValidate.title" type="text" placeholder="(不超过30个字)" :maxlength="30"></i-input>
 				</Form-item>
+
+				<Form-item label="页面宽度" prop="width">
+					<i-input v-model="formValidate.width" type="number" placeholder="(数值范围: 640-1600)" :maxlength="10"></i-input>
+				</Form-item>
+
 				<Form-item label="HTML">
 					<div id="edit_html"></div>
 				</Form-item>
-
 
 				<Form-item label="公共头">
 					<Row>
@@ -114,9 +118,10 @@ pagecInfo = {
 	id:      '[[pagecInfo.id]]',
 	key:     '[[pagecInfo.key]]',
 	title:   '[[pagecInfo.title]]',
-	html:    '[[pagecInfo.html]]',
+	html:    {% autoescape false %}'[[pagecInfo.html]]'{% endautoescape %},
 	css:     '[[pagecInfo.css]]',
 	js:      '[[pagecInfo.js]]',
+	width:   '[[pagecInfo.width]]',
 	header:  {% autoescape false %}'[[pagecInfo.header]]'{% endautoescape %},
 	footer:  {% autoescape false %}'[[pagecInfo.footer]]'{% endautoescape %},
 	modelItems: {% autoescape false %}'[[pagecInfo.modelItems]]'{% endautoescape %}
