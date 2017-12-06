@@ -21,7 +21,7 @@
 				{
 					title: '推荐位名称',
 					key: 'name',
-					render: (row, column, index) => {
+					render: (row, col, idx) => {
 						return `<a class="text-blue" href="/imgrp/list?rpId=${row.id}">${row.name}</a>`
 					}
 				},
@@ -46,7 +46,7 @@
 				{
 					title: '操作',
 					key: '',
-					render: (row, column, index) => {
+					render: (row, col, idx) => {
 						return `<a class="text-blue" href="/imgrp/edit?rpId=${row.id}">编辑</i></a>
 								<a class="text-blue" @click="handleModal(`+(row.active? `'refresh'`: `'release'`)+`, row.id, row.hash)">`+(row.active? `刷新`: `发布`)+`</a>
 								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a> `

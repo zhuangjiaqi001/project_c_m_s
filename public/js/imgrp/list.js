@@ -12,7 +12,7 @@
 				{
 					title: '图片',
 					key: 'imageUrl',
-					render: (row, column, index) => {
+					render: (row, col, idx) => {
 						return `<div class="upload-list">
 									<img :src="row.imageUrl" style="width: 100%">
 									<div class="upload-list-cover">
@@ -38,7 +38,7 @@
 				{
 					title: '操作',
 					key: '',
-					render: (row, column, index) => {
+					render: (row, col, idx) => {
 						return `<a class="text-blue" href="/imgrp/itemEdit?rpId=${row.rpId}&id=${row.id}">编辑</a>
 								<a class="text-blue" @click="handleModal(row.rpId, row.id)">删除</a>`
 					}

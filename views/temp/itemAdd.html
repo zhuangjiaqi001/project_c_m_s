@@ -11,10 +11,10 @@
 		<div class="col-md-8 col-md-offset-2">
 			<i-form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
 				<Form-item label="模板类KEY">
-					<span>[[item.key]]</span>
+					<span>{{temp.key}}</span>
 				</Form-item>
 				<Form-item label="模板类名称">
-					<span>[[item.name]]</span>
+					<span>{{temp.name}}</span>
 				</Form-item>
 				<Form-item label="KEY" prop="key">
 					<span v-if="pageinfo.isEdit">{{formValidate.key}}</span>
@@ -75,9 +75,5 @@
 {% endblock %}
 
 {% block js %}
-<script src="/js/util/iview/iview.min.js"></script>
-<!-- <script src="/js/util/ckeditor/ckeditor.js"></script>
-<script src="/js/util/ueditor/ueditor.config.null.js"></script>
-<script src="/js/util/ueditor/ueditor.all.js"></script> -->
 <script src="/js/temp/itemAdd.js"></script>
 {% endblock %}

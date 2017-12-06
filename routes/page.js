@@ -5,13 +5,9 @@ const Page    = proxy.Page
 const Temp    = proxy.Temp
 const Aliyun  = require('../common/aliyun')
 
-// 落地页列表
-const active  = 'page'
-
 // 列表
 router.get('/', (req, res, next) => {
 	res.render('page', {
-		active: active,
 		title: '落地页列表'
 	})
 })
@@ -19,92 +15,34 @@ router.get('/', (req, res, next) => {
 // 创建
 router.get('/add', (req, res, next) => {
 	res.render('page/add', {
-		active: active,
 		title: '新建落地页列表'
 	})
 })
 // 编辑
-router.get('/edit/:id', (req, res, next) => {
-	var id = req.params.id
-	Page.getPageById(id, function(o) {
-		if (!o) return Tools.permit('对不起！该落地页列表不存在！', res)
-		res.render('page/add', {
-			active: active,
-			title: '编辑落地页列表',
-			pageInfo: o
-		})
+router.get('/edit', (req, res, next) => {
+	res.render('page/add', {
+		title: '编辑落地页列表'
 	})
 })
 
 // 落地页列表内容列表
-router.get('/:id', (req, res, next) => {
-	var id = req.params.id
-
-	Page.getPageById(id, function(o) {
-		if (!o) return Tools.permit('对不起！该落地页列表不存在！', res)
-		res.render('page/list', {
-			active: active,
-			id: id,
-			item: o,
-			title: '落地页列表列表'
-		})
+router.get('/list', (req, res, next) => {
+	res.render('page/list', {
+		title: '落地页列表列表'
 	})
 })
 
 // 落地页列表内容创建
-router.get('/:id/add', (req, res, next) => {
-	var id = req.params.id
-
-	Page.getPageById(id, function(o) {
-		if (!o) return Tools.permit('对不起！该落地页列表不存在！', res)
-		res.render('page/itemAdd', {
-			active: active,
-			item: o,
-			title: '新建内容'
-		})
+router.get('/itemAdd', (req, res, next) => {
+	res.render('page/itemAdd', {
+		title: '新建内容'
 	})
 })
 
 // 落地页列表内容编辑
-router.get('/:pageId/edit/:id', (req, res, next) => {
-	var params   = req.params,
-		pageId   = params.pageId,
-		id       = params.id,
-		temps    = {}
-	Page.getPageById(pageId, function(o) {
-		if (!o) return Tools.permit('对不起！该落地页列表不存在！', res)
-		Page.getPageCByQuery({
-			pageId: pageId,
-			id: id
-		}, function(o2) {
-			if (!o2) return Tools.permit('对不起！该落地页列表不存在！', res)
-
-			Tools.getTempById(o2, function(ids, o2) {
-				Temp.getTempCByRpIds(ids, ['id', 'title'], function(items, count) {
-					items.map(function(i) {
-						temps[i.dataValues.id] = i.dataValues
-					})
-					if (o2.header) o2.header = JSON.stringify(temps[o2.header])
-					if (o2.footer) o2.footer = JSON.stringify(temps[o2.footer])
-					if (o2.modelItems) {
-						var mi = []
-						o2.modelItems.map(function(i) {
-							mi.push(temps[i])
-						})
-						o2.modelItems = JSON.stringify(mi)
-					}
-
-					getAliyun(o2, res, function(o2) {
-						res.render('page/itemAdd', {
-							active: active,
-							title: '编辑内容',
-							item: o,
-							pagecInfo: o2
-						})
-					})
-				})
-			})
-		})
+router.get('/itemEdit', (req, res, next) => {
+	res.render('page/itemAdd', {
+		title: '编辑内容'
 	})
 })
 

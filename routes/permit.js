@@ -6,10 +6,8 @@ const Code    = require('../common/code')
 const proxy   = require('../proxy')
 const User    = proxy.User
 
-const active  = 'permit'
 router.get('/', (req, res, next) => {
 	res.render('permit', {
-		active: active,
 		title: '权限管理'
 	})
 })

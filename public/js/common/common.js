@@ -190,7 +190,9 @@ if (!global.CMS) {
 					location.href = '/logout'
 				}
 			})
-			var sb = $('#sb_'+INIT.active)
+			var mt = location.pathname.match(/\w+/)
+			if (!mt) return
+			var sb = $('#sb_'+mt[0])
 			if (sb.length) {
 				sb.addClass('active')
 			}

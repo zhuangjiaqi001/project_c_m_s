@@ -11,17 +11,17 @@
 		<div class="col-md-8 col-md-offset-2">
 			<i-form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
 				<Form-item label="模板列表KEY">
-					<span>[[item.key]]</span>
+					<span>{{page.key}}</span>
 				</Form-item>
 				<Form-item label="模板列表名称">
-					<span>[[item.name]]</span>
+					<span>{{page.name}}</span>
 				</Form-item>
 				<Form-item label="标题" prop="title">
 					<i-input v-model="formValidate.title" type="text" placeholder="(不超过30个字)" :maxlength="30"></i-input>
 				</Form-item>
 
 				<Form-item label="页面宽度" prop="width">
-					<i-input v-model="formValidate.width" type="number" placeholder="(数值范围: 640-1600)" :maxlength="10"></i-input>
+					<i-input v-model="formValidate.width" type="text" placeholder="(数值范围: 640-1600)" :maxlength="10"></i-input>
 				</Form-item>
 
 				<Form-item label="HTML">
@@ -107,31 +107,6 @@
 {% endblock %}
 
 {% block js %}
-<script>
-var ITEM = {
-	key:    '[[item.key]]',
-	name:   '[[item.name]]',
-	pageId: [[item.id]],
-	description: '[[item.description]]'
-},
-pagecInfo = {
-	id:      '[[pagecInfo.id]]',
-	key:     '[[pagecInfo.key]]',
-	title:   '[[pagecInfo.title]]',
-	html:    {% autoescape false %}'[[pagecInfo.html]]'{% endautoescape %},
-	css:     '[[pagecInfo.css]]',
-	js:      '[[pagecInfo.js]]',
-	width:   '[[pagecInfo.width]]',
-	header:  {% autoescape false %}'[[pagecInfo.header]]'{% endautoescape %},
-	footer:  {% autoescape false %}'[[pagecInfo.footer]]'{% endautoescape %},
-	modelItems: {% autoescape false %}'[[pagecInfo.modelItems]]'{% endautoescape %}
-}
-if (pagecInfo.pageId) pagecInfo.pageId = pagecInfo.pageId
-if (pagecInfo.modelItems) pagecInfo.modelItems = JSON.parse(pagecInfo.modelItems)
-if (pagecInfo.header) pagecInfo.header = JSON.parse(pagecInfo.header)
-if (pagecInfo.footer) pagecInfo.footer = JSON.parse(pagecInfo.footer)
-</script>
-<script src="/js/util/iview/iview.min.js"></script>
 <script src="/js/util/ueditor/ueditor.config.js"></script>
 <script src="/js/util/ueditor/ueditor.all.js"></script>
 <script src="/js/page/itemAdd.js"></script>

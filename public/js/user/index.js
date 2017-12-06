@@ -9,7 +9,7 @@
 				{
 					title: '头像',
 					key: 'avatar',
-					render: (row, column, index) => {
+					render: (row, col, idx) => {
 						console.log(row)
 						return `<img class="img-circle img-bordered-sm" width="32" height="32" src="${row.avatar}">`;
 					}
@@ -35,7 +35,7 @@
 				{
 					title: '操作',
 					key: '',
-					render: (row, column, index) => {
+					render: (row, col, idx) => {
 						return `<a class="btn-xs"><i class="fa fa-edit"></i></a>`;
 					}
 				}

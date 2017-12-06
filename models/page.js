@@ -26,7 +26,7 @@ module.exports = function(sequelize, DataTypes) {
 			comment: '落地页类ID'
 		},
 		key:         { type: DataTypes.STRING(100), unique : true, comment: '落地页内容KEY' },
-		title:       { type: DataTypes.STRING(100), unique : true, comment: '标题' },
+		title:       { type: DataTypes.STRING,  comment: '标题' },
 		type:        { type: DataTypes.INTEGER, defaultValue: 0, comment: '落地页类型' },		// 0: 模块, 1: 内容
 		header:      { type: DataTypes.STRING,  comment: '头部' },
 		footer:      { type: DataTypes.STRING,  comment: '底部' },

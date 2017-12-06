@@ -1,7 +1,7 @@
 (function(global, VM, CMS) {
 	var API = {
-		list:		'/page/getPageList',
-		remove:		'/page/removePage',
+		list:   '/page/getPageList',
+		remove: '/page/removePage',
 	}
 
 	CMS.getDataList(API.list)
@@ -17,7 +17,7 @@
 					title: '名称',
 					key: 'name',
 					render: (row, col, idx) => {
-						return `<a class="text-blue" href="/page/${row.id}">${row.name}</a>`
+						return `<a class="text-blue" href="/page/list?pageId=${row.id}">${row.name}</a>`
 					}
 				},
 				{
@@ -42,7 +42,7 @@
 					title: '操作',
 					key: '',
 					render: (row, col, idx) => {
-						return `<a class="text-blue" href="/page/edit/${row.id}">编辑</i></a>
+						return `<a class="text-blue" href="/page/edit?pageId=${row.id}">编辑</i></a>
 								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a>`
 					}
 				}
@@ -60,14 +60,13 @@
 				key: ''
 			},
 			sort: '',
-			rpId: ''
+			pageId: ''
 		},
 		methods: {
-			handleModal (name, id, hash) {
+			handleModal (name, id) {
 				this.ModalName = name
-				this.rpId = id
+				this.pageId = id
 				this.Modal = true
-				if (hash) VUE.api = location.origin + '/apig/rp/img?k=' + hash
 			},
 			// 模态框操作 (发布|删除|下线)
 			handleCtrl () {
@@ -75,7 +74,7 @@
 				fn && fn()
 			},
 			handleRemove () {
-				CMS.http.post(API.remove, { id: this.rpId }, function(o) {
+				CMS.http.post(API.remove, { id: this.pageId }, function(o) {
 					console.log(o)
 					VUE.$Message.success('成功!')
 					CMS.getDataList(API.list)
@@ -84,7 +83,7 @@
 				})
 			},
 			handleRelease () {
-				CMS.http.post(API.release, { id: this.rpId }, function(o) {
+				CMS.http.post(API.release, { id: this.pageId }, function(o) {
 					console.log(o)
 					VUE.$Message.success('成功!')
 					VUE.Modal = true
@@ -95,7 +94,7 @@
 				})
 			},
 			handleOffline () {
-				CMS.http.post(API.offline, { id: this.rpId }, function(o) {
+				CMS.http.post(API.offline, { id: this.pageId }, function(o) {
 					console.log(o)
 					VUE.$Message.success('成功!')
 					CMS.getDataList(API.list)

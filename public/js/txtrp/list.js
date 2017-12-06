@@ -25,7 +25,7 @@
 				{
 					title: '操作',
 					key: '',
-					render: (row, column, index) => {
+					render: (row, col, idx) => {
 						return `<a class="text-blue" href="/txtrp/itemEdit?rpId=${row.rpId}&id=${row.id}">编辑</a>
 								<a class="text-blue" @click="handleModal(row.rpId, row.id)">删除</a>`
 					}

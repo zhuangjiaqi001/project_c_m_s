@@ -1,14 +1,17 @@
 (function(global, VM, CMS) {
-	var API = pageInfo.id? '/page/updatePage': '/page/addPage'
+	var API = {
+		get:    '/page/get',
+		submit: '/page/addPage'
+	},
+	id = CMS.getQueryValue('pageId')
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
-			birthday: '',
 			formValidate: {
-				id:   pageInfo.id,
-				key:  pageInfo.key,
-				name: pageInfo.name,
-				description: pageInfo.description
+				id:          id || '',
+				key:         '',
+				name:        '',
+				description: ''
 			},
 			ruleValidate: {
 				key: [
@@ -24,14 +27,10 @@
 		},
 		methods: {
 			// 表单相关
-			handleChange: function(data) {
-				this.birthday = data
-			},
 			handleSubmit: function(name) {
 				this.$refs[name].validate((valid) => {
 					if (valid) {
-						console.log(this.formValidate)
-						CMS.http.post(API, this.formValidate, function(o) {
+						CMS.http.post(API.submit, this.formValidate, function(o) {
 							VUE.$Message.success('提交成功!')
 							location.href = '/page'
 						}, function(err) {
@@ -45,6 +44,21 @@
 			},
 			handleReset: function(name) {
 				this.$refs[name].resetFields()
+			},
+			getPage: function() {
+				var me = this
+				CMS.http.get(API.get, { id: id }, function(o) {
+					CMS.merge2(me.formValidate, o.data)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
+			load: function() {
+				if (this.pageinfo.isEdit) {
+					API.submit = '/page/updatePage'
+					this.getPage()
+				}
 			}
 		}
 	}))

@@ -4,7 +4,8 @@
 		remove:  '/page/removePageC',
 		release: '/page/releasePageC',
 		offline: '/page/offlinePageC'
-	}
+	},
+	pageId = CMS.getQueryValue('pageId')
 
 	var Modal = {
 		release: 'handleRelease',
@@ -33,8 +34,8 @@
 				{
 					title: '操作',
 					key: '',
-					render: (row, column, index) => {
-						return `<a class="text-blue" href="/page/${row.pageId}/edit/${row.id}">编辑</a>
+					render: (row, col, idx) => {
+						return `<a class="text-blue" href="/page/itemEdit?pageId=${row.pageId}&id=${row.id}">编辑</a>
 								<a class="text-blue" @click="handleModal(`+(row.active? `'refresh'`: `'release'`)+`, row.id)">`+(row.active? `刷新`: `发布`)+`</a>
 								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a>`+
 								(row.active? ` <a class="text-blue" @click="handleModal('offline', row.id)">下线</a>`: ``) +
@@ -52,7 +53,7 @@
 				title: ''
 			},
 			sort: '',
-			pageId: '',
+			pageId: pageId || '',
 			id: '',
 			Modal: false,
 			ModalName: '',

@@ -14,6 +14,16 @@ const tprev     = swig.compileFile('template/tp.html', { autoescape: false })
 const jsframe   = Tools.getJSFrame()
 
 // 创建推荐位
+router.get('/get', (req, res, next) => {
+	var q      = req.query,
+		id     = q.id,
+		userId = req.signedCookies.id
+
+	Page.getPageById(id, function (item) {
+		if (!item) return Tools.errHandle('0128', res)
+		Tools.errHandle('0000', res, item)
+	})
+})
 router.post('/addPage', (req, res, next) => {
 	var id   = req.signedCookies.id,
 		body = req.body,
@@ -81,10 +91,42 @@ router.get('/getPageList', (req, res, next) => {
 
 
 // 创建推荐位内容
+router.get('/getC', (req, res, next) => {
+	var q      = req.query,
+		id     = q.id,
+		userId = req.signedCookies.id,
+		temps  = {}
+
+	Page.getPageCByQuery({
+		id: id
+	}, function (item) {
+		if (!item) return Tools.errHandle('0128', res)
+		item = item.dataValues
+		Tools.getTempById(item, function(ids, item) {
+			Temp.getTempCByRpIds(ids, ['id', 'title'], function(items, count) {
+				items.map(function(i) {
+					temps[i.id] = i
+				})
+				if (item.header) item.header = temps[item.header]
+				if (item.footer) item.footer = temps[item.footer]
+				if (item.modelItems) {
+					var mi = []
+					item.modelItems.map(function(i) {
+						mi.push(temps[i])
+					})
+					item.modelItems = mi
+				}
+
+				getAliyun(item, res, function(item) {
+					Tools.errHandle('0000', res, item)
+				})
+			})
+		})
+	})
+})
 router.post('/addPageC', (req, res, next) => {
 	var body   = req.body,
 		userId = req.signedCookies.id,
-		id     = body.id,
 		pageId = body.pageId,
 		key    = Date.now() + userId,
 		html   = body.html? decodeURIComponent(body.html): '',
@@ -230,6 +272,7 @@ function modelfilter(obj, js, css) {
 		})
 	}
 	if (obj.css) css.push(obj.css)
+	if (obj.js)  js.push(obj.js)
 	return {
 		html: obj.html
 	}
@@ -262,6 +305,45 @@ function uploadAliyun(html, css, js, pathname, body, res, cb) {
 		Aliyun.uploadFile(js, '0.js', pathname, function(err, url) {
 			if (err) return Tools.errHandle('0117', res)
 			body.js = url
+			++now
+			if (now === len) cb(body)
+		})
+	}
+}
+function getAliyun(body, res, cb) {
+	var len  = 0,
+		now  = 0,
+		html = body.html,
+		css  = body.css,
+		js   = body.js
+	if (html) ++len
+	if (css)  ++len
+	if (js)   ++len
+	if (!len) cb(body)
+
+	if (html) {
+		var hmt = html.match(/(tempc|pagec)[\S]*html$/)[0]
+		Aliyun.getFile(hmt, function(err, result) {
+			if (err) return Tools.errHandle('0105', res)
+			body.html = result
+			++now
+			if (now === len) cb(body)
+		})
+	}
+	if (css) {
+		var cmt = css.match(/(tempc|pagec)[\S]*css$/)[0]
+		Aliyun.getFile(cmt, function(err, result) {
+			if (err) return Tools.errHandle('0106', res)
+			body.css = result
+			++now
+			if (now === len) cb(body)
+		})
+	}
+	if (js) {
+		var jmt = js.match(/(tempc|pagec)[\S]*js$/)[0]
+		Aliyun.getFile(jmt, function(err, result) {
+			if (err) return Tools.errHandle('0107', res)
+			body.js = result
 			++now
 			if (now === len) cb(body)
 		})

@@ -10,7 +10,7 @@
 
 		<div class="row form-group">
 			<div class="col-md-12">
-				<a class="btn btn-warning" href="/page/[[id]]/add">新建</a>
+				<a class="btn btn-warning" :href="'/page/itemAdd?pageId=' + pageId">新建</a>
 			</div>
 		</div>
 		<div class="row form-group">
@@ -48,13 +48,8 @@
 {% endblock %}
 
 {% block css %}
-<link rel="stylesheet" href="/js/util/iview/styles/iview.css">
 {% endblock %}
 
 {% block js %}
-<script src="/js/util/iview/iview.min.js"></script>
-<script>
-var pageId = [[id]]
-</script>
 <script src="/js/page/list.js"></script>
 {% endblock %}

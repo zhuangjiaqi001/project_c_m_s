@@ -1,7 +1,7 @@
 (function(global, VM, CMS) {
 	var API = {
-		list:    '/temp/getTempList',
-		remove:  '/temp/removeTemp',
+		list:   '/temp/getTempList',
+		remove: '/temp/removeTemp',
 	}
 
 	CMS.getDataList(API.list)
@@ -16,8 +16,8 @@
 				{
 					title: '模板类名称',
 					key: 'name',
-					render: (row, column, index) => {
-						return `<a class="text-blue" href="/temp/${row.id}">${row.name}</a>`
+					render: (row, col, idx) => {
+						return `<a class="text-blue" href="/temp/list?tempId=${row.id}">${row.name}</a>`
 					}
 				},
 				{
@@ -41,8 +41,8 @@
 				{
 					title: '操作',
 					key: '',
-					render: (row, column, index) => {
-						return `<a class="text-blue" href="/temp/edit/${row.id}">编辑</i></a>
+					render: (row, col, idx) => {
+						return `<a class="text-blue" href="/temp/edit?tempId=${row.id}">编辑</i></a>
 								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a>`
 					}
 				}
@@ -60,14 +60,13 @@
 				key: ''
 			},
 			sort: '',
-			rpId: ''
+			tempId: ''
 		},
 		methods: {
-			handleModal (name, id, hash) {
+			handleModal (name, id) {
 				this.ModalName = name
-				this.rpId = id
+				this.tempId = id
 				this.Modal = true
-				if (hash) VUE.api = location.origin + '/apig/rp/img?k=' + hash
 			},
 			// 模态框操作 (发布|删除|下线)
 			handleCtrl () {
@@ -75,7 +74,7 @@
 				fn && fn()
 			},
 			handleRemove () {
-				CMS.http.post(API.remove, { id: this.rpId }, function(o) {
+				CMS.http.post(API.remove, { id: this.tempId }, function(o) {
 					console.log(o)
 					VUE.$Message.success('成功!')
 					CMS.getDataList(API.list)
@@ -84,7 +83,7 @@
 				})
 			},
 			handleRelease () {
-				CMS.http.post(API.release, { id: this.rpId }, function(o) {
+				CMS.http.post(API.release, { id: this.tempId }, function(o) {
 					console.log(o)
 					VUE.$Message.success('成功!')
 					VUE.Modal = true
@@ -95,7 +94,7 @@
 				})
 			},
 			handleOffline () {
-				CMS.http.post(API.offline, { id: this.rpId }, function(o) {
+				CMS.http.post(API.offline, { id: this.tempId }, function(o) {
 					console.log(o)
 					VUE.$Message.success('成功!')
 					CMS.getDataList(API.list)

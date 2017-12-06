@@ -2,11 +2,12 @@
 	var API = {
 		templist:	'/temp/getTempList',
 		tempclist:	'/temp/getTempCList',
-		pageC:		pagecInfo.id? '/page/updatePageC': '/page/addPageC'
+		get:        '/page/get',
+		getC:       '/page/getC',
+		submit:		'/page/addPageC'
 	},
-	mt = location.pathname.match(/temp\/(\d+)\/(add|edit)\/?(\d+)?$/),
-	tempId = mt? mt[1]: '',
-	id     = mt? mt[3]: ''
+	pageId = CMS.getQueryValue('pageId'),
+	id     = CMS.getQueryValue('id')
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
@@ -34,18 +35,18 @@
 					}
 				}
 			],
+			page: {},
 			formValidate: {
-				pageId:      ITEM.pageId,
-				id:          pagecInfo.id || '',
-				key:         pagecInfo.key,
-				name:        ITEM.name,
-				description: ITEM.description,
-				custemItems: pagecInfo.custemItems || [],
-				modelItems:  pagecInfo.modelItems  || [],
-				title:       pagecInfo.title,
-				width:       pagecInfo.width || 1000,
-				header:      pagecInfo.header || {},
-				footer:      pagecInfo.footer || {}
+				pageId:      pageId || '',
+				id:          id || '',
+				key:         '',
+				description: '',
+				custemItems: [],
+				modelItems:  [],
+				title:       '',
+				width:       '1000',
+				header:      {},
+				footer:      {}
 			},
 			ruleValidate: {
 				title: [
@@ -84,12 +85,11 @@
 					CMS.dateToStr(fv.modelItems)
 					console.log(fv)
 					fv.html = encodeURIComponent(html.getContent())
-					debugger
 					if (valid) {
-						CMS.http.post(API.pageC, fv, function(o) {
+						CMS.http.post(API.submit, fv, function(o) {
 							console.log(o)
 							VUE.$Message.success('创建成功!')
-							location.href = '/page/' + ITEM.pageId
+							location.href = `/page/list?pageId=${pageId}`
 						}, function(err) {
 							VUE.$Message.warning(err.message)
 							console.log(err)
@@ -160,19 +160,40 @@
 				this.current = cur
 				CMS.getDataList(this.listAPI)
 			},
+			initHTML: function(da) {
+				if (!da.html) return
+				global.html.ready(function() {
+					global.html.setContent(da.html)
+				})
+			},
+			getPage: function(me) {
+				CMS.http.get(API.get, { id: pageId }, function(o) {
+					me.page = o.data
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
+			getPageC: function() {
+				var me = this
+				CMS.http.get(API.getC, { id: id, pageId: pageId }, function(o) {
+					CMS.merge2(me.formValidate, o.data)
+					me.getPage(me)
+					me.initHTML(o.data)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
 			load: function() {
 				var me = this
-				global.html = CMS.ueditor('edit_html')
-				global.html.execCommand('source')
 				if (me.pageinfo.isEdit) {
-					me.initHTML()
+					API.submit = '/page/updatePageC'
+					me.getPageC(me)
+				} else {
+					me.getPage(me)
 				}
-			},
-			initHTML: function() {
-				if (!pagecInfo.html) return
-				global.html.ready(function() {
-					global.html.setContent(pagecInfo.html)
-				})
+				global.html = CMS.ueditor('edit_html')
 			}
 		}
 	}))

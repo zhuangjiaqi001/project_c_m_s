@@ -1,14 +1,15 @@
 (function(global, VM, CMS) {
 	var API = {
-		get:    '/temp/getC',
+		get:    '/temp/get',
+		getC:   '/temp/getC',
 		submit: '/temp/addTempC'
 	},
-	mt = location.pathname.match(/temp\/(\d+)\/(add|edit)\/?(\d+)?$/),
-	tempId = mt? mt[1]: '',
-	id     = mt? mt[3]: ''
+	tempId = CMS.getQueryValue('tempId'),
+	id   = CMS.getQueryValue('id')
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
+			temp: {},
 			formValidate: {
 				tempId:      tempId || '',
 				id:          id     || '',
@@ -58,7 +59,7 @@
 						CMS.http.post(API.submit, fv, function(o) {
 							console.log(o)
 							VUE.$Message.success('创建成功!')
-							location.href = '/temp/' + tempId
+							location.href = `/temp/list?tempId=${tempId}`
 						}, function(err) {
 							VUE.$Message.warning(err.message)
 							console.log(err)
@@ -68,19 +69,31 @@
 					}
 				})
 			},
+			getTemp: function(me) {
+				CMS.http.get(API.get, { id: tempId }, function(o) {
+					me.temp = o.data
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
 			getTempC: function() {
 				var me = this
-				CMS.http.get(API.get, { id: id, tempId: tempId }, function(o) {
+				CMS.http.get(API.getC, { id: id, tempId: tempId }, function(o) {
 					CMS.merge2(me.formValidate, o.data)
+					me.getTemp(me)
 				}, function(err) {
 					VUE.$Message.warning(err.message)
 					console.log(err)
 				})
 			},
 			load: function() {
-				if (this.pageinfo.isEdit) {
+				var me = this
+				if (me.pageinfo.isEdit) {
 					API.submit = '/temp/updateTempC'
-					this.getTempC()
+					me.getTempC(me)
+				} else {
+					me.getTemp(me)
 				}
 			}
 		}

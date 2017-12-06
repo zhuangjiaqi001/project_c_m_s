@@ -3,8 +3,7 @@
 		get:    '/temp/get',
 		submit: '/temp/addTemp'
 	},
-	id = location.pathname.match(/edit\/(\d+)/)
-	id = id? id[1]: ''
+	id = CMS.getQueryValue('tempId')
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
