@@ -2,7 +2,8 @@
 	var API = {
 		list: '/txtrp/getTxtRPCList',
 		remove: '/txtrp/removeTxtRPC'
-	}
+	},
+	rpId = CMS.getQueryValue('rpId')
 
 	var VUE = new Vue(CMS.extend(VM, {
 		data: {
@@ -25,7 +26,7 @@
 					title: '操作',
 					key: '',
 					render: (row, column, index) => {
-						return `<a class="text-blue" href="/txtrp/${row.rpId}/edit/${row.id}">编辑</a>
+						return `<a class="text-blue" href="/txtrp/itemEdit?rpId=${row.rpId}&id=${row.id}">编辑</a>
 								<a class="text-blue" @click="handleModal(row.rpId, row.id)">删除</a>`
 					}
 				}
@@ -40,7 +41,7 @@
 				title: ''
 			},
 			sort: '',
-			rpId: '',
+			rpId: rpId || '',
 			id: ''
 		},
 		methods: {
@@ -48,10 +49,6 @@
 				this.removeModal = true
 				this.rpId = rpId
 				this.id   = id
-			},
-			// 图片上传相关
-			handleView (url) {
-				this.visible = true
 			},
 			handleRemove () {
 				CMS.http.post(API.remove, {
@@ -69,17 +66,17 @@
 			// 页码切换
 			changePage: function(cur) {
 				this.current = cur
-				CMS.getDataList(API)
+				CMS.getDataList(API.list)
 			},
 			// 每页展示数据量切换
 			changePageSize: function(size) {
 				this.pageSize = size
-				CMS.getDataList(API)
+				CMS.getDataList(API.list)
 			},
 			// 列表搜索
 			searchList: function() {
 				this.current = 1
-				CMS.getDataList(API)
+				CMS.getDataList(API.list)
 			},
 			// 排序
 			sortList: function(opts) {

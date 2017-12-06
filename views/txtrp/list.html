@@ -10,7 +10,7 @@
 
 		<div class="row form-group">
 			<div class="col-md-12">
-				<a class="btn btn-warning" href="/txtrp/[[id]]/add">新建</a>
+				<a class="btn btn-warning" :href="'/txtrp/itemAdd?rpId=' + rpId">新建</a>
 			</div>
 		</div>
 		<div class="row form-group">
@@ -48,8 +48,6 @@
 
 	</div>
 </div>
-
-
 {% endblock %}
 
 {% block css %}
@@ -58,8 +56,5 @@
 
 {% block js %}
 <script src="/js/util/iview/iview.min.js"></script>
-<script>
-var rpId = [[id]]
-</script>
 <script src="/js/txtrp/list.js"></script>
 {% endblock %}

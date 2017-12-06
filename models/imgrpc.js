@@ -24,11 +24,6 @@ module.exports = function(sequelize, DataTypes) {
 		custemItems:  { type: DataTypes.STRING, comment: '自定义字段' }
 	}, {
 		freezeTableName: false,
-		setterMethods: {
-			custemItems: function(val) {
-				return this.setDataValue('custemItems', JSON.stringify(val))
-			}
-		},
 	})
 
 	ImgRPC.afterFind(function(val) {

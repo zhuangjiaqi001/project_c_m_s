@@ -9,6 +9,16 @@ const rpEdit  = Edit.TxtRP
 const rpcEdit = Edit.TxtRPC
 
 // 创建推荐位
+router.get('/get', (req, res, next) => {
+	var q      = req.query,
+		id     = q.id,
+		userId = req.signedCookies.id
+
+	TxtRP.getTxtRPById(id, function (item) {
+		if (!item) return Tools.errHandle('0128', res)
+		Tools.errHandle('0000', res, item)
+	})
+})
 router.post('/addTxtRP', (req, res, next) => {
 	var id   = req.signedCookies.id*1,
 		body = req.body,
@@ -115,6 +125,18 @@ router.get('/getTxtRPList', (req, res, next) => {
 
 
 // 创建推荐位内容
+router.get('/getC', (req, res, next) => {
+	var q      = req.query,
+		id     = q.id,
+		userId = req.signedCookies.id
+
+	TxtRP.getTxtRPCByQuery({
+		id: id
+	}, function (item) {
+		if (!item) return Tools.errHandle('0128', res)
+		Tools.errHandle('0000', res, item)
+	})
+})
 router.post('/addTxtRPC', (req, res, next) => {
 	var body  = req.body,
 		id    = req.signedCookies.id

@@ -125,6 +125,18 @@ router.get('/getImgRPList', (req, res, next) => {
 
 
 // 创建推荐位内容
+router.get('/getC', (req, res, next) => {
+	var q      = req.query,
+		id     = q.id,
+		userId = req.signedCookies.id
+
+	ImgRP.getImgRPCByQuery({
+		id: id
+	}, function (item) {
+		if (!item) return Tools.errHandle('0128', res)
+		Tools.errHandle('0000', res, item)
+	})
+})
 router.post('/addImgRPC', (req, res, next) => {
 	var body  = req.body,
 		id    = req.signedCookies.id,
@@ -134,8 +146,8 @@ router.post('/addImgRPC', (req, res, next) => {
 
 	ImgRP.getImgRPById(rpId, function(item) {
 		if (!item) return Tools.errHandle('0128', res)
-		ImgRP.addImgRPC(body, function (err) {
-			if (err) return Tools.errHandle('0123', res)
+		ImgRP.addImgRPC(body, function (item) {
+			if (!item) return Tools.errHandle('0123', res)
 			Tools.errHandle('0000', res)
 		})
 	})

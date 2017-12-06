@@ -33,14 +33,6 @@
 			},
 			uploadList: [],
 			visible: false,
-			loadLib: [
-				{ name: 'jQuery 1.12.4', val: 'jq_1_12_4' },
-				{ name: 'jQuery 2.2.4', val: 'jq_2_2_4' },
-				{ name: 'jQuery 3.2.1', val: 'jq_3_2_1' },
-				{ name: 'Zepto 1.0rc1', val: 'zepto_1_0rc1' },
-				{ name: 'AngularJS 1.2.1', val: 'ang_1_2_1' },
-				{ name: 'Vue 2.2.6', val: 'vue_2_2_6' }
-			]
 		},
 		methods: {
 			// 自定义字段

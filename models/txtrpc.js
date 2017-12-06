@@ -22,12 +22,7 @@ module.exports = function(sequelize, DataTypes) {
 		endTime:      { type: DataTypes.STRING, comment: '结束时间' },
 		custemItems:  { type: DataTypes.STRING, comment: '自定义字段' }
 	}, {
-		freezeTableName: false,
-		setterMethods: {
-			custemItems: function(val) {
-				return this.setDataValue('custemItems', JSON.stringify(val))
-			}
-		},
+		freezeTableName: false
 	})
 
 	TxtRPC.afterFind(function(val) {

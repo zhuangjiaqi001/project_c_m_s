@@ -3,7 +3,10 @@
 		templist:	'/temp/getTempList',
 		tempclist:	'/temp/getTempCList',
 		pageC:		pagecInfo.id? '/page/updatePageC': '/page/addPageC'
-	}
+	},
+	mt = location.pathname.match(/temp\/(\d+)\/(add|edit)\/?(\d+)?$/),
+	tempId = mt? mt[1]: '',
+	id     = mt? mt[3]: ''
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {

@@ -24,6 +24,13 @@ exports.getImgList = function(query, select, cb) {
 }
 
 
+exports.getImgByQuery = function(query, cb) {
+	return Img.findOne({ where: query }).then(item => {
+		cb(item? item: null)
+	})
+}
+
+
 
 // 创建图片(推荐位)
 exports.addImage = function (url, id, cb) {

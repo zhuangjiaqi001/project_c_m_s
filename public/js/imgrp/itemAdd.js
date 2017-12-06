@@ -1,20 +1,28 @@
 (function(global, VM, CMS) {
-	var API = rpcInfo.id? '/imgrp/updateImgRPC': '/imgrp/addImgRPC'
+	var API = {
+		get:    '/imgrp/get',
+		getC:   '/imgrp/getC',
+		submit: '/imgrp/addImgRPC'
+	},
+	rpId = CMS.getQueryValue('rpId'),
+	id   = CMS.getQueryValue('id')
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
+			custemItems: [],
+			imgList:     {},
 			formValidate: {
-				rpId:        ITEM.rpId,
-				id:          rpcInfo.id || '',
-				key:         ITEM.key,
-				name:        ITEM.name,
-				description: ITEM.description,
-				title:       rpcInfo.title,
-				imageUrl:    rpcInfo.imageUrl,
-				url:         rpcInfo.url,
-				startTime:   rpcInfo.startTime,
-				endTime:     rpcInfo.endTime,
-				custemItems: rpcInfo.custemItems || {}
+				id:          id   || '',
+				rpId:        rpId || '',
+				key:         '',
+				name:        '',
+				description: '',
+				title:       '',
+				imageUrl:    '',
+				url:         '',
+				startTime:   '',
+				endTime:     '',
+				custemItems: {}
 			},
 			ruleValidate: {
 				title: [
@@ -37,27 +45,78 @@
 				this.birthday = data
 			},
 			handleSubmit: function(name) {
-				this.$refs[name].validate((valid) => {
-					CMS.dateToStr(this.formValidate.custemItems)
-					console.log(this.formValidate)
+				var me = this
+				me.$refs[name].validate((valid) => {
+					CMS.dateToStr(me.formValidate.custemItems)
+					console.log(me.formValidate)
 					if (valid) {
-						CMS.http.post(API, this.formValidate, function(o) {
+						var da = JSON.parse(JSON.stringify(me.formValidate))
+						da.custemItems = JSON.stringify(da.custemItems)
+						CMS.http.post(API.submit, da, function(o) {
 							console.log(o)
 							VUE.$Message.success('创建成功!')
-							location.href = '/imgrp/' + ITEM.rpId
+							location.href = `/imgrp/list?rpId=${rpId}`
 						}, function(err) {
 							VUE.$Message.warning(err.message)
 							console.log(err)
 						})
 					} else {
-						this.$Message.error('表单验证失败!')
+						me.$Message.error('表单验证失败!')
 					}
 				})
+			},
+			getImgRP: function(me) {
+				CMS.http.get(API.get, { id: rpId }, function(o) {
+					var ci = me.formValidate.custemItems
+					me.custemItems = o.data.custemItems
+					delete o.data.custemItems
+					delete o.data.id
+					if (me.pageinfo.isEdit) {
+						for (var key in ci) {
+							var nkey = ''
+							me.custemItems.map(function(j) {
+								if (j.key === key) {
+									nkey = j.key
+									VUE.$set(me.imgList, nkey, {})
+								}
+							})
+							if (!nkey) {
+								delete ci[key]
+							}
+						}
+					} else {
+						me.custemItems.map(function(i) {
+							VUE.$set(ci, i.key, '')
+							VUE.$set(me.imgList, i.key, {})
+						})
+					}
+					CMS.merge2(me.formValidate, o.data)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
+			getImgRPC: function(me) {
+				CMS.http.get(API.getC, { id: id }, function(o) {
+					CMS.merge2(me.formValidate, o.data)
+					if (o.data.imageUrl) VUE.uploadList.push({ url: o.data.imageUrl })
+					me.getImgRP(me)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
+			load: function() {
+				var me = this
+				if (me.pageinfo.isEdit) {
+					API.submit = '/imgrp/updateImgRPC'
+					me.getImgRPC(me)
+				} else {
+					me.getImgRP(me)
+				}
 			}
 		}
 	}))
-
-	if (rpcInfo.imageUrl) VUE.uploadList.push({ url: rpcInfo.imageUrl })
 
 	VUE.$Message.config({ top: 100 })
 

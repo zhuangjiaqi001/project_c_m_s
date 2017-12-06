@@ -1,15 +1,19 @@
 (function(global, VM, CMS) {
-	var API = rpInfo.id? '/txtrp/updateTxtRP': '/txtrp/addTxtRP'
+	var API = {
+		get:    '/txtrp/get',
+		submit: '/txtrp/addTxtRP'
+	},
+	id = CMS.getQueryValue('rpId')
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
 			birthday: '',
 			formValidate: {
-				id:   rpInfo.id,
-				key:  rpInfo.key,
-				name: rpInfo.name,
-				description: rpInfo.description,
-				custemItems: rpInfo.custemItems || []
+				id:   id,
+				key:  '',
+				name: '',
+				description: '',
+				custemItems: []
 			},
 			ruleValidate: {
 				key: [
@@ -44,7 +48,7 @@
 				this.$refs[name].validate((valid) => {
 					if (valid) {
 						console.log(this.formValidate)
-						CMS.http.post(API, this.formValidate, function(o) {
+						CMS.http.post(API.submit, this.formValidate, function(o) {
 							VUE.$Message.success('提交成功!')
 							location.href = '/txtrp'
 						}, function(err) {
@@ -58,6 +62,21 @@
 			},
 			handleReset: function(name) {
 				this.$refs[name].resetFields()
+			},
+			getData: function() {
+				var me = this
+				CMS.http.get(API.get, { id: id }, function(o) {
+					CMS.merge2(me.formValidate, o.data)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
+			load: function() {
+				if (this.pageinfo.isEdit) {
+					API.submit = '/txtrp/updateTxtRP'
+					this.getData()
+				}
 			}
 		}
 	}))

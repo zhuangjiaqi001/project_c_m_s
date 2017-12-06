@@ -9,10 +9,11 @@ const Code    = require('../../common/code')
 const Tools   = require('../../common/tools')
 const uejson  = require('../../ue.config.js')
 const formidable = require('formidable')
+const validImg   = require('../../common/validImg')
 
 router.post('/upload', (req, res, next) => {
-	var id = req.signedCookies.id*1,
-		form = new formidable.IncomingForm()
+	var userId = req.signedCookies.id,
+		form   = new formidable.IncomingForm()
 	form.keepExtensions = true
 	form.hash = 'sha1'
 	form.uploadDir = config.dir.upload
@@ -28,15 +29,15 @@ router.post('/upload', (req, res, next) => {
 		form.parse(req, function(err, fields) {
 			if (err)  return Tools.errHandle('0101', res)
 			if (!len) return Tools.errHandle('0102', res)
-			Aliyun.upload(file, function(err, url) {
-				if (err) return Tools.errHandle('0102', res)
-
-				Img.addImage(url, id, function(err, file) {
-					if (err) return Tools.errHandle('0103', res)
-					
-					Tools.errHandle('0000', res, {
-						id:  file.id,
-						url: file.url
+			validImg(1, userId, file, res, function() {
+				Aliyun.upload(file, function(err, url) {
+					if (err) return Tools.errHandle('0102', res)
+					Img.addImage(url, userId, function(err, file) {
+						if (err) return Tools.errHandle('0103', res)
+						Tools.errHandle('0000', res, {
+							id:  file.id,
+							url: file.url
+						})
 					})
 				})
 			})
@@ -85,13 +86,15 @@ router.use('/ue', (req, res, next) => {
 			form.parse(req, function(err, fields) {
 				if (err)  return Tools.errHandle('0101', res)
 				if (!len) return Tools.errHandle('0102', res)
-				Aliyun.upload(file, function(err, url) {
-					if (err) return Tools.errHandle('0102', res)
-					Img.addUE(url, id, function(err, file) {
-						if (err) return Tools.errHandle('0103', res)
-						res.send({
-							url: file.url,
-							state: 'SUCCESS'
+				validImg(2, userId, file, res, function() {
+					Aliyun.upload(file, function(err, url) {
+						if (err) return Tools.errHandle('0102', res)
+						Img.addUE(url, id, function(err, file) {
+							if (err) return Tools.errHandle('0103', res)
+							res.send({
+								url: file.url,
+								state: 'SUCCESS'
+							})
 						})
 					})
 				})

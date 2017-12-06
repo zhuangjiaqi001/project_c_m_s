@@ -3,8 +3,7 @@
 		get:    '/imgrp/get',
 		submit: '/imgrp/addImgRP'
 	},
-	id = location.pathname.match(/edit\/(\d+)/)
-	id = id? id[1]: ''
+	id = CMS.getQueryValue('rpId')
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {

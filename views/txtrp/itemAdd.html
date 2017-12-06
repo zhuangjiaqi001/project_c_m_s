@@ -11,13 +11,13 @@
 		<div class="col-md-6 col-md-offset-3">
 			<i-form ref="formValidate" :model="formValidate" :rules="ruleValidate" :label-width="120">
 				<Form-item label="推荐位KEY">
-					<span>[[item.key]]</span>
+					<span>{{formValidate.key}}</span>
 				</Form-item>
 				<Form-item label="推荐位名称">
-					<span>[[item.name]]</span>
+					<span>{{formValidate.name}}</span>
 				</Form-item>
-				<Form-item label="备注" prop="description">
-					<span>[[item.description]]</span>
+				<Form-item v-if="formValidate.description" label="备注" prop="description">
+					<span>{{formValidate.description}}</span>
 				</Form-item>
 				<Form-item label="标题" prop="title">
 					<i-input v-model="formValidate.title" type="text" placeholder="(不超过30个字)" :maxlength="30"></i-input>
@@ -31,23 +31,18 @@
 				<Form-item label="结束时间">
 					<Date-picker type="datetime" format="yyyy-MM-dd HH:mm" v-model="formValidate.endTime"></Date-picker>
 				</Form-item>
-				{% for li in item.custemItems %}
-				{% if li.type === 'String' %}
-				<Form-item label="[[li.name]]">
-					<i-input v-model="formValidate.custemItems.[[li.key]]" type="text" placeholder="[[li.name]] (不超过60个字)" :maxlength="60"></i-input>
+				
+				<Form-item :label="li.name" v-for="(li, idx) in custemItems">
+					<!-- 文本 -->
+					<i-input v-if="li.type === 'String'" v-model="formValidate.custemItems[li.key]" type="text" :placeholder="li.name +' (不超过60个字)'" :maxlength="60"></i-input>
+
+					<!-- 布尔值 -->
+					<Checkbox v-if="li.type === 'Boolean'" v-model="formValidate.custemItems[li.key]"></Checkbox>
+
+					<!-- 日期 -->
+					<Date-picker v-if="li.type === 'Date'" type="datetime" format="yyyy-MM-dd HH:mm" :placeholder="li.name" v-model="formValidate.custemItems[li.key]"></Date-picker>
 				</Form-item>
-				{% endif %}
-				{% if li.type === 'Boolean' %}
-				<Form-item label="[[li.name]]">
-					<Checkbox v-model="formValidate.custemItems.[[li.key]]"></Checkbox>
-				</Form-item>
-				{% endif %}
-				{% if li.type === 'Date' %}
-				<Form-item label="[[li.name]]">
-					<Date-picker type="datetime" format="yyyy-MM-dd HH:mm" placeholder="[[li.name]]" v-model="formValidate.custemItems.[[li.key]]"></Date-picker>
-				</Form-item>
-				{% endif %}
-				{% endfor %}
+
 				<Form-item>
 					<i-button type="primary" @click="handleSubmit('formValidate')">提交</i-button>
 					<i-button type="ghost" style="margin-left: 8px" @click="handleReset('formValidate')">重置</i-button>
@@ -65,36 +60,6 @@
 {% endblock %}
 
 {% block js %}
-<script>
-var pci = {
-	_$_: 0
-	{% for li in item.custemItems %},'[[li.key]]': 1{% endfor %}
-}
-var ITEM = {
-	key:  '[[item.key]]',
-	name: '[[item.name]]',
-	rpId:  [[item.id]],
-	description: '[[item.description]]'
-},
-rpcInfo = {
-	id:        '[[rpcInfo.id]]',
-	title:     '[[rpcInfo.title]]',
-	imageUrl:  '[[rpcInfo.imageUrl]]',
-	url:       '[[rpcInfo.url]]',
-	startTime: '[[rpcInfo.startTime]]',
-	endTime:   '[[rpcInfo.endTime]]',
-	custemItems: {% autoescape false %}'[[rpcInfo.custemItems]]'{% endautoescape %}
-}
-if (rpcInfo.rpId) rpcInfo.rpId = rpcInfo.rpId*1
-if (rpcInfo.custemItems) {
-	var no = {}
-	rpcInfo.custemItems = JSON.parse(rpcInfo.custemItems)
-	for (var p in rpcInfo.custemItems) {
-		if (pci[p]) no[p] = rpcInfo.custemItems[p]
-	}
-	rpcInfo.custemItems = no
-}
-</script>
 <script src="/js/util/iview/iview.min.js"></script>
 <script src="/js/txtrp/itemAdd.js"></script>
 {% endblock %}

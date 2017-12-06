@@ -40,9 +40,7 @@
 						</i-col>
 						<i-col span="5" offset="1">
 							<i-select v-model="item.type">
-								<i-option value="String">文本</i-option>
-								<i-option value="Boolean">布尔值</i-option>
-								<i-option value="Date">日期</i-option>
+								<i-option v-for="item in loadImgRP" :value="item.val">{{item.name}}</i-option>
 							</i-select>
 						</i-col>
 						<i-col span="4" offset="1">
@@ -66,8 +64,6 @@
 
 	</div>
 </div>
-
-
 {% endblock %}
 
 {% block css %}

@@ -22,7 +22,7 @@
 					title: '推荐位名称',
 					key: 'name',
 					render: (row, column, index) => {
-						return `<a class="text-blue" href="/txtrp/${row.id}">${row.name}</a>`
+						return `<a class="text-blue" href="/txtrp/list?rpId=${row.id}">${row.name}</a>`
 					}
 				},
 				{
@@ -47,7 +47,7 @@
 					title: '操作',
 					key: '',
 					render: (row, column, index) => {
-						return `<a class="text-blue" href="/txtrp/edit/${row.id}">编辑</i></a>
+						return `<a class="text-blue" href="/txtrp/edit?rpId=${row.id}">编辑</i></a>
 								<a class="text-blue" @click="handleModal(`+(row.active? `'refresh'`: `'release'`)+`, row.id, row.hash)">`+(row.active? `刷新`: `发布`)+`</a>
 								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a> `
 						+ (row.active? `<a class="text-blue" @click="handleModal('offline', row.id)">下线</a>  <a class="text-blue" href="/apig/rp/txt?k=${row.hash}" target="_blank">API</a>`: ``)

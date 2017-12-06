@@ -40,9 +40,7 @@
 						</i-col>
 						<i-col span="5" offset="1">
 							<i-select v-model="item.type">
-								<i-option value="String">文本</i-option>
-								<i-option value="Boolean">布尔值</i-option>
-								<i-option value="Date">日期</i-option>
+								<i-option v-for="item in loadTxtRP" :value="item.val">{{item.name}}</i-option>
 							</i-select>
 						</i-col>
 						<i-col span="4" offset="1">
@@ -73,17 +71,5 @@
 
 {% block js %}
 <script src="/js/util/iview/iview.min.js"></script>
-<script>
-var rpInfo = {
-	id:   '[[rpInfo.id]]',
-	key:  '[[rpInfo.key]]',
-	name: '[[rpInfo.name]]',
-	description: '[[rpInfo.description]]',
-	custemItems: {% autoescape false %}'[[rpInfo.custemItems]]'{% endautoescape %}
-}
-if (rpInfo.id) rpInfo.id = rpInfo.id*1
-if (rpInfo.custemItems) rpInfo.custemItems = JSON.parse(rpInfo.custemItems)
-console.log(rpInfo)
-</script>
 <script src="/js/txtrp/add.js"></script>
 {% endblock %}

@@ -18,6 +18,7 @@ String.prototype.htmlDecode = function() {
 }
 
 if (!global.CMS) {
+
 	global.VM = {
 		el: '#vApp',
 		data: {
@@ -27,9 +28,29 @@ if (!global.CMS) {
 				notice: false
 			},
 			pageinfo: {
-				isEdit: /\/edit/.test(location.pathname)
+				isEdit: /(e|E)dit$/.test(location.pathname)
 			},
-			user: {}
+			user: {},
+			loadLib: [
+				{ name: 'jQuery 1.12.4', val: 'jq_1_12_4' },
+				{ name: 'jQuery 2.2.4', val: 'jq_2_2_4' },
+				{ name: 'jQuery 3.2.1', val: 'jq_3_2_1' },
+				{ name: 'Zepto 1.0rc1', val: 'zepto_1_0rc1' },
+				{ name: 'AngularJS 1.2.1', val: 'ang_1_2_1' },
+				{ name: 'Vue 2.2.6', val: 'vue_2_2_6' }
+			],
+			loadImgRP: [
+				{ name: '文本', val: 'String' },
+				{ name: '布尔值', val: 'Boolean' },
+				{ name: '日期', val: 'Date' },
+				{ name: '图片', val: 'Image' },
+			],
+			loadTxtRP: [
+				{ name: '文本', val: 'String' },
+				{ name: '布尔值', val: 'Boolean' },
+				{ name: '日期', val: 'Date' }
+			],
+			history_time: new Date()-0
 		},
 		methods: {
 			// 菜单切换
@@ -46,6 +67,11 @@ if (!global.CMS) {
 				const fileList = this.uploadList
 				fileList.splice(fileList.indexOf(file), 1)
 			},
+			imgRemove (key) {
+				var me = this
+				if (me.imgList) me.imgList[key] = {}
+				if (me.formValidate.custemItems) me.formValidate.custemItems[key] = ''
+			},
 			handleSuccess (res, file) {
 				// 因为上传过程为实例，这里模拟添加 url
 				if (res.code === '0000') {
@@ -59,6 +85,25 @@ if (!global.CMS) {
 				} else {
 					VUE.$Message.warning(res.message)
 				}
+			},
+			imgSuccess (key) {
+				return (function(res, file) {
+					var fn = function(res, file) {
+						if (res.code === '0000') {
+							console.log(res)
+							if (VUE.formValidate && VUE.formValidate.custemItems) {
+								var ci  = VUE.formValidate.custemItems,
+									key = fn.prototype.key
+								if (VUE.imgList) VUE.imgList[key] = file
+								ci[key] = res.data.url
+							}
+						} else {
+							VUE.$Message.warning(res.message)
+						}
+					}
+					fn.prototype.key  = key
+					return fn
+				}).call(key)
 			},
 			handleFormatError (file) {
 				this.$Notice.warning({
@@ -150,6 +195,11 @@ if (!global.CMS) {
 				sb.addClass('active')
 			}
 		},
+		// 获取Url参数
+		getQueryValue: function(key) {
+			var r = global.location.search.match(new RegExp('[\\?|\\&]' + key + '=([^\\&]*)', 'i'))
+			return r? decodeURIComponent(r[1]): ''
+		},
 		// 获取对象的真实类型
 		__getClass: function(obj) {
 			return Object.prototype.toString.call(obj).match(/^\[object\s(.*)\]$/)[1]
@@ -184,14 +234,18 @@ if (!global.CMS) {
 		},
 		// 获取列表
 		getDataList: function(api, path) {
-			var data = path? VM.data[path]: VM.data
-			var da = {
-				page: data.current || 1,
-				pageSize: data.pageSize || 10,
-			}
-			this.merge(data.search || {}, da)
+			var me = this,
+				data = path? VM.data[path]: VM.data,
+				da = {
+					page: data.current || 1,
+					pageSize: data.pageSize || 10,
+				},
+				_time = new Date()-0
+			me.merge(data.search || {}, da)
 			if (data.sort) da.sort = data.sort
-			this.http.get(api, da, function(d) {
+			if (me.history_time > (_time - 2000)) return
+			me.history_time = _time
+			me.http.get(api, da, function(d) {
 				data.dataList = d.data.list
 				data.total    = d.data.pageInfo.total
 				data.current  = d.data.pageInfo.current
