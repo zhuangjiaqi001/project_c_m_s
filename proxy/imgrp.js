@@ -65,7 +65,7 @@ exports.removeImgRP = function (id, cb) {
 			if (l) {
 				var ids = []
 				for (var v of rpc) {
-					ids.push(v.dataValues.id)
+					ids.push(v.id)
 				}
 				ImgRPC.destroy({ where: { id: { $or: ids } } }).then(rp => {
 					ImgRP.destroy({ where: { id: id } }).then(rp => {
