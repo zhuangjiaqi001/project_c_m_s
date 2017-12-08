@@ -81,10 +81,10 @@ router.post('/releaseTxtRP', (req, res, next) => {
 		var key = Tools.hmac(item.key)
 		TxtRP.updateTxtRP(id, { active: 1 })
 		TxtRP.getTxtRPCByRpId(id, select, (items, count) => {
-			Cache.set({ key: key, db: 2, data: Tools.sendHandle('0000', {
+			Cache.set({ key: key, db: 2, data: {
 					list:  items,
 					total: count
-				}),
+				},
 				cb: (e, o) => {
 					if (e) return Tools.errHandle('0142', res)
 					Tools.errHandle('0000', res)

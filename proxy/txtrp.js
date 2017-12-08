@@ -120,6 +120,7 @@ exports.getTxtRPById = function (id, cb) {
  * @param {Function} cb 回调函数
  */
 exports.getTxtRPCList = function(query, select, cb) {
+	if (!query.sort) query.sort = 'createdAt'
 	var qs = Tools.querySearch(query, select)
 	TxtRPC.findAndCountAll(qs.opts).then(function(items) {
 		cb(items.rows, {

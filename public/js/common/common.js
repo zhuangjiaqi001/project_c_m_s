@@ -94,8 +94,8 @@ if (!global.CMS) {
 							if (VUE.formValidate && VUE.formValidate.custemItems) {
 								var ci  = VUE.formValidate.custemItems,
 									key = fn.prototype.key
-								if (VUE.imgList) VUE.imgList[key] = file
-								ci[key] = res.data.url
+								if (VUE.imgList) Vue.set(VUE.imgList, key, file)
+								Vue.set(ci, key, res.data.url)
 							}
 						} else {
 							VUE.$Message.warning(res.message)

@@ -66,7 +66,6 @@ router.post('/removePage', (req, res, next) => {
 
 	Page.getPageById(id, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
-		if (item.active)  return Tools.errHandle('0134', res)
 		Page.removePage(id, function (err) {
 			if (err) return Tools.errHandle('0130', res)
 			Tools.errHandle('0000', res)
@@ -184,6 +183,7 @@ router.post('/removePageC', (req, res, next) => {
 
 	Page.getPageCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
+		if (item.active)  return Tools.errHandle('0174', res)
 		Page.removePageC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
 			Tools.errHandle('0000', res)
@@ -211,15 +211,19 @@ router.post('/releasePageC', (req, res, next) => {
 router.post('/offlinePageC', (req, res, next) => {
 	var body = req.body,
 		id   = body.id,
-		select = ['title', 'html', 'css', 'js', 'modelItems', 'active']
-	PageC.getPageCById(id, (item) => {
+		select = ['title', 'url', 'active']
+	Page.getPageCById(id, select, (item) => {
 		if (!item) return Tools.errHandle('0128', res)
-		var key = Tools.hmac(item.key)
-		PageC.updatePageC(id, { active: 0 })
-		Cache.del({ key: key, db: 1, cb: (e, o) => {
-			if (e) return Tools.errHandle('0142', res)
-			Tools.errHandle('0000', res)
-		}})
+		var mt   = item.url.match(/\/cms.+/),
+			path = mt? mt[0]: ''
+		if (!path) return Tools.errHandle('0130', res)
+		Aliyun.delete(path, function(err, result) {
+			if (err) return Tools.errHandle('0130', res)
+			Page.updatePageC(id, { active: 0 }, function(err) {
+				if (err) return Tools.errHandle('0130', res)
+				Tools.errHandle('0000', res)
+			})
+		})
 	})
 })
 

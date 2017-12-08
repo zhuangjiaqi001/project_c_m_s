@@ -1,6 +1,7 @@
 (function(global, VM, CMS) {
 	var API = {
-		list: '/imgrp/getImgRPCList',
+		get:    '/imgrp/get',
+		list:   '/imgrp/getImgRPCList',
 		remove: '/imgrp/removeImgRPC'
 	},
 	rpId = CMS.getQueryValue('rpId')
@@ -54,6 +55,7 @@
 				title: ''
 			},
 			sort: '',
+			rpinfo: {},
 			rpId: rpId || '',
 			id: ''
 		},
@@ -109,10 +111,22 @@
 					this.sort = ''
 				}
 				CMS.getDataList(API.list)
+			},
+			getData: function(me) {
+				CMS.http.get(API.get, { id: rpId }, function(o) {
+					me.rpinfo = o.data
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
+			load: function() {
+				var me = this
+				CMS.getDataList(API.list)
+				me.getData(me)
 			}
 		}
 	}))
 
-	CMS.getDataList(API.list)
 
 }(window, window.VM, window.CMS))

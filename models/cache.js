@@ -36,6 +36,38 @@ module.exports = {
 			cb && cb(1)
 		}
 	},
+	mget: function(opts) {
+		var key = opts.key,
+			db  = opts.db || 0,
+			cb  = opts.cb,
+			obj = {}
+		if (key && cb) {
+			console.log('===================== KEY =====================')
+			console.log(key)
+			client[db].mget(key, function (err, data) {
+				if (err) {
+					console.log('查询信息失败!')
+					return cb(err)
+				}
+				if (data) {
+					console.log('查询 "'+key+'" 信息成功!')
+					key.map((i, _i) => {
+						if (data[_i]) {
+							obj[i] = JSON.parse(data[_i])
+						} else obj[i] = null
+					})
+					// console.log('===================== DATA =====================')
+					// console.log(data)
+					return cb(null, obj)
+				} else {
+					console.log('"'+key+'" 信息不存在!')
+					return cb(1)
+				}
+			})
+		} else {
+			cb && cb(1)
+		}
+	},
 	save: function(opts) {
 		var key     = opts.key,
 			data    = opts.data,

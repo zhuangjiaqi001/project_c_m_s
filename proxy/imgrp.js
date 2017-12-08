@@ -120,6 +120,7 @@ exports.getImgRPById = function (id, cb) {
  * @param {Function} cb 回调函数
  */
 exports.getImgRPCList = function(query, select, cb) {
+	if (!query.sort) query.sort = 'createdAt'
 	var qs = Tools.querySearch(query, select)
 	ImgRPC.findAndCountAll(qs.opts).then(function(items) {
 		cb(items.rows, {

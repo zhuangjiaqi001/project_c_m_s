@@ -60,9 +60,6 @@
 					}
 				})
 			},
-			handleReset: function(name) {
-				this.$refs[name].resetFields()
-			},
 			getData: function() {
 				var me = this
 				CMS.http.get(API.get, { id: id }, function(o) {
