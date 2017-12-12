@@ -38,7 +38,7 @@ module.exports = function(sequelize, DataTypes) {
 		freezeTableName: false,
 		setterMethods: {
 			custemItems: function(val) {
-				return this.setDataValue('custemItems', JSON.stringify(val))
+				return this.setDataValue('custemItems', typeof val !== 'string'? JSON.stringify(val): val)
 			}
 		},
 	})

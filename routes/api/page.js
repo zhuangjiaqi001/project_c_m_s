@@ -13,6 +13,10 @@ const tpl       = swig.compileFile('template/t0.html', { autoescape: false })
 const tprev     = swig.compileFile('template/tp.html', { autoescape: false })
 const jsframe   = Tools.getJSFrame()
 
+var RP = {
+	pn: /\S+cms\/[a-z]{2}\//
+}
+
 // 创建推荐位
 router.get('/get', (req, res, next) => {
 	var q      = req.query,
@@ -184,6 +188,8 @@ router.post('/removePageC', (req, res, next) => {
 	Page.getPageCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		if (item.active)  return Tools.errHandle('0174', res)
+		debugger
+		item.key
 		Page.removePageC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
 			Tools.errHandle('0000', res)
@@ -223,6 +229,36 @@ router.post('/offlinePageC', (req, res, next) => {
 				if (err) return Tools.errHandle('0130', res)
 				Tools.errHandle('0000', res)
 			})
+		})
+	})
+})
+router.post('/copyPageC', (req, res, next) => {
+	var body = req.body
+
+	Page.getPageCByQuery(body, function (item) {
+		if (!item) return Tools.errHandle('0128', res)
+		item = item.dataValues
+		var da = {
+			key:         `${item.key}_copy_${Date.now()}`,
+			pageId:      item.pageId,
+			userId:      item.userId,
+			description: item.description,
+			title:       `${item.title}_copy`,
+			html:        item.html,
+			js:          item.js,
+			css:         item.css,
+			// url:         '',
+			header:      item.header,
+			footer:      item.footer,
+			custemItems: item.custemItems,
+			modelItems:  item.modelItems,
+			type:        item.type,
+			active:      false,
+			width:       item.width
+		}
+		Page.addPageC(da, function (err) {
+			if (err) return Tools.errHandle('0173', res)
+			Tools.errHandle('0000', res)
 		})
 	})
 })
@@ -326,8 +362,7 @@ function getAliyun(body, res, cb) {
 	if (!len) cb(body)
 
 	if (html) {
-		var hmt = html.match(/(tempc|pagec)[\S]*html$/)[0]
-		Aliyun.getFile(hmt, function(err, result) {
+		Aliyun.getFile(html.replace(RP.pn, ''), function(err, result) {
 			if (err) return Tools.errHandle('0105', res)
 			body.html = result
 			++now
@@ -335,8 +370,7 @@ function getAliyun(body, res, cb) {
 		})
 	}
 	if (css) {
-		var cmt = css.match(/(tempc|pagec)[\S]*css$/)[0]
-		Aliyun.getFile(cmt, function(err, result) {
+		Aliyun.getFile(css.replace(RP.pn, ''), function(err, result) {
 			if (err) return Tools.errHandle('0106', res)
 			body.css = result
 			++now
@@ -344,8 +378,7 @@ function getAliyun(body, res, cb) {
 		})
 	}
 	if (js) {
-		var jmt = js.match(/(tempc|pagec)[\S]*js$/)[0]
-		Aliyun.getFile(jmt, function(err, result) {
+		Aliyun.getFile(js.replace(RP.pn, ''), function(err, result) {
 			if (err) return Tools.errHandle('0107', res)
 			body.js = result
 			++now
@@ -359,10 +392,9 @@ function getAliyunHTML(temps, res, cb) {
 	for (let p in temps) {
 		if (!temps[p].html) return
 		++len
-		var mt = temps[p].html.match(/(tempc|pagec)[\S]*html$/)
+		var mt = temps[p].html.replace(RP.pn, '')
 		if (!mt) return
-		var path = mt[0]
-		Aliyun.getFile(path, function(err, result) {
+		Aliyun.getFile(mt, function(err, result) {
 			if (err) return Tools.errHandle('0105', res)
 			temps[p].html = result
 			++now

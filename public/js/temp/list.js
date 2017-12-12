@@ -2,7 +2,8 @@
 	var API = {
 		get:    '/temp/get',
 		list:   '/temp/getTempCList',
-		remove: '/temp/removeTempC'
+		remove: '/temp/removeTempC',
+		copy:   '/temp/copyTempC'
 	},
 	tempId = CMS.getQueryValue('tempId')
 
@@ -28,12 +29,14 @@
 					key: '',
 					render: (row, col, idx) => {
 						return `<a class="text-blue" href="/temp/itemEdit?tempId=${row.tempId}&id=${row.id}">编辑</a>
-								<a class="text-blue" @click="handleModal(row.tempId, row.id)">删除</a>
+								<a class="text-blue" @click="rpRemove(row.tempId, row.id)">删除</a>
+								<a class="text-blue" @click="rpCopy(row.tempId, row.id)">复制</a>
 								${row.preview? '<a class="text-blue" target="_blank" href="'+row.preview+'">预览</a>': ''}`
 					}
 				}
 			],
 			removeModal: false,
+			copyModal: false,
 			dataList: [],
 			total: 0,
 			pageSize: 10,
@@ -48,12 +51,17 @@
 			id: ''
 		},
 		methods: {
-			handleModal (tempId, id) {
+			rpRemove (tempId, id) {
 				this.removeModal = true
 				this.tempId = tempId
 				this.id     = id
 			},
-			handleRemove () {
+			rpCopy (rpId, id) {
+				this.copyModal = true
+				this.tempId = tempId
+				this.id     = id
+			},
+			rpRemoveFn () {
 				CMS.http.post(API.remove, {
 					tempId: this.tempId,
 					id: this.id
@@ -62,6 +70,19 @@
 					VUE.$Message.success('成功!')
 					CMS.getDataList(API.list)
 					VUE.removeModal = false
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+				})
+			},
+			rpCopyFn () {
+				CMS.http.post(API.copy, {
+					tempId: this.tempId,
+					id: this.id
+				}, function(o) {
+					console.log(o)
+					VUE.$Message.success('成功!')
+					CMS.getDataList(API.list)
+					VUE.copyModal = false
 				}, function(err) {
 					VUE.$Message.warning(err.message)
 				})

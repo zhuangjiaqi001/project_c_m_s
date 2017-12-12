@@ -4,7 +4,8 @@
 		list:    '/page/getPageCList',
 		remove:  '/page/removePageC',
 		release: '/page/releasePageC',
-		offline: '/page/offlinePageC'
+		offline: '/page/offlinePageC',
+		copy:    '/page/copyPageC'
 	},
 	pageId = CMS.getQueryValue('pageId')
 
@@ -12,7 +13,8 @@
 		release: 'handleRelease',
 		refresh: 'handleRelease',
 		remove:  'handleRemove',
-		offline: 'handleOffline'
+		offline: 'handleOffline',
+		copy:    'handleCopy'
 	}
 
 	var VUE = new Vue(CMS.extend(VM, {
@@ -38,7 +40,8 @@
 					render: (row, col, idx) => {
 						return `<a class="text-blue" href="/page/itemEdit?pageId=${row.pageId}&id=${row.id}">编辑</a>
 								<a class="text-blue" @click="handleModal(`+(row.active? `'refresh'`: `'release'`)+`, row.id)">`+(row.active? `刷新`: `发布`)+`</a>
-								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a>`+
+								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a>
+								<a class="text-blue" @click="handleModal('copy', row.id)">复制</a>`+
 								(row.active? ` <a class="text-blue" @click="handleModal('offline', row.id)">下线</a>`: ``) +
 								(row.url? ` <a class="text-blue" target="_blank" href="${row.url}">链接</a>`: ``)
 					}
@@ -127,6 +130,15 @@
 			// 下线
 			handleOffline: function() {
 				CMS.http.post(API.offline, { id: this.pageId }, function(o) {
+					console.log(o)
+					VUE.$Message.success('成功!')
+					CMS.getDataList(API.list)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+				})
+			},
+			handleCopy: function() {
+				CMS.http.post(API.copy, { id: this.pageId }, function(o) {
 					console.log(o)
 					VUE.$Message.success('成功!')
 					CMS.getDataList(API.list)
