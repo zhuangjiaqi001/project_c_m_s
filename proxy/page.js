@@ -177,8 +177,8 @@ exports.updatePageC = function (id, opts, cb) {
 		opts.modelItems.map(function(i) { mod.push(i.id) })
 		opts.modelItems = Tools.unique(mod)
 	}
-	if (opts.header) opts.header = opts.header.id
-	if (opts.footer) opts.footer = opts.footer.id
+	opts.header = opts.header? opts.header.id: ''
+	opts.footer = opts.footer? opts.footer.id: ''
 	return PageC.update(opts, { where: { id: id } }).then(rp => {
 		cb(!rp, rp[0])
 	})
