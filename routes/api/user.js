@@ -2,24 +2,28 @@ const express = require('express')
 const router  = express.Router()
 const config  = require('../../config')
 const MJJS    = require('../../common/MJJS')
+const models  = require('../../models')
 const Cache   = require('../../models/cache')
 const proxy   = require('../../proxy')
 const User    = proxy.User
 const Mapping = require('../../common/mapping')
 const Tools   = require('../../common/tools')
+const Valid   = require('../../common/valid')
 const userEdit = require('../../common/edit').User
 
-function updateRedis(req, res, id, token, remember) {
+function updateRedis(req, res, id, token, aToken, remember) {
 	User.getUserById(id, [], function (user) {
+		user.dataValues.token = token
 		Cache.save({
-			key: token,
+			key: aToken,
 			data: user,
 			expired: remember? config.cookieRemExpiredTime: config.cacheExpiredTime,
 			cb: function(e, o) {
 				if (e) return Tools.errHandle('0044', res)
 				req.session.user = user
 				var cookieCtrl = remember? config.cookieRemCtrl: config.cookieCtrl
-				res.cookie('token', token, cookieCtrl)
+				res.cookie('token',  token, cookieCtrl)
+				res.cookie('aToken', aToken, cookieCtrl)
 				res.cookie('loginname', user.loginname, cookieCtrl)
 				res.cookie('id', user.id, cookieCtrl)
 				res.cookie('rem', remember, cookieCtrl)
@@ -32,11 +36,13 @@ function updateRedis(req, res, id, token, remember) {
 
 // 获取用户信息
 router.get('/getUserInfo', (req, res, next) => {
-	var token  = req.signedCookies.token
+	var token  = req.signedCookies.token,
+		aToken = req.signedCookies.aToken
 	Cache.get({
-		key: token,
+		key: aToken,
 		cb: function(e, user) {
 			if (e) return Tools.errHandle('0006', res)
+			if (user.token != token) return Tools.errHandle('0007', res)
 			var select = ['loginname', 'nickname', 'email', 'gender', 'birthday', 'zodiac', 'zodiac_china', 'blood_type', 'avatar', 'levelName', 'createdAt']
 			user = Tools.dataFilter(user, select)
 			user.genderName = Mapping.gender[user.gender] || Mapping.gender[0]
@@ -64,7 +70,8 @@ router.post('/update', (req, res, next) => {
 	var body  = req.body,
 		mid   = req.signedCookies.id*1,
 		nid   = body.id,
-		token = req.signedCookies.token,
+		token  = req.signedCookies.token,
+		aToken = req.signedCookies.aToken,
 		birdate  = body.birthday,
 		remember = req.signedCookies.rem
 
@@ -91,15 +98,64 @@ router.post('/update', (req, res, next) => {
 
 			User.updateUser(nid, body, function (err, user) {
 				if (err) return Tools.errHandle('0042', res)
-				updateRedis(req, res, nid, token, remember)
+				updateRedis(req, res, nid, token, aToken, remember)
 			})
 		})
 	} else {
 		User.updateUser(mid, body, function (err, user) {
 			if (err) return Tools.errHandle('0041', res)
-			updateRedis(req, res, mid, token, remember)
+			updateRedis(req, res, mid, token, aToken, remember)
 		})
 	}
+})
+
+// 获取用户资源信息
+router.get('/getRes', (req, res, next) => {
+	var id  = req.signedCookies.id
+	User.findById(id, {
+		include: [{
+			all: true,
+			required: false,
+			attributes: ['id'],
+		}],
+		attributes: [],
+	}, function (user) {
+		if (!user) return Tools.errHandle('0011', res)
+		for (var p in user.dataValues) {
+			user.dataValues[p] = user.dataValues[p].length
+		}
+		Tools.errHandle('0000', res, user.dataValues)
+	})
+})
+
+
+// 用户注册
+router.post('/zjq_reg', (req, res, next) => {
+	var body      = req.body,
+		loginname = body.loginname,
+		password  = body.password,
+		email     = body.email,
+		admin     = body.admin
+
+	body.passwordR = password
+	if (admin != config.admin) return Tools.errHandle('0028', res)
+
+	Valid.run(res, 'reg', body, function() {
+		// 检查用户名是否已经存在
+		User.getUserByQuery({
+			'loginname': loginname,
+			'email': email
+		}, function(user) {
+			var url = config.link.index
+			if (user) return Tools.errFlash(req, res, 'indexErr', '0026', url)
+			User.addUser(loginname, password, email, function (err) {
+				if (err) return Tools.errHandle('0027', res)
+				return Tools.errHandle('0000', res)
+			})
+		})
+	}, function(code) {
+		return Tools.errHandle(code, res)
+	})
 })
 
 function getUserById(id, items) {

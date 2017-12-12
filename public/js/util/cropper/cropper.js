@@ -2159,7 +2159,7 @@
 		var _this = this;
 		var id = 'avatar-' + new Date() * 1;
 		$.ajax({
-			url: '/temp/crop-avatar.html',
+			url: '/template/crop-avatar.html',
 			success: function(o) {
 				if (!$('#' + id).length) {
 					$('body').append($(o)[0].outerHTML);

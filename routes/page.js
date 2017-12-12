@@ -7,43 +7,32 @@ const Aliyun  = require('../common/aliyun')
 
 // 列表
 router.get('/', (req, res, next) => {
-	res.render('page', {
-		title: '落地页列表'
-	})
+	res.render('page')
 })
 
 // 创建
 router.get('/add', (req, res, next) => {
-	res.render('page/add', {
-		title: '新建落地页列表'
-	})
+	res.render('page/add')
 })
+
 // 编辑
 router.get('/edit', (req, res, next) => {
-	res.render('page/add', {
-		title: '编辑落地页列表'
-	})
+	res.render('page/add')
 })
 
 // 落地页列表内容列表
 router.get('/list', (req, res, next) => {
-	res.render('page/list', {
-		title: '落地页列表列表'
-	})
+	res.render('page/list')
 })
 
 // 落地页列表内容创建
 router.get('/itemAdd', (req, res, next) => {
-	res.render('page/itemAdd', {
-		title: '新建内容'
-	})
+	res.render('page/itemAdd')
 })
 
 // 落地页列表内容编辑
 router.get('/itemEdit', (req, res, next) => {
-	res.render('page/itemAdd', {
-		title: '编辑内容'
-	})
+	res.render('page/itemAdd')
 })
 
 function getAliyun(body, res, cb) {

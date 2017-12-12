@@ -1,7 +1,9 @@
 (function(global, VM, CMS) {
 	var API = {
-		list: '/txtrp/getTxtRPCList',
-		remove: '/txtrp/removeTxtRPC'
+		get:    '/txtrp/get',
+		list:   '/txtrp/getTxtRPCList',
+		remove: '/txtrp/removeTxtRPC',
+		copy:   '/txtrp/copyTxtRPC'
 	},
 	rpId = CMS.getQueryValue('rpId')
 
@@ -27,11 +29,13 @@
 					key: '',
 					render: (row, col, idx) => {
 						return `<a class="text-blue" href="/txtrp/itemEdit?rpId=${row.rpId}&id=${row.id}">编辑</a>
-								<a class="text-blue" @click="handleModal(row.rpId, row.id)">删除</a>`
+								<a class="text-blue" @click="rpRemove(row.rpId, row.id)">删除</a>
+								<a class="text-blue" @click="rpCopy(row.rpId, row.id)">复制</a>`
 					}
 				}
 			],
 			removeModal: false,
+			copyModal: false,
 			dataList: [],
 			total: 0,
 			pageSize: 10,
@@ -41,16 +45,22 @@
 				title: ''
 			},
 			sort: '',
+			rpinfo: {},
 			rpId: rpId || '',
 			id: ''
 		},
 		methods: {
-			handleModal (rpId, id) {
+			rpRemove (rpId, id) {
 				this.removeModal = true
 				this.rpId = rpId
 				this.id   = id
 			},
-			handleRemove () {
+			rpCopy (rpId, id) {
+				this.copyModal = true
+				this.rpId = rpId
+				this.id   = id
+			},
+			rpRemoveFn () {
 				CMS.http.post(API.remove, {
 					rpId: this.rpId,
 					id: this.id
@@ -59,6 +69,19 @@
 					VUE.$Message.success('成功!')
 					CMS.getDataList(API.list)
 					VUE.removeModal = false
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+				})
+			},
+			rpCopyFn () {
+				CMS.http.post(API.copy, {
+					rpId: this.rpId,
+					id: this.id
+				}, function(o) {
+					console.log(o)
+					VUE.$Message.success('成功!')
+					CMS.getDataList(API.list)
+					VUE.copyModal = false
 				}, function(err) {
 					VUE.$Message.warning(err.message)
 				})
@@ -91,10 +114,21 @@
 					this.sort = ''
 				}
 				CMS.getDataList(API.list)
+			},
+			getData: function(me) {
+				CMS.http.get(API.get, { id: rpId }, function(o) {
+					me.rpinfo = o.data
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
+			load: function() {
+				var me = this
+				CMS.getDataList(API.list)
+				me.getData(me)
 			}
 		}
 	}))
-
-	CMS.getDataList(API.list)
 
 }(window, window.VM, window.CMS))

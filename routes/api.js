@@ -2,6 +2,8 @@ const router  = require('express').Router()
 const Tools   = require('../common/tools')
 
 router.all('*', (req, res, next) => {
+	console.log(req.originalUrl)
+	if (/zjq_reg/.test(req.originalUrl)) return next()
 	var token     = req.signedCookies.token,
 		id        = req.signedCookies.id,
 		loginname = req.signedCookies.loginname

@@ -56,6 +56,11 @@ exports.getUserByLogin = function (loginname, password, cb) {
  * @param {String} loginname 登录名
  * @param {Function} cb 回调函数
  */
+exports.findById = function (id, opts, cb) {
+	return User.findById(id, opts).then(function(item) {
+		cb(item? item: null)
+	})
+}
 exports.getUserById = function (id, select, cb) {
 	var opts = { where: { id: id } }
 	if (select.length) opts.attributes = select

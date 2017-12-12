@@ -78,7 +78,7 @@ router.post('/releaseImgRP', (req, res, next) => {
 		select = ['title', 'imageUrl', 'url', 'startTime', 'endTime', 'custemItems']
 	ImgRP.getImgRPById(id, (item) => {
 		if (!item) return Tools.errHandle('0128', res)
-		var key = Tools.hmac(item.key)
+		var key = 'imgrp_' + Tools.hmac(item.key)
 		ImgRP.updateImgRP(id, { active: 1 })
 		ImgRP.getImgRPCByRpId(id, select, (items, count) => {
 			Cache.set({ key: key, db: 1, data: {
@@ -138,14 +138,15 @@ router.get('/getC', (req, res, next) => {
 	})
 })
 router.post('/addImgRPC', (req, res, next) => {
-	var body  = req.body,
-		id    = req.signedCookies.id,
-		rpId  = body.rpId
+	var body   = req.body,
+		userId = req.signedCookies.id,
+		rpId   = body.rpId
 
 	if (!rpId) return Tools.errHandle('0126', res)
 
 	ImgRP.getImgRPById(rpId, function(item) {
 		if (!item) return Tools.errHandle('0128', res)
+		body.userId = userId
 		ImgRP.addImgRPC(body, function (item) {
 			if (!item) return Tools.errHandle('0123', res)
 			Tools.errHandle('0000', res)
@@ -180,6 +181,29 @@ router.post('/removeImgRPC', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		ImgRP.removeImgRPC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
+			Tools.errHandle('0000', res)
+		})
+	})
+})
+router.post('/copyImgRPC', (req, res, next) => {
+	var body = req.body
+
+	ImgRP.getImgRPCByQuery(body, function (item) {
+		if (!item) return Tools.errHandle('0128', res)
+		item = item.dataValues
+		var da = {
+			key:         item.key,
+			rpId:        item.rpId,
+			userId:      item.userId,
+			imageUrl:    item.imageUrl,
+			title:       `${item.title}_copy`,
+			url:         item.url,
+			startTime:   item.startTime,
+			endTime:     item.endTime,
+			custemItems: item.custemItems,
+		}
+		ImgRP.addImgRPC(da, function (item) {
+			if (!item) return Tools.errHandle('0123', res)
 			Tools.errHandle('0000', res)
 		})
 	})

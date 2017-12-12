@@ -137,6 +137,10 @@ if (!global.CMS) {
 		}
 	}
 	global.CMS = {
+		api_history: {
+			api: '',
+			time: new Date() - 0
+		},
 		http: {
 			ajax: function(type, url, data, success, error) {
 				var _data, _success, _error
@@ -186,8 +190,11 @@ if (!global.CMS) {
 					global.VM.data.user = o.data
 					if (me.load && !me.isLoad) me.load(o.data)
 					me.isLoad = false
-				} else if (o.code === '0006') {
-					location.href = '/logout'
+				} else {
+					VUE.$Message.warning(o.message)
+					setTimeout(function() {
+						location.href = '/logout'
+					}, 2000)
 				}
 			})
 			var mt = location.pathname.match(/\w+/)
@@ -245,8 +252,9 @@ if (!global.CMS) {
 				_time = new Date()-0
 			me.merge(data.search || {}, da)
 			if (data.sort) da.sort = data.sort
-			if (me.history_time > (_time - 2000)) return
-			me.history_time = _time
+			if (api === me.api_history.api && me.api_history.time > (_time - 2000)) return
+			me.api_history.api = api
+			me.api_history.time = _time
 			me.http.get(api, da, function(d) {
 				data.dataList = d.data.list
 				data.total    = d.data.pageInfo.total

@@ -24,9 +24,11 @@ router.post('/', (req, res, next) => {
 	Valid.run(res, 'login', body, function() {
 		User.getUserByLogin(loginname, password, function(user) {
 			if (!user) return Tools.errFlash(req, res, 'indexErr', '0003', url)
-			var token = Tools.hmac(user.accessToken + new Date()*1)
+			var token  = 'user_' + Tools.hmac(user.accessToken + new Date()*1),
+				aToken = 'user_' + user.accessToken
+			user.dataValues.token = token
 			Cache.save({
-				key: token,
+				key: aToken,
 				data: user,
 				expired: remember? config.cookieRemExpiredTime: config.cacheExpiredTime,
 				cb: function(e, o) {
@@ -35,7 +37,8 @@ router.post('/', (req, res, next) => {
 					}
 					req.session.user = user
 					var cookieCtrl = remember? config.cookieRemCtrl: config.cookieCtrl
-					res.cookie('token', token, cookieCtrl)
+					res.cookie('token',  token,  cookieCtrl)
+					res.cookie('aToken', aToken, cookieCtrl)
 					res.cookie('loginname', user.loginname, cookieCtrl)
 					res.cookie('id', user.id, cookieCtrl)
 					res.cookie('rem', remember, cookieCtrl)

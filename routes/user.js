@@ -7,15 +7,12 @@ const Code    = require('../common/code')
 const proxy   = require('../proxy')
 const User    = proxy.User
 
-router.get('/', (req, res, next) => {
-	res.render('user', {
-		title: '用户管理'
-	})
-})
+// router.get('/', (req, res, next) => {
+// 	res.render('user')
+// })
 
 router.get('/profile', (req, res, next) => {
 	res.render('user/profile', {
-		title: '个人信息',
 		avatarEdit: 1
 	})
 })

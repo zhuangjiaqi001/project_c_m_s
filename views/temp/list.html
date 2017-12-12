@@ -4,13 +4,14 @@
 
 <div class="box">
 	<div class="box-header">
-		<h3 class="box-title">[[item.name]] <small>[[item.key]]</small></h3>
+		<h3 class="box-title">{{tempinfo.name}} <!-- <small>{{tempinfo.key}}</small> --></h3>
 	</div>
 	<div class="box-body">
 
 		<div class="row form-group">
 			<div class="col-md-12">
 				<a class="btn btn-warning" :href="'/temp/itemAdd?tempId=' + tempId">新建</a>
+				<a class="btn" href="/temp">返回</a>
 			</div>
 		</div>
 		<div class="row form-group">

@@ -9,6 +9,19 @@
 	pageId = CMS.getQueryValue('pageId'),
 	id     = CMS.getQueryValue('id')
 
+
+	global.handleCSel = function(item) {
+		VUE.handleCSel(item)
+	}
+	global.selModel = function(item) {
+		VUE.selModel(item)
+	}
+	global.widthCheck = function(rule, val, cb) {
+		if (!/^\d+$/.test(val)) cb(new Error(`值必须为正整数`))
+		else if (val < rule.min || val > rule.max) cb(new Error(`值必须在 ${rule.min} 和 ${rule.max} 之间`))
+		else cb()
+	}
+
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
 			listAPI: API.templist,
@@ -200,16 +213,5 @@
 
 	VUE.$Message.config({ top: 100 })
 
-}(window, window.VM, window.CMS))
 
-function handleCSel(item) {
-	VUE.handleCSel(item)
-}
-function selModel(item) {
-	VUE.selModel(item)
-}
-function widthCheck(rule, val, cb) {
-	if (!/^\d+$/.test(val)) cb(new Error(`值必须为正整数`))
-	else if (val < rule.min || val > rule.max) cb(new Error(`值必须在 ${rule.min} 和 ${rule.max} 之间`))
-	else cb()
-}
+}(window, window.VM, window.CMS))

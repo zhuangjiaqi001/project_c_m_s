@@ -6,7 +6,7 @@
     "ignore_watch": ["node_modules","public","views","upload/*"],
     "log_date_format": "YYYY-MM-DD HH:mm Z",
     "env": {
-      "NODE_ENV": "production"
+      "NODE_ENV": "prd"
     }
   }]
 }

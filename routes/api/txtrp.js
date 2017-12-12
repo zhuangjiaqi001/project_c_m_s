@@ -78,7 +78,7 @@ router.post('/releaseTxtRP', (req, res, next) => {
 		select = ['title', 'url', 'startTime', 'endTime', 'custemItems']
 	TxtRP.getTxtRPById(id, (item) => {
 		if (!item) return Tools.errHandle('0128', res)
-		var key = Tools.hmac(item.key)
+		var key = 'txtrp_' + Tools.hmac(item.key)
 		TxtRP.updateTxtRP(id, { active: 1 })
 		TxtRP.getTxtRPCByRpId(id, select, (items, count) => {
 			Cache.set({ key: key, db: 2, data: {
@@ -138,19 +138,17 @@ router.get('/getC', (req, res, next) => {
 	})
 })
 router.post('/addTxtRPC', (req, res, next) => {
-	var body  = req.body,
-		id    = req.signedCookies.id
-		rpId  = body.rpId,
-		title = body.title,
-		key   = body.key,
-		custemItems = body.custemItems
+	var body   = req.body,
+		userId = req.signedCookies.id,
+		rpId   = body.rpId
 
 	if (!rpId) return Tools.errHandle('0126', res)
 
 	TxtRP.getTxtRPById(rpId, function(item) {
 		if (!item) return Tools.errHandle('0128', res)
-		TxtRP.addTxtRPC(body, function (err) {
-			if (err) return Tools.errHandle('0123', res)
+		body.userId = userId
+		TxtRP.addTxtRPC(body, function (item) {
+			if (!item) return Tools.errHandle('0123', res)
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -183,6 +181,28 @@ router.post('/removeTxtRPC', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		TxtRP.removeTxtRPC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
+			Tools.errHandle('0000', res)
+		})
+	})
+})
+router.post('/copyTxtRPC', (req, res, next) => {
+	var body = req.body
+
+	TxtRP.getTxtRPCByQuery(body, function (item) {
+		if (!item) return Tools.errHandle('0128', res)
+		item = item.dataValues
+		var da = {
+			key:         item.key,
+			rpId:        item.rpId,
+			userId:      item.userId,
+			title:       `${item.title}_copy`,
+			url:         item.url,
+			startTime:   item.startTime,
+			endTime:     item.endTime,
+			custemItems: item.custemItems,
+		}
+		TxtRP.addTxtRPC(da, function (item) {
+			if (!item) return Tools.errHandle('0123', res)
 			Tools.errHandle('0000', res)
 		})
 	})

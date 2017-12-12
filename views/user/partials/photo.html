@@ -6,6 +6,7 @@
 	</li>
 </ul>
 
-<Modal title="查看图片" v-model="visibleImg">
+<Modal v-model="visibleImg">
 	<img :src="imgPrev" v-if="visibleImg" style="width: 100%">
+	<div slot="footer"></div>
 </Modal>

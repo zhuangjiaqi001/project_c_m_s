@@ -15,7 +15,6 @@ module.exports = function(sequelize, DataTypes) {
 			type: DataTypes.STRING,
 			comment: '推荐位KEY'
 		},
-
 		title:        { type: DataTypes.STRING, comment: '标题' },
 		imageUrl:     { type: DataTypes.STRING, comment: '图片地址' },
 		url:          { type: DataTypes.STRING, comment: '链接地址' },
@@ -24,6 +23,11 @@ module.exports = function(sequelize, DataTypes) {
 		custemItems:  { type: DataTypes.STRING, comment: '自定义字段' }
 	}, {
 		freezeTableName: false,
+		setterMethods: {
+			custemItems: function(val) {
+				return this.setDataValue('custemItems', typeof val !== 'string'? JSON.stringify(val): val)
+			}
+		},
 	})
 
 	ImgRPC.afterFind(function(val) {

@@ -43,7 +43,6 @@ Page.hasMany(PageC,  { foreignKey: 'pageId', targetKey: 'id', as: 'PageC' })	// 
 
 // sequelize.sync()
 
-
 exports.User   = User
 exports.Img    = Img
 exports.ImgRP  = ImgRP

@@ -10,22 +10,23 @@
 	</div>
 	<div class="col-md-8">
 		<div class="nav-tabs-custom">
-			<ul class="nav nav-tabs">
-				<li class="active"><a href="#timeline" data-toggle="tab">时间线</a></li>
-				<li><a href="#photo" data-toggle="tab">图片管理</a></li>
-				<li><a href="#settings" data-toggle="tab">编辑</a></li>
-			</ul>
-			<div class="tab-content">
-				<div class="active tab-pane" id="timeline">
-					{% include "partials/timeline.html" ignore missing %}
-				</div>
-				<div class="tab-pane" id="photo">
-					{% include "partials/photo.html" ignore missing %}
-				</div>
-				<div class="tab-pane" id="settings">
-					{% include "partials/settings.html" ignore missing %}
-				</div>
-			</div>
+			<Tabs class="tab-content" :animated="false" active-key="key1">
+				<Tab-pane label="时间线" key="key1">
+					<div class="active tab-pane" id="timeline">
+						{% include "partials/timeline.html" ignore missing %}
+					</div>
+				</Tab-pane>
+				<Tab-pane label="图片管理" key="key2">
+					<div class="active tab-pane" id="photo">
+						{% include "partials/photo.html" ignore missing %}
+					</div>
+				</Tab-pane>
+				<Tab-pane label="编辑" key="key3">
+					<div class="active tab-pane" id="settings">
+						{% include "partials/settings.html" ignore missing %}
+					</div>
+				</Tab-pane>
+			</Tabs>
 		</div>
 	</div>
 </div>
@@ -36,6 +37,7 @@
 {% endblock %}
 
 {% block js %}
+<script src="/js/lib/bootstrap.min.js"></script>
 <script src="/js/util/cropper/cropper.js"></script>
 <script src="/js/user/profile.js"></script>
 {% endblock %}

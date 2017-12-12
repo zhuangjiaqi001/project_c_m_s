@@ -19,17 +19,17 @@ module.exports = {
 			client[db].get(key, function (err, data) {
 				if (err) {
 					console.log('查询信息失败!')
-					return cb(err)
+					return cb && cb(err)
 				}
 				if (data) {
 					console.log('查询 "'+key+'" 信息成功!')
 					data = JSON.parse(data)
 					console.log('===================== DATA =====================')
 					console.log(data)
-					return cb(null, data)
+					return cb && cb(null, data)
 				} else {
 					console.log('"'+key+'" 信息不存在!')
-					return cb(1)
+					return cb && cb(1)
 				}
 			})
 		} else {
@@ -47,7 +47,7 @@ module.exports = {
 			client[db].mget(key, function (err, data) {
 				if (err) {
 					console.log('查询信息失败!')
-					return cb(err)
+					return cb && cb(err)
 				}
 				if (data) {
 					console.log('查询 "'+key+'" 信息成功!')
@@ -58,10 +58,10 @@ module.exports = {
 					})
 					// console.log('===================== DATA =====================')
 					// console.log(data)
-					return cb(null, obj)
+					return cb && cb(null, obj)
 				} else {
 					console.log('"'+key+'" 信息不存在!')
-					return cb(1)
+					return cb && cb(1)
 				}
 			})
 		} else {
@@ -82,10 +82,10 @@ module.exports = {
 			client[db].setex(key, expired, JSON.stringify(data), function(err, o) {
 				if (err) {
 					console.log('设置 "'+key+'" 信息失败!')
-					return cb(err)
+					return cb && cb(err)
 				}
 				console.log('设置 "'+key+'" 信息成功!')
-				return cb(null, o)
+				return cb && cb(null, o)
 			})
 		} else {
 			cb && cb(1)
@@ -104,10 +104,10 @@ module.exports = {
 			client[db].set(key, JSON.stringify(data), function(err, o) {
 				if (err) {
 					console.log('设置 "'+key+'" 信息失败!')
-					return cb(err)
+					return cb && cb(err)
 				}
 				console.log('设置 "'+key+'" 信息成功!')
-				return cb(null, o)
+				return cb && cb(null, o)
 			})
 		} else {
 			cb && cb(1)
@@ -123,10 +123,10 @@ module.exports = {
 			client[db].del(key, function(err, o) {
 				if (err) {
 					console.log('删除 "'+key+'" 失败!')
-					return cb(err)
+					return cb && cb(err)
 				}
 				console.log('删除 "'+key+'" 成功!')
-				return cb(null, o)
+				return cb && cb(null, o)
 			})
 		} else {
 			cb && cb(1)

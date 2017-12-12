@@ -2,7 +2,8 @@
 	var API = {
 		get:    '/imgrp/get',
 		list:   '/imgrp/getImgRPCList',
-		remove: '/imgrp/removeImgRPC'
+		remove: '/imgrp/removeImgRPC',
+		copy:   '/imgrp/copyImgRPC'
 	},
 	rpId = CMS.getQueryValue('rpId')
 
@@ -41,11 +42,13 @@
 					key: '',
 					render: (row, col, idx) => {
 						return `<a class="text-blue" href="/imgrp/itemEdit?rpId=${row.rpId}&id=${row.id}">编辑</a>
-								<a class="text-blue" @click="handleModal(row.rpId, row.id)">删除</a>`
+								<a class="text-blue" @click="rpRemove(row.rpId, row.id)">删除</a>
+								<a class="text-blue" @click="rpCopy(row.rpId, row.id)">复制</a>`
 					}
 				}
 			],
 			removeModal: false,
+			copyModal: false,
 			dataList: [],
 			total: 0,
 			pageSize: 10,
@@ -60,8 +63,13 @@
 			id: ''
 		},
 		methods: {
-			handleModal (rpId, id) {
+			rpRemove (rpId, id) {
 				this.removeModal = true
+				this.rpId = rpId
+				this.id   = id
+			},
+			rpCopy (rpId, id) {
+				this.copyModal = true
 				this.rpId = rpId
 				this.id   = id
 			},
@@ -70,7 +78,7 @@
 				this.imgPrev = url
 				this.visible = true
 			},
-			handleRemove () {
+			rpRemoveFn () {
 				CMS.http.post(API.remove, {
 					rpId: this.rpId,
 					id: this.id
@@ -79,6 +87,19 @@
 					VUE.$Message.success('成功!')
 					CMS.getDataList(API.list)
 					VUE.removeModal = false
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+				})
+			},
+			rpCopyFn () {
+				CMS.http.post(API.copy, {
+					rpId: this.rpId,
+					id: this.id
+				}, function(o) {
+					console.log(o)
+					VUE.$Message.success('成功!')
+					CMS.getDataList(API.list)
+					VUE.copyModal = false
 				}, function(err) {
 					VUE.$Message.warning(err.message)
 				})

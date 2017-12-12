@@ -11,6 +11,7 @@
 		<div class="row form-group">
 			<div class="col-md-12">
 				<a class="btn btn-warning" :href="'/imgrp/itemAdd?rpId=' + rpId">新建</a>
+				<a class="btn" href="/imgrp">返回</a>
 			</div>
 		</div>
 		<div class="row form-group">
@@ -40,13 +41,19 @@
 		<Modal v-model="removeModal" width="360">
 			<p slot="header" style="color: #f60; text-align: center">
 				<Icon type="information-circled"></Icon>
-				<span>删除确认该内容吗?</span>
+				<span>确定删除该内容吗?</span>
 			</p>
 			<div style="text-align:center">
 				<p>删除该内容后不可恢复</p>
 			</div>
 			<div slot="footer">
-				<i-button type="error" size="large" @click="handleRemove">删除</i-button>
+				<i-button type="error" size="large" @click="rpRemoveFn">删除</i-button>
+			</div>
+		</Modal>
+
+		<Modal v-model="copyModal" width="360" @on-ok="rpCopyFn">
+			<div style="text-align:center">
+				<p>确定复制该内容吗?</p>
 			</div>
 		</Modal>
 

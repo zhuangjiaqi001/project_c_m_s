@@ -162,7 +162,7 @@ exports.getTxtRPCByRpId = function(rpId, select, cb) {
 exports.addTxtRPC = function (opts, cb) {
 	delete opts.id
 	return TxtRPC.create(opts).then(rpc => {
-		cb(!rpc, rpc.dataValues)
+		cb(rpc? rpc: null)
 	})
 }
 exports.updateTxtRPC = function (id, opts, cb) {

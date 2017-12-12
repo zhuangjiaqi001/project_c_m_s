@@ -4,22 +4,22 @@
 <!-- banner -->
 <div class="banner swiper-container">
 	<div class="swiper-wrapper">
-		<div class="swiper-slide" style="background-image: url(/img/banner/1.jpg);">
+		<div class="swiper-slide" style="background-image: url(/img/banner/sim/1.jpg);">
 			<b>What's this?</b>
 		</div>
-		<div class="swiper-slide" style="background-image: url(/img/banner/2.jpg);">
+		<div class="swiper-slide" style="background-image: url(/img/banner/sim/2.jpg);">
 			<b>What's this?</b>
 		</div>
-		<div class="swiper-slide" style="background-image: url(/img/banner/3.jpg);">
+		<div class="swiper-slide" style="background-image: url(/img/banner/sim/3.jpg);">
 			<b>What's this?</b>
 		</div>
-		<div class="swiper-slide" style="background-image: url(/img/banner/4.jpg);">
+		<div class="swiper-slide" style="background-image: url(/img/banner/sim/4.jpg);">
 			<b>What's this?</b>
 		</div>
-		<div class="swiper-slide" style="background-image: url(/img/banner/5.jpg);">
+		<div class="swiper-slide" style="background-image: url(/img/banner/sim/5.jpg);">
 			<b>What's this?</b>
 		</div>
-		<div class="swiper-slide" style="background-image: url(/img/banner/6.jpg);">
+		<div class="swiper-slide" style="background-image: url(/img/banner/sim/6.jpg);">
 			<b>What's this?</b>
 		</div>
 	</div>
@@ -32,7 +32,7 @@
 		<img width="32" src="/img/img-logo.png">
 		CMS
 	</a>
-	<a class="btn-register"></a>
+	{% if config.env === 'localhost' %}<a class="btn-register"></a>{% endif %}
 
 	<!-- 登录 -->
 	<form id="formLogin" class="form-login" method="post" action="/">
@@ -47,6 +47,7 @@
 	</form>
 
 	<!-- 注册 -->
+	{% if config.env === 'localhost' %}
 	<div class="register">
 		<div class="r-content">
 			<form id="formRegister" class="form-register" method="post" action="/register">
@@ -59,6 +60,7 @@
 		</div>
 		<div class="r-mask"></div>
 	</div>
+	{% endif %}
 </div>
 
 {% endblock %}

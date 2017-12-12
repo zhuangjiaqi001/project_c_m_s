@@ -6,63 +6,31 @@ const Aliyun  = require('../common/aliyun')
 
 // 列表
 router.get('/', (req, res, next) => {
-	res.render('temp', {
-		title: '模板类'
-	})
+	res.render('temp')
 })
 
 // 创建
 router.get('/add', (req, res, next) => {
-	res.render('temp/add', {
-		title: '新建模板类'
-	})
+	res.render('temp/add')
 })
 // 编辑
 router.get('/edit', (req, res, next) => {
-	res.render('temp/add', {
-		title: '编辑模板类'
-	})
+	res.render('temp/add')
 })
 
 // 模板类内容列表
 router.get('/list', (req, res, next) => {
-	res.render('temp/list', {
-		title: '模板类列表'
-	})
+	res.render('temp/list')
 })
 
 // 模板类内容创建
 router.get('/itemAdd', (req, res, next) => {
-	res.render('temp/itemAdd', {
-		title: '新建内容'
-	})
+	res.render('temp/itemAdd')
 })
+
 // 模板类内容编辑
 router.get('/itemEdit', (req, res, next) => {
-	res.render('temp/itemAdd', {
-		title: '编辑内容'
-	})
-	// var params   = req.params,
-	// 	tempId   = params.tempId,
-	// 	id       = params.id
-	// Temp.getTempById(tempId, function(o) {
-	// 	if (!o) return Tools.permit('对不起！该模板类不存在！', res)
-	// 	Temp.getTempCByQuery({
-	// 		tempId: tempId,
-	// 		id: id
-	// 	}, function(o2) {
-	// 		var key      = o2.key,
-	// 			pathname = `tempc/${key}`
-	// 		if (!o2) return Tools.permit('对不起！该模板类不存在！', res)
-	// 		getAliyun(o2, pathname, res, function(o2) {
-	// 			res.render('temp/itemAdd', {
-	// 				title: '编辑内容',
-	// 				item: o,
-	// 				tempcInfo: o2
-	// 			})
-	// 		})
-	// 	})
-	// })
+	res.render('temp/itemAdd')
 })
 
 function getAliyun(body, pathname, res, cb) {

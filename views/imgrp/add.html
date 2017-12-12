@@ -48,7 +48,7 @@
 						</i-col>
 					</Row>
 				</Form-item>
-				<Form-item>
+				<Form-item v-if="formValidate.custemItems.length < 10">
 					<Row>
 						<i-col span="12">
 							<i-button type="dashed" long @click="handleAdd" icon="plus-round">新增</i-button>

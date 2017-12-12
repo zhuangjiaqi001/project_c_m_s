@@ -58,10 +58,10 @@
 						</i-col>
 					</Row>
 				</Form-item>
-				<Form-item>
+				<Form-item v-if="formValidate.modelItems.length < 10">
 					<Row>
 						<i-col span="12">
-							<i-button v-if="formValidate.modelItems.length < 10" type="dashed" long @click="getTemp('modelItems')" icon="plus-round">新增 模块</i-button>
+							<i-button type="dashed" long @click="getTemp('modelItems')" icon="plus-round">新增 模块</i-button>
 						</i-col>
 					</Row>
 				</Form-item>

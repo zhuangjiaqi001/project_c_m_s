@@ -1,6 +1,35 @@
-module.exports = function(app) {
+const title  = require('./common/title')
+
+module.exports = function(app, config) {
+	// 添加字段处理时间(ms)
+	app.use(function (req, res, next) {
+		var startTime = Date.now()
+		var _send = res.send
+		res.send = function () {
+			res.set('Z-Execution-Time', String(Date.now() - startTime + 'ms'))
+			return _send.apply(res, arguments)
+		}
+		next()
+	})
+
+	// 渲染统一添加config, title
+	app.use(function (req, res, next) {
+		var _render = res.render,
+			path    = req.originalUrl.replace(/\/{2,}/g, '/').replace(/\/$/, '').replace(/\?.*/, '')
+		res.render = function () {
+			if (arguments.length === 1) {
+				arguments.length = 2
+				arguments[1] = {}
+			}
+			arguments[1].config = config
+			arguments[1].title  = title[path || '/']
+			return _render.apply(this, arguments)
+		}
+		next()
+	})
+
 	// 用户相关
-	app.use('/register', require('./routes/register'))	// 注册
+	if (config.env === 'localhost') app.use('/register', require('./routes/register'))	// 注册
 	app.use('/logout',   require('./routes/logout'))	// 登出
 
 
@@ -8,7 +37,7 @@ module.exports = function(app) {
 	app.use([
 		'/dashboard',
 		'/user',
-		'/permit',
+		// '/permit',
 		'/imgrp',
 		'/txtrp',
 		'/temp',

@@ -10,17 +10,17 @@ module.exports = [
 		url:  '/dashboard',
 		icon: 'book',
 	},
-	{
-		type: 0,
-		name: '用户管理'
-	},
-	{
-		type: 1,
-		key:  'user',
-		name: '用户管理',
-		url:  '/user',
-		icon: 'user'
-	},
+	// {
+	// 	type: 0,
+	// 	name: '用户管理'
+	// },
+	// {
+	// 	type: 1,
+	// 	key:  'user',
+	// 	name: '用户管理',
+	// 	url:  '/user',
+	// 	icon: 'user'
+	// },
 	// {
 	// 	type: 1,
 	// 	key:  'permit',

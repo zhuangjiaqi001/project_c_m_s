@@ -1,5 +1,6 @@
 (function(global, VM, CMS) {
 	var API = {
+		get:     '/page/get',
 		list:    '/page/getPageCList',
 		remove:  '/page/removePageC',
 		release: '/page/releasePageC',
@@ -53,6 +54,7 @@
 				title: ''
 			},
 			sort: '',
+			pageinfo: {},
 			pageId: pageId || '',
 			id: '',
 			Modal: false,
@@ -145,10 +147,22 @@
 					this.sort = ''
 				}
 				CMS.getDataList(API.list)
+			},
+			getData: function(me) {
+				CMS.http.get(API.get, { id: pageId }, function(o) {
+					me.pageinfo = o.data
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
+			load: function() {
+				var me = this
+				CMS.getDataList(API.list)
+				me.getData(me)
 			}
 		}
 	}))
 
-	CMS.getDataList(API.list)
 
 }(window, window.VM, window.CMS))
