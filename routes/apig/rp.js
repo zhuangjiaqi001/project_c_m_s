@@ -49,7 +49,7 @@ router.get('/txt', (req, res, next) => {
 		get = 'mget'
 	}
 	Cache[get]({
-		key: key, db: 1,
+		key: key, db: 2,
 		cb: function(e, o) {
 			if (e) return Tools.errHandle('0128', res)
 			var da = { code: '0000', data: o }

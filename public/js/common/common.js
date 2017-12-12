@@ -253,7 +253,7 @@ if (!global.CMS) {
 				_time = new Date()-0
 			me.merge(data.search || {}, da)
 			if (data.sort) da.sort = data.sort
-			if (api === me.api_history.api && me.api_history.time > (_time - 2000)) return
+			if (api === me.api_history.api && me.api_history.time > (_time - 1000)) return
 			me.api_history.api = api
 			me.api_history.time = _time
 			me.http.get(api, da, function(d) {

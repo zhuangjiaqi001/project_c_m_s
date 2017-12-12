@@ -188,8 +188,6 @@ router.post('/removePageC', (req, res, next) => {
 	Page.getPageCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		if (item.active)  return Tools.errHandle('0174', res)
-		debugger
-		item.key
 		Page.removePageC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
 			Tools.errHandle('0000', res)
@@ -248,8 +246,8 @@ router.post('/copyPageC', (req, res, next) => {
 			js:          item.js,
 			css:         item.css,
 			// url:         '',
-			header:      item.header,
-			footer:      item.footer,
+			header:      { id: item.header },
+			footer:      { id: item.footer },
 			custemItems: item.custemItems,
 			modelItems:  item.modelItems,
 			type:        item.type,
