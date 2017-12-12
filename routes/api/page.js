@@ -405,12 +405,13 @@ function getAliyunHTML(temps, res, cb) {
 }
 // 创建页面
 function createPage(body, res, cb) {
+	var mi = typeof body.modelItems === 'string'? JSON.parse(body.modelItems): body.modelItems
 	var prev = tpl({
 		title:   `${body.title}`,
 		body:    body.html,
 		css:     body.css,
 		js:      body.js,
-		model:   body.modelItems,
+		model:   mi,
 		header:  body.header? body.header.html || '': '',
 		footer:  body.footer? body.footer.html || '': '',
 		width:   body.width || '1000'

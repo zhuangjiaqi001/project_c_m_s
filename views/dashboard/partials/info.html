@@ -3,8 +3,9 @@
 		<a :href="info.href" target="_blank" class="info-box">
 			<span class="info-box-icon" v-bind:class="'bg-' + info.color"><i v-bind:class="info.icon"></i></span>
 			<div class="info-box-content">
-				<span class="info-box-text">{{info.name}}</span>
-				<span class="info-box-number" v-html="info.data"></span>
+				<span class="info-box-number">{{info.name}}</span>
+				<!-- <span class="info-box-text">列表: {{info.list}}</span> -->
+				<span class="info-box-number">{{info.max}}</span>
 			</div>
 		</a>
 	</div>

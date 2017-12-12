@@ -9,7 +9,7 @@ router.get('/', (req, res, next) => {
 	res.clearCookie('loginname')
 	res.clearCookie('id')
 	res.clearCookie('rem')
-	res.redirect(config.link.index)
+	res.redirect(config.link.login)
 })
 
 module.exports = router

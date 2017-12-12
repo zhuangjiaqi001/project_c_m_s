@@ -193,6 +193,7 @@ if (!global.CMS) {
 				} else {
 					VUE.$Message.warning(o.message)
 					setTimeout(function() {
+						debugger
 						location.href = '/logout'
 					}, 2000)
 				}
