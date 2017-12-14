@@ -17,7 +17,8 @@
 					title: '名称',
 					key: 'name',
 					render: (row, col, idx) => {
-						return `<a class="text-blue" href="/page/list?pageId=${row.id}">${row.name}</a>`
+						return `<a class="text-blue" href="/page/list?pageId=${row.id}">${row.name}</a>
+								<a class="text-blue" href="/page/edit?pageId=${row.id}"><i class="fa fa-edit"></i></i></a>`
 					}
 				},
 				{

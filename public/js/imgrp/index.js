@@ -22,7 +22,8 @@
 					title: '推荐位名称',
 					key: 'name',
 					render: (row, col, idx) => {
-						return `<a class="text-blue" href="/imgrp/list?rpId=${row.id}">${row.name}</a>`
+						return `<a class="text-blue" href="/imgrp/list?rpId=${row.id}">${row.name}</a>
+								<a class="text-blue" href="/imgrp/edit?rpId=${row.id}"><i class="fa fa-edit"></i></i></a>`
 					}
 				},
 				{

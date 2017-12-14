@@ -17,7 +17,8 @@
 					title: '模板类名称',
 					key: 'name',
 					render: (row, col, idx) => {
-						return `<a class="text-blue" href="/temp/list?tempId=${row.id}">${row.name}</a>`
+						return `<a class="text-blue" href="/temp/list?tempId=${row.id}">${row.name}</a>
+								<a class="text-blue" href="/temp/edit?tempId=${row.id}"><i class="fa fa-edit"></i></i></a>`
 					}
 				},
 				{
