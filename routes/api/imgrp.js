@@ -81,7 +81,7 @@ router.post('/releaseImgRP', (req, res, next) => {
 		var key = 'imgrp_' + Tools.hmac(item.key)
 		ImgRP.updateImgRP(id, { active: 1 })
 		ImgRP.getImgRPCByRpId(id, select, (items, count) => {
-			Cache.set({ key: key, db: 1, data: {
+			Cache.set({ key: key, db: 2, data: {
 					list:  items,
 					total: count
 				},
@@ -101,7 +101,7 @@ router.post('/offlineImgRP', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		var key = Tools.hmac(item.key)
 		ImgRP.updateImgRP(id, { active: 0 })
-		Cache.del({ key: key, db: 1, cb: (e, o) => {
+		Cache.del({ key: key, db: 2, cb: (e, o) => {
 			if (e) return Tools.errHandle('0142', res)
 			Tools.errHandle('0000', res)
 		}})

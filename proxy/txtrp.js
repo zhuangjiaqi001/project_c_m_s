@@ -65,7 +65,7 @@ exports.removeTxtRP = function (id, cb) {
 			if (l) {
 				var ids = []
 				for (var v of rpc) {
-					ids.push(v.dataValues.id)
+					ids.push(v.id)
 				}
 				TxtRPC.destroy({ where: { id: { $or: ids } } }).then(rp => {
 					TxtRP.destroy({ where: { id: id } }).then(rp => {

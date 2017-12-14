@@ -9,7 +9,7 @@ router.get('*', (req, res, next) => {
 	if (token && aToken && loginname) {
 		next()
 	} else {
-		return res.redirect(config.link.login)
+		return res.redirect(config.link.logout)
 	}
 })
 

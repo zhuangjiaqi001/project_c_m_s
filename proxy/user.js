@@ -107,9 +107,10 @@ var createAvatar = function () {
 exports.createAvatar = createAvatar
 
 exports.isNotLogin = function(req, res, next) {
-	var token     = req.signedCookies.token
-	var loginname = req.signedCookies.loginname
-	if (token && loginname) {
+	var token     = req.signedCookies.token,
+		aToken    = req.signedCookies.aToken,
+		loginname = req.signedCookies.loginname
+	if (token && aToken && loginname) {
 		return res.redirect(config.link.index)
 	} else {
 		next()

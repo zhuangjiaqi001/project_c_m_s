@@ -17,17 +17,23 @@ router.get('*', (req, res, next) => {
 
 // 图片推荐位列表
 router.get('/img', (req, res, next) => {
-	var q    = req.query,
-		key  = 'imgrp_' + (q.k || ''),
-		get  = 'get'//,
+	var q   = req.query,
+		key = q.k,
+		get = 'get'//,
 		// cb   = q.cb || ''
 	if (!key) return Tools.errHandle('0128', res)
 	if (/\,/.test(key)) {
 		key = key.split(',')
+		key.map(function(i, _) {
+			key[_] = 'imgrp_' + i
+		})
 		get = 'mget'
+	} else {
+		key = 'imgrp_' + key
 	}
+	console.log(key)
 	Cache[get]({
-		key: key, db: 1,
+		key: key, db: 2,
 		cb: function(e, o) {
 			if (e) return Tools.errHandle('0128', res)
 			var da = { code: '0000', data: o }
@@ -39,9 +45,36 @@ router.get('/img', (req, res, next) => {
 
 // 文字推荐位列表
 router.get('/txt', (req, res, next) => {
-	var q    = req.query,
-		key  = 'txtrp_' + (q.k || ''),
-		get  = 'get'//,
+	var q   = req.query,
+		key = key = q.k,
+		get = 'get'//,
+		// cb   = q.cb || ''
+	if (!key) return Tools.errHandle('0128', res)
+	if (/\,/.test(key)) {
+		key = key.split(',')
+		key.map(function(i, _) {
+			key[_] = 'txtrp_' + i
+		})
+		get = 'mget'
+	} else {
+		key = 'txtrp_' + key
+	}
+	Cache[get]({
+		key: key, db: 2,
+		cb: function(e, o) {
+			if (e) return Tools.errHandle('0128', res)
+			var da = { code: '0000', data: o }
+			// if (cb) da = `${cb}(${JSON.stringify(o)})`
+			return res.send(da)
+		}
+	})
+})
+
+// 文字推荐位列表
+router.get('/all', (req, res, next) => {
+	var q   = req.query,
+		key = key = q.k.replace(/\:/g, 'rp_'),
+		get = 'get'//,
 		// cb   = q.cb || ''
 	if (!key) return Tools.errHandle('0128', res)
 	if (/\,/.test(key)) {
