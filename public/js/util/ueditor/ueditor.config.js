@@ -122,7 +122,7 @@
 			// 'drafts',		// 从草稿箱加载
 			// 'charts',		// 图表
 			[
-				'fullscreen', 'undo', 'redo', 'insertunorderedlist', 'insertorderedlist', 'link', 'unlink', 'help', 'attachment', 'simpleupload', 'insertimage', 'insertvideo', 'pagebreak', 'date', 'bold', 'italic', 'fontborder', 'strikethrough', 'underline', 'forecolor', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'rowspacingbottom', 'rowspacingtop', 'lineheight', 'preview'
+				'fullscreen', 'undo', 'redo', 'insertunorderedlist', 'insertorderedlist', 'link', 'unlink', 'help', 'attachment', 'simpleupload', 'insertimage', 'insertvideo', 'pagebreak', 'date', 'fontsize', 'bold', 'italic', 'fontborder', 'strikethrough', 'underline', 'forecolor', 'justifyleft', 'justifycenter', 'justifyright', 'justifyjustify', 'rowspacingbottom', 'rowspacingtop', 'lineheight', 'preview'
 			]
 		]
 		//当鼠标放在工具栏上时显示的tooltip提示,留空支持自动多语言配置，否则以配置值为准
@@ -164,7 +164,7 @@
 
 		//,iframeCssUrl: URL + '/themes/iframe.css' //给编辑器内部引入一个css文件
 
-		//,initialFrameWidth:1000  //初始化编辑器宽度,默认1000
+		// ,initialFrameWidth:'100%'  //初始化编辑器宽度,默认1000
 		//,initialFrameHeight:320  //初始化编辑器高度,默认320
 
 		//,readonly : false //编辑器初始化结束后,编辑区域是否是只读的，默认是false
@@ -180,7 +180,7 @@
 		//粘贴只保留标签，去除标签所有属性
 		//,retainOnlyLabelPasted: false
 
-		//,pasteplain:false  //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
+		,pasteplain: true  //是否默认为纯文本粘贴。false为不使用纯文本粘贴，true为使用纯文本粘贴
 		//纯文本粘贴模式下的过滤规则
 		//'filterTxtRules' : function(){
 		//    function transP(node){
