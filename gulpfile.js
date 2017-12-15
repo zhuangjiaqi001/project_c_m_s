@@ -53,7 +53,7 @@ gulp.task('browser-sync', function() {
 	});
 });
 
-gulp.task('default', ['build:localhost']);
+gulp.task('default', ['build:dev']);
 
 /* 编译LESS */
 gulp.task('less:dev', function() {

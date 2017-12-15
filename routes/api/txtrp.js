@@ -99,7 +99,7 @@ router.post('/offlineTxtRP', (req, res, next) => {
 		select = ['title', 'url', 'startTime', 'endTime', 'custemItems', 'active']
 	TxtRP.getTxtRPById(id, (item) => {
 		if (!item) return Tools.errHandle('0128', res)
-		var key = Tools.hmac(item.key)
+		var key = 'txtrp_' + Tools.hmac(item.key)
 		TxtRP.updateTxtRP(id, { active: 0 })
 		Cache.del({ key: key, db: 2, cb: (e, o) => {
 			if (e) return Tools.errHandle('0142', res)

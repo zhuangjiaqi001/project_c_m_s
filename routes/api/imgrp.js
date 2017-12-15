@@ -99,7 +99,7 @@ router.post('/offlineImgRP', (req, res, next) => {
 		select = ['title', 'imageUrl', 'url', 'startTime', 'endTime', 'custemItems', 'active']
 	ImgRP.getImgRPById(id, (item) => {
 		if (!item) return Tools.errHandle('0128', res)
-		var key = Tools.hmac(item.key)
+		var key = 'imgrp_' + Tools.hmac(item.key)
 		ImgRP.updateImgRP(id, { active: 0 })
 		Cache.del({ key: key, db: 2, cb: (e, o) => {
 			if (e) return Tools.errHandle('0142', res)

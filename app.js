@@ -19,7 +19,7 @@ swig.setDefaults({
 const app = express()
 
 app.disable('x-powered-by')
-app.set('etag', false)
+// app.set('etag', false)
 
 app.engine('html', swig.renderFile)
 app.set('view engine', 'html')
@@ -53,10 +53,10 @@ app.use(bodyParser.urlencoded({ limit: '1mb', extended: true }))
 // cookie解析]
 app.use(cookieParser(config.cookieSecret))
 
-
-
-const oneDay = 86400000
-app.use(express.static(__dirname + config.static, { maxAge: oneDay }))
+app.use(express.static(__dirname + config.static, {
+	maxage: 6e5,
+	etag: false
+}))
 
 // 配置路由
 routes(app, config)
