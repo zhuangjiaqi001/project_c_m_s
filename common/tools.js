@@ -106,22 +106,11 @@ var Tools = {
 	bodyFilter: function(permit, oObj) {
 		var l = 0
 		var nObj = {}
-		// for (var p in permit) {
-		// 	if (permit[p]) {
-		// 		++l
-		// 		if (oObj[p]) {
-		// 			var val = typeof oObj[p] === 'string'? oObj[p].replace(/(^\s*)|(\s*$)/g, ''): oObj[p]
-		// 			if (val) nObj[p] = val
-		// 		} else {
-		// 			nObj[p] = ''
-		// 		}
-		// 	}
-		// }
 		for (var p in oObj) {
 			if (permit[p]) {
 				++l
 				var val = typeof oObj[p] === 'string'? oObj[p].replace(/(^\s*)|(\s*$)/g, ''): oObj[p]
-				if (val) nObj[p] = val
+				if (val !== null) nObj[p] = val
 			}
 		}
 		delete nObj.id

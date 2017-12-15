@@ -137,6 +137,12 @@ if (!global.CMS) {
 		}
 	}
 	global.CMS = {
+		customDefVal: {
+			String: '',
+			Boolean: false,
+			Date: '',
+			Image: ''
+		},
 		api_history: {
 			api: '',
 			time: new Date() - 0

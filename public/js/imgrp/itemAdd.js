@@ -72,18 +72,11 @@
 					delete o.data.custemItems
 					delete o.data.id
 					if (me.pageinfo.isEdit) {
-						for (var key in ci) {
-							var nkey = ''
-							me.custemItems.map(function(j) {
-								if (j.key === key) {
-									nkey = j.key
-									VUE.$set(me.imgList, nkey, {})
-								}
-							})
-							if (!nkey) {
-								delete ci[key]
-							}
-						}
+						var newCustemItems = {}
+						me.custemItems.map(function(i) {
+							newCustemItems[i.key] = ci[i.key] === undefined? CMS.customDefVal[i.type]: ci[i.key]
+						})
+						VUE.$set(me.formValidate, 'custemItems', newCustemItems)
 					} else {
 						me.custemItems.map(function(i) {
 							VUE.$set(ci, i.key, '')
