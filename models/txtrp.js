@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
 		key:          { type: DataTypes.STRING(100), unique : true,   comment: '推荐位KEY' },
 		name:         { type: DataTypes.STRING(100), unique : true,   comment: '推荐位名称' },
 		description:  { type: DataTypes.STRING, comment: '描述' },
-		custemItems:  { type: DataTypes.STRING, comment: '自定义字段' },
+		custemItems:  { type: DataTypes.STRING(1000), comment: '自定义字段' },
 		hash:         { type: DataTypes.STRING, comment: 'KEY对应的HASH' },
 		active:       { type: DataTypes.BOOLEAN, defaultValue: false, comment: '是否激活' }
 	}, {

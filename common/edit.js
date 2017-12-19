@@ -50,6 +50,17 @@ module.exports = {
 		js:          1, 		// JS
 		custemItems: 1			// 工具库
 	},
+	Shop: {
+		name:        1,			// 名称
+		description: 1,			// 描述
+	},
+	ShopC: {
+		title:       1,			// 标题
+		html:        1, 		// HTML
+		css:         1, 		// CSS
+		js:          1, 		// JS
+		custemItems: 1			// 工具库
+	},
 	Page: {
 		name:        1,			// 名称
 		description: 1,			// 描述

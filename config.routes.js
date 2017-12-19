@@ -41,6 +41,7 @@ module.exports = function(app, config) {
 		'/imgrp',
 		'/txtrp',
 		'/temp',
+		'/shop',
 		'/page'
 	], require('./routes/cookie'))
 
@@ -53,6 +54,7 @@ module.exports = function(app, config) {
 	app.use('/imgrp',     require('./routes/imgrp'))		// 图片推荐位
 	app.use('/txtrp',     require('./routes/txtrp'))		// 文字推荐位
 	app.use('/temp',      require('./routes/temp'))			// 模板管理
+	app.use('/shop',      require('./routes/shop'))			// 店铺装修管理
 	app.use('/page',      require('./routes/page'))			// 页面管理
 
 

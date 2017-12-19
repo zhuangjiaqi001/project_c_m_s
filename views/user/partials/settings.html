@@ -13,7 +13,7 @@
 		</Radio-group>
 	</Form-item>
 	<Form-item label="生日" prop="birthday">
-		<Date-picker type="date" format="yyyy-MM-dd" placeholder="生日" v-model="formValidate.birthday" @on-change="handleChange"></Date-picker>
+		<Date-picker type="date" format="yyyy-MM-dd" placeholder="生日" v-model="formValidate.birthday" @on-change="handleChange" :editable="false"></Date-picker>
 	</Form-item>
 	<Form-item label="血型" prop="blood_type">
 		<Radio-group v-model="formValidate.blood_type">
@@ -24,35 +24,6 @@
 			<Radio label="O">O</Radio>
 		</Radio-group>
 	</Form-item>
-	<!-- <Form-item label="头像">
-		<div class="upload-list" v-for="item in uploadList">
-			<img :src="item.url" style="width: 100%">
-			<div class="upload-list-cover">
-				<Icon type="ios-eye-outline" @click.native="handleView(item.url)"></Icon>
-				<Icon type="ios-trash-outline" @click.native="handleRemove(item)"></Icon>
-			</div>
-			<Progress v-if="item.showProgress" :percent="item.percentage" hide-info></Progress>
-		</div>
-		<Upload v-if="uploadList.length === 0"
-			ref="upload"
-			:show-upload-list="false"
-			:on-success="handleSuccess"
-			:format="['jpg','jpeg','png']"
-			:max-size="200"
-			:on-format-error="handleFormatError"
-			:on-exceeded-size="handleMaxSize"
-			:before-upload="handleBeforeUpload"
-			type="drag"
-			action="/api/file/upload"
-			style="display: inline-block; width: 58px;">
-			<div style="width: 58px; height:58px; line-height: 58px;">
-				<Icon type="camera" size="20"></Icon>
-			</div>
-		</Upload>
-		<Modal title="查看图片" v-model="visible">
-			<img :src="imgName" v-if="visible" style="width: 100%">
-		</Modal>
-	</Form-item> -->
 	<Form-item label="个人描述" prop="description">
 		<i-input v-model="formValidate.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="个人描述不能少于20字"></i-input>
 	</Form-item>

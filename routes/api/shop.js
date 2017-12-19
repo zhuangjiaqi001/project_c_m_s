@@ -1,14 +1,14 @@
 const router  = require('express').Router()
 const Cache   = require('../../models/cache')
 const proxy   = require('../../proxy')
-const Temp    = proxy.Temp
+const Shop    = proxy.Shop
 const Aliyun  = require('../../common/aliyun')
 const Tools   = require('../../common/tools')
 const Valid   = require('../../common/valid')
 const Edit    = require('../../common/edit')
 const swig    = require('swig')
-const tempEdit  = Edit.Temp
-const tempcEdit = Edit.TempC
+const shopEdit  = Edit.Shop
+const shopcEdit = Edit.ShopC
 const tpl       = swig.compileFile('template/t0.html', { autoescape: false })
 const tprev     = swig.compileFile('template/tp.html', { autoescape: false })
 
@@ -23,58 +23,58 @@ router.get('/get', (req, res, next) => {
 		id     = q.id,
 		userId = req.signedCookies.id
 
-	Temp.getTempByQuery({
+	Shop.getShopByQuery({
 		'id':  id
 	}, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		Tools.errHandle('0000', res, item)
 	})
 })
-router.post('/addTemp', (req, res, next) => {
+router.post('/addShop', (req, res, next) => {
 	var id   = req.signedCookies.id,
 		body = req.body,
 		key  = body.key,
 		name = body.name,
 		description = body.description
-	Valid.run(res, 'temp', body, function() {
-		Temp.getTempByQuery({
+	Valid.run(res, 'shop', body, function() {
+		Shop.getShopByQuery({
 			'key':  key,
 			'name': name
 		}, function (item) {
 			if (item) return Tools.errHandle('0123', res)
 
-			Temp.addTemp(key, name, description, id, function (err) {
+			Shop.addShop(key, name, description, id, function (err) {
 				if (err) return Tools.errHandle('0124', res)
 				Tools.errHandle('0000', res)
 			})
 		})
 	})
 })
-router.post('/updateTemp', (req, res, next) => {
+router.post('/updateShop', (req, res, next) => {
 	var body = req.body,
 		id   = body.id
 
-	var bodyFilter = Tools.bodyFilter(tempEdit, body)
+	var bodyFilter = Tools.bodyFilter(shopEdit, body)
 	body = bodyFilter.obj
 
-	Valid.run(res, 'tempUp', body, function() {
-		Temp.getTempById(id, function (item) {
+	Valid.run(res, 'shopUp', body, function() {
+		Shop.getShopById(id, function (item) {
 			if (!item) return Tools.errHandle('0128', res)
-			Temp.updateTemp(id, body, function (err) {
+			Shop.updateShop(id, body, function (err) {
 				if (err) return Tools.errHandle('0130', res)
 				Tools.errHandle('0000', res)
 			})
 		})
 	})
 })
-router.post('/removeTemp', (req, res, next) => {
+router.post('/removeShop', (req, res, next) => {
 	var body = req.body,
 		id   = body.id
 
-	Temp.getTempById(id, function (item) {
+	Shop.getShopById(id, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		if (item.active)  return Tools.errHandle('0134', res)
-		Temp.removeTemp(id, function (err) {
+		Shop.removeShop(id, function (err) {
 			if (err) return Tools.errHandle('0130', res)
 			Tools.errHandle('0000', res)
 		})
@@ -83,11 +83,11 @@ router.post('/removeTemp', (req, res, next) => {
 
 
 // 获取推荐位列表
-router.get('/getTempList', (req, res, next) => {
+router.get('/getShopList', (req, res, next) => {
 	var query  = req.query,
 		select = ['key', 'name', 'description', 'id', 'createdAt', 'updatedAt']
 
-	Temp.getTempList(query, select, function (items, pageInfo) {
+	Shop.getShopList(query, select, function (items, pageInfo) {
 
 		Tools.errHandle('0000', res, {
 			list: items,
@@ -101,73 +101,73 @@ router.get('/getTempList', (req, res, next) => {
 router.get('/getC', (req, res, next) => {
 	var q      = req.query,
 		id     = q.id,
-		tempId = q.tempId,
+		shopId = q.shopId,
 		userId = req.signedCookies.id
 
-	Temp.getTempCByQuery({
-		tempId: tempId,
+	Shop.getShopCByQuery({
+		shopId: shopId,
 		id: id
 	}, function(o) {
 		var key      = o.key,
-			pathname = `tempc/${key}`
+			pathname = `shopc/${key}`
 		if (!o) return Tools.permit('对不起！该模板类不存在！', res)
 		getAliyun(o, pathname, res, function(o) {
 			Tools.errHandle('0000', res, o)
 		})
 	})
 })
-router.post('/addTempC', (req, res, next) => {
+router.post('/addShopC', (req, res, next) => {
 	var body   = req.body,
 		id     = req.signedCookies.id,
-		tempId = body.tempId,
+		shopId = body.shopId,
 		key    = body.key,
-		html   = body.html? body.html: '',
-		css    = body.css?  body.css:  '',
-		js     = body.js?   body.js:   '',
-		pathname = `tempc/${key}`
+		html   = body.html? decodeURIComponent(body.html): '',
+		css    = body.css?  decodeURIComponent(body.css):  '',
+		js     = body.js?   decodeURIComponent(body.js):   '',
+		pathname = `shopc/${key}`
 
 	body.custemItems = body.custemItems || []
 
-	if (!tempId) return Tools.errHandle('0126', res)
+	if (!shopId) return Tools.errHandle('0126', res)
 
-	Temp.getTempCByQuery({
+	Shop.getShopCByQuery({
 		key: key
 	}, function(item) {
 		if (item) return Tools.errHandle('0163', res)
 		uploadAliyun(html, css, js, pathname, body, res, function(body) {
 			body.userId = id
-			Temp.addTempC(body, function (err) {
+			Shop.addShopC(body, function (err) {
 				if (err) return Tools.errHandle('0123', res)
 				Tools.errHandle('0000', res)
 			})
 		})
 	})
 })
-router.post('/updateTempC', (req, res, next) => {
+router.post('/updateShopC', (req, res, next) => {
 	var body   = req.body,
 		id     = body.id,
 		userId = req.signedCookies.id,
-		tempId = body.tempId,
-		key    = body.key,
+		shopId = body.shopId,
+		key    = `shopc_${Date.now() + userId}`,
 		html   = body.html || '',
 		css    = body.css  || '',
 		js     = body.js   || '',
-		pathname = `tempc/${key}`
+		pathname = `shopc/${key}`
 
 	body.custemItems = body.custemItems || []
 	
-	var bodyFilter = Tools.bodyFilter(tempcEdit, body)
+	var bodyFilter = Tools.bodyFilter(shopcEdit, body)
 	body = bodyFilter.obj
 
-	Valid.run(res, 'tempc', body, function() {
-		Temp.getTempCByQuery({
-			tempId: tempId,
+	Valid.run(res, 'shopc', body, function() {
+		Shop.getShopCByQuery({
+			shopId: shopId,
 			key: key
 		}, function(item) {
 			if (!item) return Tools.errHandle('0163', res)
 			uploadAliyun(html, css, js, pathname, body, res, function(body) {
 				body.userId = userId
-				Temp.updateTempC(id, body, function (err) {
+				Shop.updateShopC(id, body, function (err) {
 					if (err) return Tools.errHandle('0130', res)
 					Tools.errHandle('0000', res)
 				})
@@ -175,26 +175,26 @@ router.post('/updateTempC', (req, res, next) => {
 		})
 	})
 })
-router.post('/removeTempC', (req, res, next) => {
+router.post('/removeShopC', (req, res, next) => {
 	var body = req.body
 
-	Temp.getTempCByQuery(body, function (item) {
+	Shop.getShopCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
-		Temp.removeTempC(body.id, function (err) {
+		Shop.removeShopC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
 			Tools.errHandle('0000', res)
 		})
 	})
 })
-router.post('/copyTempC', (req, res, next) => {
+router.post('/copyShopC', (req, res, next) => {
 	var body = req.body
 
-	Temp.getTempCByQuery(body, function (item) {
+	Shop.getShopCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		item = item.dataValues
 		var da = {
 			key:         `${item.key}_copy_${Date.now()}`,
-			tempId:      item.tempId,
+			shopId:      item.shopId,
 			userId:      item.userId,
 			description: item.description,
 			title:       `${item.title}_copy`,
@@ -205,7 +205,7 @@ router.post('/copyTempC', (req, res, next) => {
 			type:        item.type,
 			preview:     item.preview,
 		}
-		Temp.addTempC(da, function (err) {
+		Shop.addShopC(da, function (err) {
 			if (err) return Tools.errHandle('0123', res)
 			Tools.errHandle('0000', res)
 		})
@@ -214,10 +214,10 @@ router.post('/copyTempC', (req, res, next) => {
 
 
 // 获取推荐位内容列表
-router.get('/getTempCList', (req, res, next) => {
+router.get('/getShopCList', (req, res, next) => {
 	var query  = req.query
-	var select = ['tempId', 'key', 'title', 'preview', 'createdAt', 'updatedAt']
-	Temp.getTempCList(query, select, function (items, pageInfo) {
+	var select = ['shopId', 'key', 'title', 'preview', 'createdAt', 'updatedAt']
+	Shop.getShopCList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
 			list: items,
 			pageInfo: pageInfo

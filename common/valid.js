@@ -7,8 +7,8 @@ const RE = {
 	name    : /^([a-zA-Z0-9_-])+$/,
 	phone   : /^1(3|4|5|7|8)\d{9}$/,
 	password: /^[A-Za-z0-9]{6,20}$/,		// 6-20位字母数字组合
-	isLetter  : /[A-Za-z]+/,
-	isNumber  : /[\d]+/
+	isLetter: /[A-Za-z]+/,
+	isNumber: /[\d]+/
 }
 const RULE = {
 	// 登录名
@@ -106,6 +106,16 @@ const rule = {
 		title: RULE.imgrpName
 	},
 	tempUp: {
+		name: RULE.imgrpName
+	},
+	shop: {
+		key:  RULE.imgrpKey,
+		name: RULE.imgrpName
+	},
+	shopc: {
+		title: RULE.imgrpName
+	},
+	shopUp: {
 		name: RULE.imgrpName
 	},
 	page: {

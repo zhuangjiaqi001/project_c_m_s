@@ -1,0 +1,67 @@
+{% extends '../layout/layout.html' %}
+
+{% block body %}
+
+<div class="box">
+	<div class="box-header">
+		<h3 class="box-title">{{shopinfo.name}} <!-- <small>{{shopinfo.key}}</small> --></h3>
+	</div>
+	<div class="box-body">
+
+		<div class="row form-group">
+			<div class="col-md-12">
+				<a class="btn btn-warning" :href="'/shop/itemAdd?shopId=' + shopId">新建</a>
+				<a class="btn" href="/shop">返回</a>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-3">
+				<i-input v-model="search.title" placeholder="标题" @on-enter="searchList"></i-input>
+			</div>
+			<div class="col-md-2">
+				<i-button type="warning" @click="searchList"><i class="fa fa-search"></i></i-button>
+			</div>
+		</div>
+		<div class="row form-group">
+			<div class="col-md-12">
+				<i-table :columns="columns" :data="dataList" @on-sort-change="sortList"></i-table>
+				<div style="margin: 10px;overflow: hidden">
+					<div style="float: right;">
+						<Page :total="total" :page-size="pageSize" :current="current" @on-change="changePage" @on-page-size-change="changePageSize" show-total></Page>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 确认删除 模态框 -->
+		<Modal v-model="removeModal" width="360">
+			<p slot="header" style="color: #f60; text-align: center">
+				<Icon type="information-circled"></Icon>
+				<span>确定删除该模板吗?</span>
+			</p>
+			<div style="text-align:center">
+				<p>删除该模板后不可恢复</p>
+			</div>
+			<div slot="footer">
+				<i-button type="error" size="large" @click="rpRemoveFn">删除</i-button>
+			</div>
+		</Modal>
+
+		<Modal v-model="copyModal" width="360" @on-ok="rpCopyFn">
+			<div style="text-align:center">
+				<p>确定复制该模板吗?</p>
+			</div>
+		</Modal>
+
+	</div>
+</div>
+
+
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block js %}
+<script src="/js/shop/list.js"></script>
+{% endblock %}

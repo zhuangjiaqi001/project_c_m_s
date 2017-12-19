@@ -59,9 +59,23 @@ module.exports = [
 	},
 	{
 		type: 1,
+		key:  'temp',
+		name: '店铺模板管理',
+		url:  '/shop',
+		icon: 'shopping-bag'
+	},
+	{
+		type: 1,
 		key:  'page',
 		name: '落地页管理',
 		url:  '/page',
 		icon: 'file-code-o'
-	}
+	},
+	{
+		type: 1,
+		key:  'page',
+		name: '店铺页管理',
+		url:  '/store',
+		icon: 'file-video-o'
+	},
 ];

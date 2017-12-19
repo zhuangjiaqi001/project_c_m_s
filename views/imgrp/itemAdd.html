@@ -52,10 +52,10 @@
 					<i-input v-model="formValidate.url" type="text" :maxlength="100"></i-input>
 				</Form-item>
 				<Form-item label="开始时间">
-					<Date-picker type="datetime" format="yyyy-MM-dd HH:mm" v-model="formValidate.startTime"></Date-picker>
+					<Date-picker type="datetime" format="yyyy-MM-dd HH:mm" v-model="formValidate.startTime" :editable="false"></Date-picker>
 				</Form-item>
 				<Form-item label="结束时间">
-					<Date-picker type="datetime" format="yyyy-MM-dd HH:mm" v-model="formValidate.endTime"></Date-picker>
+					<Date-picker type="datetime" format="yyyy-MM-dd HH:mm" v-model="formValidate.endTime" :editable="false"></Date-picker>
 				</Form-item>
 				
 				<Form-item :label="li.name" v-for="(li, idx) in custemItems">
@@ -66,7 +66,7 @@
 					<Checkbox v-if="li.type === 'Boolean'" v-model="formValidate.custemItems[li.key]"></Checkbox>
 
 					<!-- 日期 -->
-					<Date-picker v-if="li.type === 'Date'" type="datetime" format="yyyy-MM-dd HH:mm" :placeholder="li.name" v-model="formValidate.custemItems[li.key]"></Date-picker>
+					<Date-picker v-if="li.type === 'Date'" type="datetime" format="yyyy-MM-dd HH:mm" :placeholder="li.name" v-model="formValidate.custemItems[li.key]" :editable="false"></Date-picker>
 
 					<!-- 图片 -->
 					<div v-if="li.type === 'Image'">

@@ -26,6 +26,13 @@ module.exports = {
 	'/temp/itemAdd':   '新建模板',
 	'/temp/itemEdit':  '编辑模板',
 
+	'/shop':           '店铺模板管理',
+	'/shop/add':       '新建店铺模板',
+	'/shop/edit':      '编辑店铺模板',
+	'/shop/list':      '店铺模板列表',
+	'/shop/itemAdd':   '新建店铺',
+	'/shop/itemEdit':  '编辑店铺',
+
 	'/page':           '落地页分类管理',
 	'/page/add':       '新建落地页分类',
 	'/page/edit':      '编辑落地页分类',
