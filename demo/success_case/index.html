@@ -1,92 +1,116 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="common/default.css">
+<link rel="stylesheet" href="common/fa/fa.css">
 <link rel="stylesheet" href="css.css">
 </head>
 <body>
 
 <div id="vApp">
 	
+<!-- 标签 -->
+<div class="case-nav">
+	<h3>成功案例<i>&gt;</i><e-text v-model="json.title"></e-text></h3>
+</div>
 
-
-
-	<div class="case-nav">
-		<h3>成功案例<i>&gt;</i><e-text v-model="title"></e-text></h3>
+<!-- Banner -->
+<e-bgimage v-model="json.banner_img" e-class="d-banner" max-size="150">
+	<div class="data-box three">
+		<div class="data-left">
+			<p class="data-top"><e-text v-model="json.tab1_1"></e-text></p>
+			<p class="data-bottom"><e-text v-model="json.tab1_2"></e-text></p>
+		</div>
+		<div class="data-middle">
+			<p class="data-top"><e-text v-model="json.tab2_1"></e-text></p>
+			<p class="data-bottom"><e-text v-model="json.tab2_2"></e-text></p>
+		</div>
+		<div class="data-right">
+			<p class="data-top"><e-text v-model="json.tab3_1"></e-text></p>
+			<p class="data-bottom"><e-text v-model="json.tab3_2"></e-text></p>
+		</div>
+		<span class="data-border data-border-left"></span>
+		<span class="data-border data-border-right"></span>
 	</div>
-	<div class="d-banner" style="background-image: url(http://mj-public.oss-cn-shanghai.aliyuncs.com/cms/lo/cms_1c280de3f7cbbed6ad9c6ec07ce7d5cfdca810ec.jpg);">
-		<div class="data-box three">
-			<div class="data-left">
-				<p class="data-top"><e-text v-model="tab1_1"></e-text></p>
-				<p class="data-bottom"><e-text v-model="tab1_2"></e-text></p>
-			</div>
-			<div class="data-middle">
-				<p class="data-top"><e-text v-model="tab2_1"></e-text></p>
-				<p class="data-bottom"><e-text v-model="tab2_2"></e-text></p>
-			</div>
-			<div class="data-right">
-				<p class="data-top"><e-text v-model="tab3_1"></e-text></p>
-				<p class="data-bottom"><e-text v-model="tab3_2"></e-text></p>
-			</div>
-			<span class="data-border data-border-left"></span>
-			<span class="data-border data-border-right"></span>
+	<div class="bg-word">
+		<p class="bg-word-top"><e-text v-model="json.maintitle"></e-text></p>
+		<p class="bg-word-bottom"><e-text v-model="json.subtitle"></e-text></p>
+	</div>
+</e-bgimage>
+
+<!-- 内容 -->
+<div class="d-case-content">
+	<div class="d-case-desc">
+		<h3 class="desc-title"><e-text v-model="json.contitle"></e-text></h3>
+		<e-textarea v-model="json.condesc"></e-textarea>
+	</div>
+	<div class="d-case-img">
+		<e-image v-model="json.case_img"></e-image>
+	</div>
+</div>
+
+<!-- 预约 -->
+<e-bgimage v-model="json.bottom_img" e-class="appointment-section">
+	<h3><e-text v-model="json.bottitle"></e-text></h3>
+	<div class="form-control clearfix">
+		<div class="inp-box inp-name">
+			<i></i>
+			<input type="text" placeholder="请输入您的姓名">
+			<p class="inerror">姓名为必填</p>
 		</div>
-		<div class="bg-word">
-			<p class="bg-word-top"><e-text v-model="maintitle"></e-text></p>
-			<p class="bg-word-bottom"><e-text v-model="subtitle"></e-text></p>
+		<div class="inp-box inp-tel">
+			<i></i>
+			<input type="tel" placeholder="请输入您的电话">
+			<p class="inerror tel-empty">手机号码为必填</p>
+			<p class="inerror tel-error">请填写正确的手机号码</p>
 		</div>
 	</div>
-	<div class="d-case-content">
-		<div class="d-case-desc">
-			<h3 class="desc-title"><e-text v-model="contitle"></e-text></h3>
-			<e-textarea v-model="condesc"></e-text>
-		</div>
-		<div class="d-case-img">
-			<img src="http://mj-public.oss-cn-shanghai.aliyuncs.com/cms/lo/cms_1c280de3f7cbbed6ad9c6ec07ce7d5cfdca810ec.jpg">
-		</div>
+	<div class="appoint-btn">
+		<input type="button" value="立即预约 &gt;">
 	</div>
-	<div class="appointment-section" style="background-image: url(http://mj-public.oss-cn-shanghai.aliyuncs.com/cms/lo/cms_1c280de3f7cbbed6ad9c6ec07ce7d5cfdca810ec.jpg)">
-		<h3>预约您的专属广告营销顾问</h3>
-		<div class="form-control clearfix">
-			<div class="inp-box inp-name">
-				<i></i>
-				<input type="text" placeholder="请输入您的姓名">
-				<p class="inerror">姓名为必填</p>
-			</div>
-			<div class="inp-box inp-tel">
-				<i></i>
-				<input type="tel" placeholder="请输入您的电话">
-				<p class="inerror tel-empty">手机号码为必填</p>
-				<p class="inerror tel-error">请填写正确的手机号码</p>
-			</div>
-		</div>
-		<div class="appoint-btn">
-			<input type="button" value="立即预约 &gt;">
-		</div>
-	</div>
+</e-bgimage>
 
 
-
-
+	
 </div>
 
 
 <script id="e-text" type="text/x-template">
-	<span class="e-pos-rep">
+	<span class="e-pos-rep" @dblclick="editActive" :class="value === ''? 'e-null': ''">
 		<input class="e-text" v-if="isEdit === true" :style="`width: ${w}px; height: ${h}px;`" v-model="content" @blur="submit" v-focus="isFocus"></input>
-		<span v-if="isEdit === false" @dblclick="editActive">{{value}}</span>
+		<span v-if="isEdit === false">{{value}}</span>
 	</span>
 </script>
 
 <script id="e-textarea" type="text/x-template">
-	<div class="e-pos-rep">
+	<div class="e-pos-rep" @dblclick="editActive" :class="contentList.length === 1 && contentList[0] === ''? 'e-null': ''">
 		<textarea class="e-textarea" v-if="isEdit === true" :style="`width: ${w}px; height: ${h}px;`" v-model="content" @blur="submit" v-focus="isFocus"></textarea>
-		<p v-if="isEdit === false" @dblclick="editActive" v-for="p in contentList">{{p}}</p>
+		<p v-if="isEdit === false" v-for="p in contentList">{{p}}</p>
 	</div>
 </script>
 
+<script id="e-image" type="text/x-template">
+	<div class="e-pos-rep e-image">
+		<img :src="value" :style="value? '': 'opacity: 0'">
+		<div class="e-icon">
+			<a class="e-icon-fa e-update"><i class="fa fa-edit"></i><input class="e-update-file" type="file" @change="update"></a>
+			<a class="e-icon-fa" @click="remove"><i class="fa fa-trash-o"></i></a>
+		</div>
+	</div>
+</script>
+<script id="e-bgimage" type="text/x-template">
+	<div class="e-pos-rep e-image">
+		<div :class="eClass" :style="'background-image: url(' + value + ');'"><slot></slot></div>
+		<div class="e-icon">
+			<a class="e-icon-fa e-update"><i class="fa fa-edit"></i><input class="e-update-file" type="file" @change="update"></a>
+			<a class="e-icon-fa" @click="remove"><i class="fa fa-trash-o"></i></a>
+		</div>
+	</div>
+</script>
 
 <script src="http://mj-stc.mjmobi.com/common/js/lib/jquery.js"></script>
 <script src="http://mj-stc.mjmobi.com/h5/js/lib/vue.js"></script>
-<script src="js.js"></script>
+<script src="common/default.js"></script>
+<script src="common/js.js"></script>
 </body>
 </html>

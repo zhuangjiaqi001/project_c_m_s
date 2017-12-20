@@ -20,7 +20,7 @@ module.exports = function(sequelize, DataTypes) {
 		url:          { type: DataTypes.STRING, comment: '链接地址' },
 		startTime:    { type: DataTypes.STRING, comment: '开始时间' },
 		endTime:      { type: DataTypes.STRING, comment: '结束时间' },
-		custemItems:  { type: DataTypes.STRING, comment: '自定义字段' }
+		custemItems:  { type: DataTypes.STRING(1000), comment: '自定义字段' }
 	}, {
 		freezeTableName: false,
 		setterMethods: {

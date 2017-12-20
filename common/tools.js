@@ -3,8 +3,13 @@ const crypto  = require('crypto')
 const Code    = require('./code')
 const config  = require('../config')
 const Mapping = require('../common/mapping')
+const Aliyun  = require('../common/aliyun')
 
 moment.locale('zh-cn'); // 使用中文
+
+var RP = {
+	pn: /\S+cms\/[a-z]{2}\//
+}
 
 var Tools = {
 	formatDate: function (date, friendly) {
@@ -217,6 +222,92 @@ var Tools = {
 			})
 			return data
 		}
+	},
+	getAliyun: function(body, res, cb) {
+		var len  = 0,
+			now  = 0,
+			html = body.html,
+			css  = body.css,
+			js   = body.js
+		if (html) ++len
+		if (css)  ++len
+		if (js)   ++len
+		if (!len) cb(body)
+
+		if (html) {
+			Aliyun.getFile(html.replace(RP.pn, ''), function(err, result) {
+				if (err) return Tools.errHandle('0105', res)
+				body.html = result
+				++now
+				if (now === len) cb(body)
+			})
+		}
+		if (css) {
+			Aliyun.getFile(css.replace(RP.pn, ''), function(err, result) {
+				if (err) return Tools.errHandle('0106', res)
+				body.css = result
+				++now
+				if (now === len) cb(body)
+			})
+		}
+		if (js) {
+			Aliyun.getFile(js.replace(RP.pn, ''), function(err, result) {
+				if (err) return Tools.errHandle('0107', res)
+				body.js = result
+				++now
+				if (now === len) cb(body)
+			})
+		}
+	},
+	getAliyunHTML: function(temps, res, cb) {
+		var len  = 0,
+			now  = 0
+		for (let p in temps) {
+			if (!temps[p].html) return
+			++len
+			var mt = temps[p].html.replace(RP.pn, '')
+			if (!mt) return
+			Aliyun.getFile(mt, function(err, result) {
+				if (err) return Tools.errHandle('0105', res)
+				temps[p].html = result
+				++now
+				if (now === len) return cb(temps)
+			})
+		}
+		if (!len) return cb(temps)
+	},
+	uploadAliyun: function(html, css, js, pathname, body, res, cb) {
+		var len = 0, now = 0
+		body.html = body.css = body.js = ''
+		if (html) ++len
+		if (css)  ++len
+		if (js)   ++len
+		if (!len) cb(body)
+
+		if (html) {
+			Aliyun.uploadFile(html, '0.html', pathname, function(err, url) {
+				if (err) return Tools.errHandle('0115', res)
+				body.html = url
+				++now
+				if (now === len) cb(body)
+			})
+		}
+		if (css) {
+			Aliyun.uploadFile(css, '0.css', pathname, function(err, url) {
+				if (err) return Tools.errHandle('0116', res)
+				body.css = url
+				++now
+				if (now === len) cb(body)
+			})
+		}
+		if (js) {
+			Aliyun.uploadFile(js, '0.js', pathname, function(err, url) {
+				if (err) return Tools.errHandle('0117', res)
+				body.js = url
+				++now
+				if (now === len) cb(body)
+			})
+		}
 	}
 }
 
@@ -232,6 +323,22 @@ function objToJSON(obj) {
 	if (da.endTime)   da.endTime   = Tools.formatDate(da.endTime)
 	if (da.levelName) da.levelName = Mapping.level[da.level] || Mapping.level[0]
 	return da
+}
+
+// 创建页面
+function createPage(body, res, cb) {
+	var mi = typeof body.modelItems === 'string'? JSON.parse(body.modelItems): body.modelItems
+	var prev = tpl({
+		title:   `${body.title}`,
+		body:    body.html,
+		css:     body.css,
+		js:      body.js,
+		model:   mi,
+		header:  body.header? body.header.html || '': '',
+		footer:  body.footer? body.footer.html || '': '',
+		width:   body.width || '1000'
+	})
+	cb && cb(prev)
 }
 
 module.exports = Tools

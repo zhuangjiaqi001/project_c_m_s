@@ -28,25 +28,43 @@
 				<Form-item label="JS">
 					<i-input v-model="formValidate.js" type="textarea" :rows="6" placeholder="(不超过10000个字)" :maxlength="10000"></i-input>
 				</Form-item>
+				<Form-item label="数据JSON">
+					<i-input v-model="formValidate.json" type="textarea" :rows="6" placeholder="JSON格式: (不超过1000个字)" :maxlength="1000"></i-input>
+				</Form-item>
 
-				<Form-item
-					v-for="(item, index) in formValidate.custemItems"
-					:label="'工具库' + (index + 1)">
+				<Form-item label="公共头">
 					<Row>
-						<i-col span="5">
-							<i-select v-model="item.name">
-								<i-option v-for="item in loadLib" :value="item.val">{{item.name}}</i-option>
-							</i-select>
-						</i-col>
-						<i-col span="4" offset="1">
-							<i-button type="ghost" @click="handleRemove(index)">删除</i-button>
+						<i-col span="12">
+							<i-button v-if="!formValidate.header.id" type="ghost" @click="getTemp('header')">选择</i-button>
+							<span v-if="formValidate.header.id">{{formValidate.header.title}}</span>
+							<i-button v-if="formValidate.header.id" type="error" @click="handleSelRemove('header')">删除</i-button>
 						</i-col>
 					</Row>
 				</Form-item>
-				<Form-item v-if="formValidate.custemItems.length < 10">
+
+				<Form-item label="公共底">
 					<Row>
 						<i-col span="12">
-							<i-button type="dashed" long @click="handleAdd" icon="plus-round">新增 类库或框架</i-button>
+							<i-button v-if="!formValidate.footer.id" type="ghost" @click="getTemp('footer')">选择</i-button>
+							<span v-if="formValidate.footer.id">{{formValidate.footer.title}}</span>
+							<i-button v-if="formValidate.footer.id" type="error" @click="handleSelRemove('footer')">删除</i-button>
+						</i-col>
+					</Row>
+				</Form-item>
+				<Form-item
+					v-for="(item, idx) in formValidate.modelItems"
+					:label="'模块' + (idx + 1)">
+					<Row>
+						<i-col span="12">
+							<span v-if="item.id">{{item.title}}</span>
+							<i-button type="error" @click="handleSelRemove(idx)">删除</i-button>
+						</i-col>
+					</Row>
+				</Form-item>
+				<Form-item v-if="formValidate.modelItems.length < 10">
+					<Row>
+						<i-col span="12">
+							<i-button type="dashed" long @click="getTemp('modelItems')" icon="plus-round">新增 模块</i-button>
 						</i-col>
 					</Row>
 				</Form-item>
@@ -57,6 +75,30 @@
 				</Form-item>
 			</i-form>
 		</div>
+
+		<!-- 选择公共模块 -->
+		<Modal v-model="Modal" :title="mTitle" @on-ok="handleCtrl" :width="720">
+			<div class="row form-group">
+				<div v-if="!isTempC" class="col-md-12">
+					<i-table :columns="columns" :data="pageTemp.dataList" @on-sort-change="sortList"></i-table>
+					<div style="margin: 10px;overflow: hidden">
+						<div style="float: right;">
+							<Page :total="pageTemp.total" :page-size="pageTemp.pageSize" :current="pageTemp.current" @on-change="changePage" show-total></Page>
+						</div>
+					</div>
+				</div>
+				<div v-if="isTempC" class="col-md-12">
+					<i-table :columns="columns" :data="pageTempC.dataList" @on-sort-change="sortList"></i-table>
+					<div style="margin: 10px;overflow: hidden">
+						<i-button type="ghost" @click="handleReturn">返回</i-button>
+						<div style="float: right;">
+							<Page :total="pageTemp.total" :page-size="pageTemp.pageSize" :current="pageTemp.current" @on-change="changePage" show-total></Page>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div slot="footer"></div>
+		</Modal>
 
 	</div>
 </div>

@@ -50,13 +50,15 @@ app.use(flash())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ limit: '1mb', extended: true }))
 
-// cookie解析]
+// cookie解析
 app.use(cookieParser(config.cookieSecret))
 
 app.use(express.static(__dirname + config.static, {
 	maxage: 6e5,
 	etag: false
 }))
+
+app.use(express.static(__dirname + '/demo'))
 
 // 配置路由
 routes(app, config)

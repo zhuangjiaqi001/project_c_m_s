@@ -301,6 +301,7 @@ function datafilter(item, select, res, cb) {
 		})
 	})
 }
+
 // 模块过滤
 function modelfilter(obj, js, css) {
 	var cis  = obj.custemItems
@@ -315,6 +316,7 @@ function modelfilter(obj, js, css) {
 		html: obj.html
 	}
 }
+
 function uploadAliyun(html, css, js, pathname, body, res, cb) {
 	var len = 0, now = 0
 	body.html = body.css = body.js = ''

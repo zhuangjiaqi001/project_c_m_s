@@ -7,7 +7,7 @@
 		submit:		'/page/addPageC'
 	},
 	pageId = CMS.getQueryValue('pageId'),
-	id     = CMS.getQueryValue('id')
+	id     = CMS.getQueryValue('id');
 
 
 	global.handleCSel = function(item) {

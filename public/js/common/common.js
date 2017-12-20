@@ -133,6 +133,7 @@ if (!global.CMS) {
 		},
 		mounted() {
 			var me = this
+			global.CMS.getUserInfo()
 			me.load && me.load()
 		}
 	}
@@ -199,7 +200,6 @@ if (!global.CMS) {
 				} else {
 					VUE.$Message.warning(o.message)
 					setTimeout(function() {
-						debugger
 						location.href = '/logout'
 					}, 2000)
 				}
@@ -306,7 +306,6 @@ if (!global.CMS) {
 			return global.UE? global.UE.getEditor(id): ''
 		}
 	}
-	global.CMS.getUserInfo()
 }
 
 }(window))

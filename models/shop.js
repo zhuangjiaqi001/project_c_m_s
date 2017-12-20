@@ -27,10 +27,14 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		key:         { type: DataTypes.STRING(100), unique: true, comment: '商店内容KEY' },
 		title:       { type: DataTypes.STRING, comment: '标题' },
-		custemItems: { type: DataTypes.STRING, comment: '工具库' },
+		header:      { type: DataTypes.STRING, comment: '头部' },
+		footer:      { type: DataTypes.STRING, comment: '底部' },
+		modelItems:  { type: DataTypes.STRING(1000), comment: '模块' },
+		custemItems: { type: DataTypes.STRING(1000), comment: '工具库' },
 		css:         { type: DataTypes.STRING, comment: '样式' },
 		html:        { type: DataTypes.STRING, comment: 'HTML文档' },
 		js:          { type: DataTypes.STRING, comment: '脚本' },
+		json:        { type: DataTypes.STRING(1000), comment: '脚本' },
 		preview:     { type: DataTypes.STRING, comment: '预览' },
 		description: { type: DataTypes.STRING, comment: '商店描述' }
 	}, {

@@ -20,7 +20,7 @@ module.exports = function(type, userId, file, res, cb) {
 				})
 			} else if (type === 2) {
 				res.send({
-					url: file.url,
+					url: item.url,
 					state: 'SUCCESS'
 				})
 			}

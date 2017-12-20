@@ -59,7 +59,11 @@ module.exports = {
 		html:        1, 		// HTML
 		css:         1, 		// CSS
 		js:          1, 		// JS
-		custemItems: 1			// 工具库
+		json:        1,
+		header:      1,
+		footer:      1,
+		custemItems: 1,			// 工具库
+		modelItems:  1,
 	},
 	Page: {
 		name:        1,			// 名称

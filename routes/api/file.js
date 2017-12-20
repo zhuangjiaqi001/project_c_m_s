@@ -69,8 +69,8 @@ router.use('/ue', (req, res, next) => {
 	var q = req.query
 	// 图片上传
 	if (q.action === 'uploadimage') {
-		var id = req.signedCookies.id*1,
-			form = new formidable.IncomingForm()
+		var userId = req.signedCookies.id*1,
+			form   = new formidable.IncomingForm()
 		form.keepExtensions = true
 		form.hash = 'sha1'
 		form.uploadDir = config.dir.upload
@@ -89,7 +89,7 @@ router.use('/ue', (req, res, next) => {
 				validImg(2, userId, file, res, function() {
 					Aliyun.upload(file, function(err, url) {
 						if (err) return Tools.errHandle('0102', res)
-						Img.addUE(url, id, function(err, file) {
+						Img.addUE(url, userId, function(err, file) {
 							if (err) return Tools.errHandle('0103', res)
 							res.send({
 								url: file.url,

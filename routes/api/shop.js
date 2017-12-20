@@ -1,7 +1,7 @@
 const router  = require('express').Router()
-const Cache   = require('../../models/cache')
 const proxy   = require('../../proxy')
 const Shop    = proxy.Shop
+const Temp    = proxy.Temp
 const Aliyun  = require('../../common/aliyun')
 const Tools   = require('../../common/tools')
 const Valid   = require('../../common/valid')
@@ -11,7 +11,7 @@ const shopEdit  = Edit.Shop
 const shopcEdit = Edit.ShopC
 const tpl       = swig.compileFile('template/t0.html', { autoescape: false })
 const tprev     = swig.compileFile('template/tp.html', { autoescape: false })
-
+const jsframe   = Tools.getJSFrame()
 
 var RP = {
 	pn: /\S+cms\/[a-z]{2}\//
@@ -101,46 +101,84 @@ router.get('/getShopList', (req, res, next) => {
 router.get('/getC', (req, res, next) => {
 	var q      = req.query,
 		id     = q.id,
-		shopId = q.shopId,
-		userId = req.signedCookies.id
+		userId = req.signedCookies.id,
+		temps  = {}
 
 	Shop.getShopCByQuery({
-		shopId: shopId,
 		id: id
-	}, function(o) {
-		var key      = o.key,
-			pathname = `shopc/${key}`
-		if (!o) return Tools.permit('对不起！该模板类不存在！', res)
-		getAliyun(o, pathname, res, function(o) {
-			Tools.errHandle('0000', res, o)
+	}, function(item) {
+		if (!item) return Tools.errHandle('0128', res)
+		item = item.dataValues
+		Tools.getTempById(item, function(ids, item) {
+			Temp.getTempCByRpIds(ids, ['id', 'title'], function(items, count) {
+				items.map(function(i) {
+					temps[i.id] = i
+				})
+				if (item.header) item.header = temps[item.header]
+				if (item.footer) item.footer = temps[item.footer]
+				if (item.modelItems) {
+					var mi = []
+					item.modelItems.map(function(i) {
+						mi.push(temps[i])
+					})
+					item.modelItems = mi
+				}
+
+				Tools.getAliyun(item, res, function(item) {
+					Tools.errHandle('0000', res, item)
+				})
+			})
 		})
 	})
 })
 router.post('/addShopC', (req, res, next) => {
 	var body   = req.body,
-		id     = req.signedCookies.id,
+		userId = req.signedCookies.id,
 		shopId = body.shopId,
-		key    = body.key,
-		html   = body.html? decodeURIComponent(body.html): '',
-		css    = body.css?  decodeURIComponent(body.css):  '',
-		js     = body.js?   decodeURIComponent(body.js):   '',
+		key    = `shopc_${Date.now() + userId}`,
+		html   = body.html? body.html: '',
+		css    = body.css?  body.css:  '',
+		js     = body.js?   body.js:   '',
 		pathname = `shopc/${key}`
-
-	body.custemItems = body.custemItems || []
 
 	if (!shopId) return Tools.errHandle('0126', res)
 
-	Shop.getShopCByQuery({
-		key: key
-	}, function(item) {
-		if (item) return Tools.errHandle('0163', res)
-		uploadAliyun(html, css, js, pathname, body, res, function(body) {
-			body.userId = id
+	Shop.getShopById(shopId, function(item) {
+		if (!item) return Tools.errHandle('0178', res)
+		Tools.uploadAliyun(html, css, js, pathname, body, res, function(body) {
+			body.userId = userId
+			body.key    = key
+
 			Shop.addShopC(body, function (err) {
 				if (err) return Tools.errHandle('0123', res)
 				Tools.errHandle('0000', res)
 			})
+			// datafilter(item, ['id', 'title', 'html', 'css', 'js', 'json', 'custemItems'], res, function(html) {
+			// 	Aliyun.uploadFile(html, 'ol.html', pathname, function(err, url) {
+			// 		if (err) return Tools.errHandle('0118', res)
+			// 	})
+			// })
 		})
+	})
+})
+router.get('/prevShopC', (req, res, next) => {
+	var q      = req.query,
+		id     = q.id,
+		userId = req.signedCookies.id
+
+	Shop.getShopCByQuery({
+		id: id
+	}, function(item) {
+		if (!item) return Tools.errHandle('0163', res)
+		var key      = item.key,
+			pathname = `shopc/${key}`;
+
+			datafilter(item, ['id', 'title', 'html', 'css', 'js', 'custemItems'], res, function(html) {
+				res.send(html)
+				// Aliyun.uploadFile(html, 'ol.html', pathname, function(err, url) {
+				// 	if (err) return Tools.errHandle('0118', res)
+				// })
+			})
 	})
 })
 router.post('/updateShopC', (req, res, next) => {
@@ -148,29 +186,33 @@ router.post('/updateShopC', (req, res, next) => {
 		id     = body.id,
 		userId = req.signedCookies.id,
 		shopId = body.shopId,
-		key    = `shopc_${Date.now() + userId}`,
 		html   = body.html || '',
 		css    = body.css  || '',
-		js     = body.js   || '',
-		pathname = `shopc/${key}`
-
-	body.custemItems = body.custemItems || []
+		js     = body.js   || ''
 	
 	var bodyFilter = Tools.bodyFilter(shopcEdit, body)
 	body = bodyFilter.obj
 
 	Valid.run(res, 'shopc', body, function() {
 		Shop.getShopCByQuery({
-			shopId: shopId,
-			key: key
+			id: id
 		}, function(item) {
 			if (!item) return Tools.errHandle('0163', res)
-			uploadAliyun(html, css, js, pathname, body, res, function(body) {
+			var key      = item.key,
+				pathname = `shopc/${key}`;
+			Tools.uploadAliyun(html, css, js, pathname, body, res, function(body) {
 				body.userId = userId
+
 				Shop.updateShopC(id, body, function (err) {
 					if (err) return Tools.errHandle('0130', res)
 					Tools.errHandle('0000', res)
 				})
+				// datafilter(item, ['id', 'title', 'html', 'css', 'js', 'custemItems'], res, function(html) {
+				// 	Aliyun.uploadFile(html, 'ol.html', pathname, function(err, url) {
+				// 		if (err) return Tools.errHandle('0118', res)
+				// 	})
+				// })
+
 			})
 		})
 	})
@@ -212,7 +254,6 @@ router.post('/copyShopC', (req, res, next) => {
 	})
 })
 
-
 // 获取推荐位内容列表
 router.get('/getShopCList', (req, res, next) => {
 	var query  = req.query
@@ -224,88 +265,64 @@ router.get('/getShopCList', (req, res, next) => {
 		})
 	})
 })
-function getAliyun(body, pathname, res, cb) {
-	var len  = 0,
-		now  = 0,
-		html = body.html,
-		css  = body.css,
-		js   = body.js
-	if (html) ++len
-	if (css)  ++len
-	if (js)   ++len
-	if (!len) cb(body)
 
-	if (html) {
-		Aliyun.getFile(html.replace(RP.pn, ''), function(err, result) {
-			if (err) return Tools.errHandle('0105', res)
-			body.html = result
-			++now
-			if (now === len) cb(body)
+// 数据过滤
+function datafilter(item, select, res, cb) {
+	Tools.getTempById(item, function(ids, item) {
+		Temp.getTempCByRpIds(ids, ['id', 'title', 'html', 'css', 'js', 'custemItems'], function(items, count) {
+			var temps = {}, js = [], css = []
+			items.map(function(i) {
+				temps[i.id] = i
+			})
+			if (item.html) temps['body'] = { html: item.html }
+			if (item.css) css.push(item.css)
+			if (item.js)  js.push(item.js)
+			Tools.getAliyunHTML(temps, res, function(temps) {
+				if (item.header) item.header = modelfilter(temps[item.header], js, css)
+				if (item.modelItems) {
+					var mi = []
+					item.modelItems.map(function(i) {
+						mi.push(modelfilter(temps[i], js, css))
+					})
+					item.modelItems = mi
+				}
+				if (item.footer) item.footer = modelfilter(temps[item.footer], js, css)
+				item.js  = Tools.unique(js)
+				item.css = Tools.unique(css)
+				if (temps.body) item.html = temps['body'].html
+				createPage(item, res, cb)
+			})
+		})
+	})
+}
+// 模块过滤
+function modelfilter(obj, js, css) {
+	var cis  = obj.custemItems
+	if (cis.length) {
+		cis.map(function(i) {
+			js.push(jsframe[i.name])
 		})
 	}
-	if (css) {
-		Aliyun.getFile(css.replace(RP.pn, ''), function(err, result) {
-			if (err) return Tools.errHandle('0106', res)
-			body.css = result
-			++now
-			if (now === len) cb(body)
-		})
-	}
-	if (js) {
-		Aliyun.getFile(js.replace(RP.pn, ''), function(err, result) {
-			if (err) return Tools.errHandle('0107', res)
-			body.js = result
-			++now
-			if (now === len) cb(body)
-		})
+	if (obj.css) css.push(obj.css)
+	if (obj.js)  js.push(obj.js)
+	return {
+		html: obj.html
 	}
 }
-function uploadAliyun(html, css, js, pathname, body, res, cb) {
-	var len = 0, now = 0
-	body.html = body.css = body.js = ''
-	if (html) ++len
-	if (css)  ++len
-	if (js)   ++len
-	if (!len) cb(body)
-	if (html) {
-		Aliyun.uploadFile(html, '0.html', pathname, function(err, url) {
-			if (err) return Tools.errHandle('0115', res)
-			body.html = url
-			++now
-			if (now === len) createPrev(html, body, pathname, res, cb)
-		})
-	}
-	if (css) {
-		Aliyun.uploadFile(css, '0.css', pathname, function(err, url) {
-			if (err) return Tools.errHandle('0116', res)
-			body.css = url
-			++now
-			if (now === len) createPrev(html, body, pathname, res, cb)
-		})
-	}
-	if (js) {
-		Aliyun.uploadFile(js, '0.js', pathname, function(err, url) {
-			if (err) return Tools.errHandle('0117', res)
-			body.js = url
-			++now
-			if (now === len) createPrev(html, body, pathname, res, cb)
-		})
-	}
-}
-function createPrev(html, body, pathname, res, cb) {
-	var prev = tprev({
-		title:   `${body.title}_${body.name}`,
-		jsframe: Tools.getJSFrame(),
-		items:   body.custemItems,
-		body:    html,
+// 创建页面
+function createPage(body, res, cb) {
+	var mi = typeof body.modelItems === 'string'? JSON.parse(body.modelItems): body.modelItems
+	body.js.unshift( jsframe.vue_2_2_6, jsframe.jq_1_12_4, '/js/util/e-edit-view.js' )
+	var prev = tpl({
+		title:   `${body.title}`,
+		body:    body.html,
 		css:     body.css,
-		js:      body.js
+		js:      body.js,
+		model:   mi,
+		header:  body.header? body.header.html || '': '',
+		footer:  body.footer? body.footer.html || '': '',
+		width:   body.width || '1000'
 	})
-	Aliyun.uploadFile(prev, 'prev.html', pathname, function(err, url) {
-		if (err) return Tools.errHandle('0118', res)
-		body.preview = url
-		cb(body)
-	})
+	cb && cb(prev)
 }
-
 module.exports = router

@@ -28,10 +28,7 @@ module.exports = function(sequelize, DataTypes) {
 		key:         { type: DataTypes.STRING(100), unique : true, comment: '落地页内容KEY' },
 		title:       { type: DataTypes.STRING,  comment: '标题' },
 		type:        { type: DataTypes.INTEGER, defaultValue: 0, comment: '落地页类型' },		// 0: 模块, 1: 内容
-		header:      { type: DataTypes.STRING,  comment: '头部' },
-		footer:      { type: DataTypes.STRING,  comment: '底部' },
-		modelItems:  { type: DataTypes.STRING,  comment: '模块' },
-		custemItems: { type: DataTypes.STRING,  comment: '工具库' },
+		modelItems:  { type: DataTypes.STRING(1000),  comment: '模块' },
 		css:         { type: DataTypes.STRING,  comment: '样式' },
 		html:        { type: DataTypes.STRING,  comment: 'HTML文档' },
 		js:          { type: DataTypes.STRING,  comment: '脚本' },
