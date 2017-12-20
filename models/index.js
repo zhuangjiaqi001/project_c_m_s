@@ -24,6 +24,10 @@ const Sp     = require('./shop')(sequelize, Sequelize)
 const Shop   = Sp.Shop
 const ShopC  = Sp.Shopc
 
+const St     = require('./store')(sequelize, Sequelize)
+const Store  = St.Store
+const StoreC = St.Storec
+
 // 图片推荐位
 User.hasMany(ImgRP,   { foreignKey: 'userId', targetKey: 'id', as: 'ImgRP' })	// 用户关联推荐位列表
 User.hasMany(ImgRPC,  { foreignKey: 'userId', targetKey: 'id', as: 'ImgRPC' })	// 用户关联推荐位内容
@@ -50,6 +54,11 @@ User.hasMany(Shop,   { foreignKey: 'userId', targetKey: 'id', as: 'Shop' })		// 
 User.hasMany(ShopC,  { foreignKey: 'userId', targetKey: 'id', as: 'ShopC' })	// 用户关联店铺内容
 Shop.hasMany(ShopC,  { foreignKey: 'shopId', targetKey: 'id', as: 'ShopC' })	// 列表类关联内容
 
+// 商店管理
+User.hasMany(Store,   { foreignKey: 'userId', targetKey: 'id', as: 'Store' })	// 用户关联店铺列表类
+User.hasMany(StoreC,  { foreignKey: 'userId', targetKey: 'id', as: 'StoreC' })	// 用户关联店铺内容
+Store.hasMany(StoreC, { foreignKey: 'shopId', targetKey: 'id', as: 'StoreC' })	// 列表类关联内容
+
 // sequelize.sync()
 
 exports.User   = User
@@ -64,3 +73,5 @@ exports.Page   = Page
 exports.PageC  = PageC
 exports.Shop   = Shop
 exports.ShopC  = ShopC
+exports.Store  = Store
+exports.StoreC = StoreC

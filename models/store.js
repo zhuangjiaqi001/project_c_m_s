@@ -1,20 +1,20 @@
 const Tools = require('../common/tools')
 module.exports = function(sequelize, DataTypes) {
-	// 落地页列表
+	// 商店列表
 	const Store = sequelize.define('cms_store', {
 		id:           { type: DataTypes.BIGINT(11), primaryKey: true, autoIncrement: true, unique: true },
 		userId:       {
 			type:    DataTypes.BIGINT(11),
 			comment: '用户ID'
 		},
-		key:          { type: DataTypes.STRING(100), unique: true, comment: '落地页列表KEY' },
-		name:         { type: DataTypes.STRING(100), unique: true, comment: '落地页列表名称' },
-		description:  { type: DataTypes.STRING, comment: '落地页列表描述' }
+		key:          { type: DataTypes.STRING(100), unique: true, comment: '商店列表KEY' },
+		name:         { type: DataTypes.STRING(100), unique: true, comment: '商店列表名称' },
+		description:  { type: DataTypes.STRING, comment: '商店列表描述' }
 	}, {
 		freezeTableName: false
 	})
 
-	// 落地页内容
+	// 商店内容
 	const Storec = sequelize.define('cms_store_c', {
 		id:          { type: DataTypes.BIGINT(11), primaryKey : true, autoIncrement: true, unique : true },
 		userId:      {
@@ -23,19 +23,15 @@ module.exports = function(sequelize, DataTypes) {
 		},
 		storeId:      {
 			type: DataTypes.BIGINT(11),
-			comment: '落地页类ID'
+			comment: '商店ID'
 		},
-		key:         { type: DataTypes.STRING(100), unique : true, comment: '落地页内容KEY' },
+		key:         { type: DataTypes.STRING(100), unique : true, comment: '商店内容KEY' },
 		title:       { type: DataTypes.STRING,  comment: '标题' },
-		type:        { type: DataTypes.INTEGER, defaultValue: 0, comment: '落地页类型' },		// 0: 模块, 1: 内容
-		modelItems:  { type: DataTypes.STRING(1000),  comment: '模块' },
-		css:         { type: DataTypes.STRING,  comment: '样式' },
 		html:        { type: DataTypes.STRING,  comment: 'HTML文档' },
-		js:          { type: DataTypes.STRING,  comment: '脚本' },
-		url:         { type: DataTypes.STRING,  comment: '预览' },
-		description: { type: DataTypes.STRING,  comment: '落地页描述' },
-		active:      { type: DataTypes.BOOLEAN, defaultValue: false, comment: '是否激活' },
-		width:       { type: DataTypes.STRING, defaultValue: '1000', comment: '页面宽度' }
+		preview:     { type: DataTypes.STRING,  comment: '预览' },
+		url:         { type: DataTypes.STRING,  comment: '链接' },
+		description: { type: DataTypes.STRING,  comment: '商店描述' },
+		active:      { type: DataTypes.BOOLEAN, defaultValue: false, comment: '是否激活' }
 	}, {
 		freezeTableName: false,
 		setterMethods: {
