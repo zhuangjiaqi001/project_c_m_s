@@ -17,23 +17,23 @@ module.exports = function(sequelize, DataTypes) {
 	// 商店内容
 	const Storec = sequelize.define('cms_store_c', {
 		id:          { type: DataTypes.BIGINT(11), primaryKey : true, autoIncrement: true, unique : true },
-		userId:      {
-			type: DataTypes.BIGINT(11),
-			comment: '用户ID'
-		},
-		storeId:      {
-			type: DataTypes.BIGINT(11),
-			comment: '商店ID'
-		},
+		userId:      { type: DataTypes.BIGINT(11), comment: '用户ID' },
+		stopId:      { type: DataTypes.BIGINT(11), comment: '店铺ID' },
+		storeId:     { type: DataTypes.BIGINT(11), comment: '商店ID' },
 		key:         { type: DataTypes.STRING(100), unique : true, comment: '商店内容KEY' },
 		title:       { type: DataTypes.STRING,  comment: '标题' },
-		html:        { type: DataTypes.STRING,  comment: 'HTML文档' },
-		preview:     { type: DataTypes.STRING,  comment: '预览' },
 		url:         { type: DataTypes.STRING,  comment: '链接' },
-		description: { type: DataTypes.STRING,  comment: '商店描述' },
+		html:        { type: DataTypes.STRING,  comment: 'HTML' },
+		json:        { type: DataTypes.STRING,  comment: 'JSON' },
 		active:      { type: DataTypes.BOOLEAN, defaultValue: false, comment: '是否激活' }
 	}, {
 		freezeTableName: false,
+		getterMethods: {
+			json: function() {
+				this
+				debugger
+			}
+		},
 		setterMethods: {
 			custemItems: function(val) {
 				return this.setDataValue('custemItems', typeof val !== 'string'? JSON.stringify(val): val)

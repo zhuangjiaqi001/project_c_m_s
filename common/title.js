@@ -39,4 +39,11 @@ module.exports = {
 	'/page/list':      '落地页列表',
 	'/page/itemAdd':   '新建落地页',
 	'/page/itemEdit':  '编辑落地页',
+
+	'/store':           '商店管理',
+	'/store/add':       '新建商店',
+	'/store/edit':      '编辑商店',
+	'/store/list':      '商店列表',
+	'/store/itemAdd':   '新建商店',
+	'/store/itemEdit':  '编辑商店',
 }

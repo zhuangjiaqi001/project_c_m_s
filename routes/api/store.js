@@ -1,14 +1,14 @@
 const router  = require('express').Router()
 const proxy   = require('../../proxy')
-const Shop    = proxy.Shop
+const Store    = proxy.Store
 const Temp    = proxy.Temp
 const Aliyun  = require('../../common/aliyun')
 const Tools   = require('../../common/tools')
 const Valid   = require('../../common/valid')
 const Edit    = require('../../common/edit')
 const swig    = require('swig')
-const shopEdit  = Edit.Shop
-const shopcEdit = Edit.ShopC
+const storeEdit  = Edit.Store
+const storecEdit = Edit.StoreC
 const tpl       = swig.compileFile('template/t0.html', { autoescape: false })
 const tprev     = swig.compileFile('template/tp.html', { autoescape: false })
 const jsframe   = Tools.getJSFrame()
@@ -23,58 +23,58 @@ router.get('/get', (req, res, next) => {
 		id     = q.id,
 		userId = req.signedCookies.id
 
-	Shop.getShopByQuery({
+	Store.getStoreByQuery({
 		'id':  id
 	}, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		Tools.errHandle('0000', res, item)
 	})
 })
-router.post('/addShop', (req, res, next) => {
+router.post('/addStore', (req, res, next) => {
 	var id   = req.signedCookies.id,
 		body = req.body,
 		key  = body.key,
 		name = body.name,
 		description = body.description
-	Valid.run(res, 'shop', body, function() {
-		Shop.getShopByQuery({
+	Valid.run(res, 'store', body, function() {
+		Store.getStoreByQuery({
 			'key':  key,
 			'name': name
 		}, function (item) {
 			if (item) return Tools.errHandle('0123', res)
 
-			Shop.addShop(key, name, description, id, function (err) {
+			Store.addStore(key, name, description, id, function (err) {
 				if (err) return Tools.errHandle('0124', res)
 				Tools.errHandle('0000', res)
 			})
 		})
 	})
 })
-router.post('/updateShop', (req, res, next) => {
+router.post('/updateStore', (req, res, next) => {
 	var body = req.body,
 		id   = body.id
 
-	var bodyFilter = Tools.bodyFilter(shopEdit, body)
+	var bodyFilter = Tools.bodyFilter(storeEdit, body)
 	body = bodyFilter.obj
 
-	Valid.run(res, 'shopUp', body, function() {
-		Shop.getShopById(id, function (item) {
+	Valid.run(res, 'storeUp', body, function() {
+		Store.getStoreById(id, function (item) {
 			if (!item) return Tools.errHandle('0128', res)
-			Shop.updateShop(id, body, function (err) {
+			Store.updateStore(id, body, function (err) {
 				if (err) return Tools.errHandle('0130', res)
 				Tools.errHandle('0000', res)
 			})
 		})
 	})
 })
-router.post('/removeShop', (req, res, next) => {
+router.post('/removeStore', (req, res, next) => {
 	var body = req.body,
 		id   = body.id
 
-	Shop.getShopById(id, function (item) {
+	Store.getStoreById(id, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		if (item.active)  return Tools.errHandle('0134', res)
-		Shop.removeShop(id, function (err) {
+		Store.removeStore(id, function (err) {
 			if (err) return Tools.errHandle('0130', res)
 			Tools.errHandle('0000', res)
 		})
@@ -83,11 +83,11 @@ router.post('/removeShop', (req, res, next) => {
 
 
 // 获取推荐位列表
-router.get('/getShopList', (req, res, next) => {
+router.get('/getStoreList', (req, res, next) => {
 	var query  = req.query,
 		select = ['key', 'name', 'description', 'id', 'createdAt', 'updatedAt']
 
-	Shop.getShopList(query, select, function (items, pageInfo) {
+	Store.getStoreList(query, select, function (items, pageInfo) {
 
 		Tools.errHandle('0000', res, {
 			list: items,
@@ -104,7 +104,7 @@ router.get('/getC', (req, res, next) => {
 		userId = req.signedCookies.id,
 		temps  = {}
 
-	Shop.getShopCByQuery({
+	Store.getStoreCByQuery({
 		id: id
 	}, function(item) {
 		if (!item) return Tools.errHandle('0128', res)
@@ -131,88 +131,79 @@ router.get('/getC', (req, res, next) => {
 		})
 	})
 })
-router.post('/addShopC', (req, res, next) => {
+router.post('/addStoreC', (req, res, next) => {
 	var body   = req.body,
 		userId = req.signedCookies.id,
-		shopId = body.shopId,
-		key    = `shopc_${Date.now() + userId}`,
+		storeId = body.storeId,
+		key    = `storec_${Date.now() + userId}`,
 		html   = body.html? body.html: '',
 		css    = body.css?  body.css:  '',
 		js     = body.js?   body.js:   '',
-		pathname = `shopc/${key}`
+		pathname = `storec/${key}`
 
-	if (!shopId) return Tools.errHandle('0126', res)
+	if (!storeId) return Tools.errHandle('0126', res)
 
-	Shop.getShopById(shopId, function(item) {
+	Store.getStoreById(storeId, function(item) {
 		if (!item) return Tools.errHandle('0178', res)
 		Tools.uploadAliyun(html, css, js, pathname, body, res, function(body) {
 			body.userId = userId
 			body.key    = key
 
-			Shop.addShopC(body, function (err) {
+			Store.addStoreC(body, function (err) {
 				if (err) return Tools.errHandle('0123', res)
 				Tools.errHandle('0000', res)
 			})
+			// datafilter(item, ['id', 'title', 'html', 'css', 'js', 'json', 'custemItems'], res, function(html) {
+			// 	Aliyun.uploadFile(html, 'ol.html', pathname, function(err, url) {
+			// 		if (err) return Tools.errHandle('0118', res)
+			// 	})
+			// })
 		})
 	})
 })
-router.get('/prevShopC', (req, res, next) => {
+router.get('/prevStoreC', (req, res, next) => {
 	var q      = req.query,
 		id     = q.id,
 		userId = req.signedCookies.id
 
-	Shop.getShopCByQuery({
+	Store.getStoreCByQuery({
 		id: id
 	}, function(item) {
 		if (!item) return Tools.errHandle('0163', res)
 		var key      = item.key,
-			pathname = `shopc/${key}`;
+			pathname = `storec/${key}`;
 
-			datafilter('preview', item, ['id', 'title', 'html', 'css', 'js', 'custemItems'], res, function(html) {
+			datafilter(item, ['id', 'title', 'html', 'css', 'js', 'custemItems'], res, function(html) {
 				res.send(html)
+				// Aliyun.uploadFile(html, 'ol.html', pathname, function(err, url) {
+				// 	if (err) return Tools.errHandle('0118', res)
+				// })
 			})
 	})
 })
-router.get('/editorShopC', (req, res, next) => {
-	var q      = req.query,
-		id     = q.id,
-		userId = req.signedCookies.id
-
-	Shop.getShopCByQuery({
-		id: id
-	}, function(item) {
-		if (!item) return Tools.errHandle('0163', res)
-		var key      = item.key,
-			pathname = `shopc/${key}`;
-
-		datafilter('editor', item, ['id', 'title', 'html', 'css', 'js', 'custemItems'], res, function(html) {
-			res.send(html)
-		})
-	})
-})
-router.post('/updateShopC', (req, res, next) => {
+router.post('/updateStoreC', (req, res, next) => {
 	var body   = req.body,
 		id     = body.id,
 		userId = req.signedCookies.id,
-		shopId = body.shopId,
+		storeId = body.storeId,
 		html   = body.html || '',
 		css    = body.css  || '',
 		js     = body.js   || ''
 	
-	var bodyFilter = Tools.bodyFilter(shopcEdit, body)
+	var bodyFilter = Tools.bodyFilter(storecEdit, body)
 	body = bodyFilter.obj
 
-	Valid.run(res, 'shopc', body, function() {
-		Shop.getShopCByQuery({
+	Valid.run(res, 'storec', body, function() {
+		Store.getStoreCByQuery({
 			id: id
 		}, function(item) {
 			if (!item) return Tools.errHandle('0163', res)
 			var key      = item.key,
-				pathname = `shopc/${key}`;
+				pathname = `storec/${key}`;
 			Tools.uploadAliyun(html, css, js, pathname, body, res, function(body) {
 				body.userId = userId
 
-				Shop.updateShopC(id, body, function (err) {
+				Store.updateStoreC(id, body, function (err) {
 					if (err) return Tools.errHandle('0130', res)
 					Tools.errHandle('0000', res)
 				})
@@ -226,26 +217,26 @@ router.post('/updateShopC', (req, res, next) => {
 		})
 	})
 })
-router.post('/removeShopC', (req, res, next) => {
+router.post('/removeStoreC', (req, res, next) => {
 	var body = req.body
 
-	Shop.getShopCByQuery(body, function (item) {
+	Store.getStoreCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
-		Shop.removeShopC(body.id, function (err) {
+		Store.removeStoreC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
 			Tools.errHandle('0000', res)
 		})
 	})
 })
-router.post('/copyShopC', (req, res, next) => {
+router.post('/copyStoreC', (req, res, next) => {
 	var body = req.body
 
-	Shop.getShopCByQuery(body, function (item) {
+	Store.getStoreCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		item = item.dataValues
 		var da = {
 			key:         `${item.key}_copy_${Date.now()}`,
-			shopId:      item.shopId,
+			storeId:      item.storeId,
 			userId:      item.userId,
 			description: item.description,
 			title:       `${item.title}_copy`,
@@ -256,7 +247,7 @@ router.post('/copyShopC', (req, res, next) => {
 			type:        item.type,
 			preview:     item.preview,
 		}
-		Shop.addShopC(da, function (err) {
+		Store.addStoreC(da, function (err) {
 			if (err) return Tools.errHandle('0123', res)
 			Tools.errHandle('0000', res)
 		})
@@ -264,10 +255,10 @@ router.post('/copyShopC', (req, res, next) => {
 })
 
 // 获取推荐位内容列表
-router.get('/getShopCList', (req, res, next) => {
+router.get('/getStoreCList', (req, res, next) => {
 	var query  = req.query
-	var select = ['shopId', 'key', 'title', 'preview', 'createdAt', 'updatedAt']
-	Shop.getShopCList(query, select, function (items, pageInfo) {
+	var select = ['storeId', 'key', 'title', 'preview', 'createdAt', 'updatedAt']
+	Store.getStoreCList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
 			list: items,
 			pageInfo: pageInfo
@@ -276,7 +267,7 @@ router.get('/getShopCList', (req, res, next) => {
 })
 
 // 数据过滤
-function datafilter(type, item, select, res, cb) {
+function datafilter(item, select, res, cb) {
 	Tools.getTempById(item, function(ids, item) {
 		Temp.getTempCByRpIds(ids, ['id', 'title', 'html', 'css', 'js', 'custemItems'], function(items, count) {
 			var temps = {}, js = [], css = []
@@ -299,7 +290,7 @@ function datafilter(type, item, select, res, cb) {
 				item.js  = Tools.unique(js)
 				item.css = Tools.unique(css)
 				if (temps.body) item.html = temps['body'].html
-				createPage(type, item, res, cb)
+				createPage(item, res, cb)
 			})
 		})
 	})
@@ -319,14 +310,9 @@ function modelfilter(obj, js, css) {
 	}
 }
 // 创建页面
-function createPage(type, body, res, cb) {
+function createPage(body, res, cb) {
 	var mi = typeof body.modelItems === 'string'? JSON.parse(body.modelItems): body.modelItems
-	body.js.unshift( jsframe.vue_2_2_6, jsframe.jq_1_12_4 )
-	if (type === 'preview') body.js.push( '/js/util/e-edit/e-edit-view.js' )
-	if (type === 'editor')  {
-		body.css.push( '/js/util/e-edit/e-edit-edit.css', '/js/util/e-edit/fa/fa.css' )
-		body.js.push( '/js/util/e-edit/e-edit-edit.js' )
-	}
+	body.js.unshift( jsframe.vue_2_2_6, jsframe.jq_1_12_4, '/js/util/e-edit-view.js' )
 	var prev = tpl({
 		title:   `${body.title}`,
 		body:    body.html,

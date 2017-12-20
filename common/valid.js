@@ -128,6 +128,16 @@ const rule = {
 	pageUp: {
 		name: RULE.imgrpName
 	},
+	store: {
+		key:  RULE.imgrpKey,
+		name: RULE.imgrpName
+	},
+	storec: {
+		title: RULE.imgrpName
+	},
+	storeUp: {
+		name: RULE.imgrpName
+	},
 }
 
 var Valid = {

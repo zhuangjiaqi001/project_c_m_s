@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "dev": "NODE_ENV=development nodemon ./bin/www",
+    "dev": "NODE_ENV=development nodemon ./bin/www"
   },
   "dependencies": {
     "ali-oss": "^4.8.0",

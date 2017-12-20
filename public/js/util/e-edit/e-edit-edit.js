@@ -8,20 +8,24 @@
 	})
 	Vue.component('e-text', {
 		props: ['value'],
-		template: '#e-text',
+		template: `<span class="e-pos-rep" @dblclick="editActive" :class="value === ''? 'e-null': ''">
+				<input class="e-text" v-if="isEdit === true" :style="size" v-model="content" @blur="submit" v-focus="isFocus"></input>
+				<span v-if="isEdit === false">{{value}}</span>
+			</span>`,
 		data: function() {
 			return {
 				content: this.value,
 				isEdit: false,
 				isFocus: false,
-				w: 0,
-				h: 0,
+				size: { width: 0, height: 0 },
 			}
 		},
 		methods: {
 			editActive: function(el) {
-				this.w = el.currentTarget.offsetWidth
-				this.h = el.currentTarget.offsetHeight
+				this.size = {
+					width:  el.currentTarget.offsetWidth  + 'px',
+					height: el.currentTarget.offsetHeight + 'px'
+				}
 				this.isEdit = this.isFocus = true
 			},
 			submit: function() {
@@ -32,21 +36,25 @@
 	})
 	Vue.component('e-textarea', {
 		props: ['value'],
-		template: '#e-textarea',
+		template: `<div class="e-pos-rep" @dblclick="editActive" :class="contentList.length === 1 && contentList[0] === ''? 'e-null': ''">
+				<textarea class="e-textarea" v-if="isEdit === true" :style="size" v-model="content" @blur="submit" v-focus="isFocus"></textarea>
+				<p v-if="isEdit === false" v-for="p in contentList">{{p}}</p>
+			</div>`,
 		data: function() {
 			return {
 				content: this.value,
 				contentList: [],
 				isEdit: false,
 				isFocus: false,
-				w: 0,
-				h: 0,
+				size: { width: 0, height: 0 },
 			}
 		},
 		methods: {
 			editActive: function(el) {
-				this.w = el.currentTarget.offsetWidth
-				this.h = el.currentTarget.offsetHeight
+				this.size = {
+					width:  el.currentTarget.offsetWidth  + 'px',
+					height: el.currentTarget.offsetHeight + 'px'
+				}
 				this.isEdit = this.isFocus = true
 			},
 			submit: function() {
@@ -62,7 +70,13 @@
 	})
 	Vue.component('e-image', {
 		props: ['value'],
-		template: '#e-image',
+		template: `<div class="e-pos-rep e-image">
+				<img :src="value" :style="value? '': 'opacity: 0'">
+				<div class="e-icon">
+					<a class="e-icon-fa e-update"><i class="fa fa-edit"></i><input class="e-update-file" type="file" @change="update"></a>
+					<a class="e-icon-fa" @click="remove"><i class="fa fa-trash-o"></i></a>
+				</div>
+			</div>`,
 		data: function() {
 			return { e_format: accept(this.format || []), }
 		},
@@ -80,7 +94,13 @@
 	})
 	Vue.component('e-bgimage', {
 		props: ['value', 'eClass', 'maxSize', 'format'],
-		template: '#e-bgimage',
+		template: `<div class="e-pos-rep e-image">
+				<div :class="eClass" :style="'background-image: url(' + value + ');'"><slot></slot></div>
+				<div class="e-icon">
+					<a class="e-icon-fa e-update"><i class="fa fa-edit"></i><input class="e-update-file" type="file" @change="update"></a>
+					<a class="e-icon-fa" @click="remove"><i class="fa fa-trash-o"></i></a>
+				</div>
+			</div>`,
 		data: function() {
 			return { e_format: accept(this.format || []), }
 		},
@@ -152,3 +172,27 @@
 		}
 	}
 }());
+
+var VUE
+
+(function() {
+	if (self === top) return;
+
+	var shop = top.VUE.formValidate.shop,
+		json = top.VUE.formValidate.json
+	try {
+		json = JSON.parse(json)
+		VUE = new Vue({
+			el: '#v_edit_app',
+			data: {
+				json: json
+			},
+			methods: {
+			},
+			mounted: function() {
+			}
+		})
+	} catch (e) {
+		console.log(e)
+	}
+}())

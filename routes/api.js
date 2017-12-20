@@ -22,5 +22,6 @@ router.use('/img',   require('./api/img'))
 router.use('/temp',  require('./api/temp'))
 router.use('/shop',  require('./api/shop'))
 router.use('/page',  require('./api/page'))
+router.use('/store', require('./api/store'))
 
 module.exports = router

@@ -78,4 +78,16 @@ module.exports = {
 		width:       1,
 		modelItems:  1,
 	},
+	Store: {
+		name:        1,			// 名称
+		description: 1,			// 描述
+	},
+	StoreC: {
+		title:       1,			// 标题
+		html:        1,
+		json:        1,
+		url:         1,
+		stopId:      1,
+		active:      1,
+	},
 }

@@ -42,7 +42,8 @@ module.exports = function(app, config) {
 		'/txtrp',
 		'/temp',
 		'/shop',
-		'/page'
+		'/page',
+		'/store',
 	], require('./routes/cookie'))
 
 
@@ -56,6 +57,7 @@ module.exports = function(app, config) {
 	app.use('/temp',      require('./routes/temp'))			// 模板管理
 	app.use('/shop',      require('./routes/shop'))			// 店铺装修管理
 	app.use('/page',      require('./routes/page'))			// 页面管理
+	app.use('/store',     require('./routes/store'))		// 商店管理
 
 
 	// API
