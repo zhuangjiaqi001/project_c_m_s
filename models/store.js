@@ -18,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
 	const Storec = sequelize.define('cms_store_c', {
 		id:          { type: DataTypes.BIGINT(11), primaryKey : true, autoIncrement: true, unique : true },
 		userId:      { type: DataTypes.BIGINT(11), comment: '用户ID' },
-		shopId:      { type: DataTypes.BIGINT(11), comment: '店铺ID' },
+		shopcId:     { type: DataTypes.BIGINT(11), comment: '店铺ID' },
 		storeId:     { type: DataTypes.BIGINT(11), comment: '商店ID' },
 		key:         { type: DataTypes.STRING(100), unique : true, comment: '商店内容KEY' },
 		title:       { type: DataTypes.STRING,  comment: '标题' },
@@ -33,8 +33,20 @@ module.exports = function(sequelize, DataTypes) {
 				return this.setDataValue('custemItems', typeof val !== 'string'? JSON.stringify(val): val)
 			},
 			modelItems: function(val) {
-				return this.setDataValue('modelItems', typeof val !== 'string'? JSON.stringify(val): val)
-			}
+				if (typeof val !== 'string') {
+					var mod = []
+					val.map(function(i) { mod.push(typeof i === 'string'? i: i.id) })
+					mod = Tools.unique(mod)
+					val = JSON.stringify(val)
+				}
+				return this.setDataValue('modelItems', val)
+			},
+			header: function(val) {
+				return this.setDataValue('header', val? val.id: '')
+			},
+			footer: function(val) {
+				return this.setDataValue('footer', val? val.id: '')
+			},
 		},
 	})
 

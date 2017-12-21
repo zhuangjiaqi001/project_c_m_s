@@ -155,26 +155,11 @@ exports.getPageCById = function(id, cb) {
  */
 exports.addPageC = function (opts, cb) {
 	delete opts.id
-
-	if (opts.modelItems) {
-		var mod = []
-		opts.modelItems.map(function(i) { mod.push(i.id) })
-		opts.modelItems = Tools.unique(mod)
-	}
-	opts.header = opts.header? opts.header.id: ''
-	opts.footer = opts.footer? opts.footer.id: ''
 	return PageC.create(opts).then(rpc => {
 		cb(!rpc, rpc.dataValues)
 	})
 }
 exports.updatePageC = function (id, opts, cb) {
-	if (opts.modelItems) {
-		var mod = []
-		opts.modelItems.map(function(i) { mod.push(i.id) })
-		opts.modelItems = Tools.unique(mod)
-	}
-	opts.header = opts.header? opts.header.id: ''
-	opts.footer = opts.footer? opts.footer.id: ''
 	return PageC.update(opts, { where: { id: id } }).then(rp => {
 		cb(!rp, rp[0])
 	})

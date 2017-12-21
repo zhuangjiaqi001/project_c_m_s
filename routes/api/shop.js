@@ -124,10 +124,10 @@ router.post('/addShopC', (req, res, next) => {
 
 	if (!shopId) return Tools.errHandle('0126', res)
 
-	debugger
 	Shop.getShopById(shopId, function(item) {
 		if (!item) return Tools.errHandle('0178', res)
-		Tools.uploadAliyun(html, css, js, pathname, body, res, function(body) {
+
+		Public.set.uploadAliyun(body, pathname, res, function(body) {
 			body.userId = userId
 			body.key    = key
 
@@ -148,10 +148,10 @@ router.get('/prevShopC', (req, res, next) => {
 		var key      = item.key,
 			pathname = `shopc/${key}`;
 
-			item.dataValues.renderType = 'shop_prev'
-			Public.get.getShopRender(item, res, function(html) {
-				res.send(html)
-			})
+		item.dataValues.renderType = 'shop_prev'
+		Public.get.getShopRender(item, res, function(html) {
+			res.send(html)
+		})
 	})
 })
 router.get('/editorShopC', (req, res, next) => {
@@ -218,17 +218,18 @@ router.post('/copyShopC', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		item = item.dataValues
 		var da = {
-			key:         `${item.key}_copy_${Date.now()}`,
+			key:         `shopc_${Date.now()}`,
 			shopId:      item.shopId,
 			userId:      item.userId,
-			description: item.description,
-			title:       `${item.title}_copy`,
+			title:       `${item.title}_copy_${Date.now()}`,
+			header:      { id: item.header },
+			footer:      { id: item.footer },
 			html:        item.html,
 			js:          item.js,
+			json:        item.json,
 			css:         item.css,
 			custemItems: item.custemItems,
-			type:        item.type,
-			preview:     item.preview,
+			modelItems:  item.modelItems,
 		}
 		Shop.addShopC(da, function (err) {
 			if (err) return Tools.errHandle('0123', res)

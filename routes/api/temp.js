@@ -120,7 +120,7 @@ router.post('/addTempC', (req, res, next) => {
 	var body   = req.body,
 		userId = req.signedCookies.id,
 		tempId = body.tempId,
-		key    = `tempc_${Date.now() + userId}`,
+		key    = `tempc_${Date.now()}`,
 		html   = body.html? body.html: '',
 		css    = body.css?  body.css:  '',
 		js     = body.js?   body.js:   '',
@@ -190,17 +190,15 @@ router.post('/copyTempC', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		item = item.dataValues
 		var da = {
-			key:         `${item.key}_copy_${Date.now()}`,
+			key:         `tempc_${Date.now()}`,
 			tempId:      item.tempId,
 			userId:      item.userId,
-			description: item.description,
-			title:       `${item.title}_copy`,
+			title:       `${item.title}_copy_${Date.now()}`,
 			html:        item.html,
 			js:          item.js,
 			css:         item.css,
 			custemItems: item.custemItems,
 			type:        item.type,
-			preview:     item.preview,
 		}
 		Temp.addTempC(da, function (err) {
 			if (err) return Tools.errHandle('0123', res)

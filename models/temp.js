@@ -32,8 +32,6 @@ module.exports = function(sequelize, DataTypes) {
 		css:          { type: DataTypes.STRING,  comment: '样式' },
 		html:         { type: DataTypes.STRING,  comment: 'HTML文档' },
 		js:           { type: DataTypes.STRING,  comment: '脚本' },
-		preview:      { type: DataTypes.STRING,  comment: '预览' },
-		description:  { type: DataTypes.STRING,  comment: '模板描述' }
 	}, {
 		freezeTableName: false,
 		setterMethods: {

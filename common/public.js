@@ -55,9 +55,9 @@ var Public = {
 					})
 				})
 			})
-			if (item.shopId) {
+			if (item.shopcId) {
 				++len
-				Shop.getShopCById(item.shopId, function(shop) {
+				Shop.getShopCById(item.shopcId, function(shop) {
 					++now;
 					item.shop = shop.dataValues;
 					(len === now) && cb && cb(item)
@@ -69,9 +69,9 @@ var Public = {
 			item = item.dataValues? item.dataValues: item
 			var me    = this,
 				temps = {};
-			if (!item.shopId) return me.getTemp(item, res, cb)
+			if (!item.shopcId) return me.getTemp(item, res, cb)
 
-			Shop.getShopCById(item.shopId, function(shop) {
+			Shop.getShopCById(item.shopcId, function(shop) {
 				shop = shop.dataValues;
 				item.js         = shop.js
 				item.css        = shop.css

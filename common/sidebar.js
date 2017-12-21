@@ -59,7 +59,7 @@ module.exports = [
 	},
 	{
 		type: 1,
-		key:  'temp',
+		key:  'shop',
 		name: '店铺模板管理',
 		url:  '/shop',
 		icon: 'shopping-bag'
@@ -73,7 +73,7 @@ module.exports = [
 	},
 	{
 		type: 1,
-		key:  'page',
+		key:  'store',
 		name: '店铺页管理',
 		url:  '/store',
 		icon: 'file-video-o'

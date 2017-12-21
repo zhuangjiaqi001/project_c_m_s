@@ -49,17 +49,18 @@ User.hasMany(Page,   { foreignKey: 'userId', targetKey: 'id', as: 'Page' })		// 
 User.hasMany(PageC,  { foreignKey: 'userId', targetKey: 'id', as: 'PageC' })	// 用户关联落地页内容
 Page.hasMany(PageC,  { foreignKey: 'pageId', targetKey: 'id', as: 'PageC' })	// 列表类关联内容
 
+// 商店管理
+User.hasMany(Store,   { foreignKey: 'userId', targetKey: 'id', as: 'Store' })	// 用户关联店铺列表类
+User.hasMany(StoreC,  { foreignKey: 'userId', targetKey: 'id', as: 'StoreC' })	// 用户关联店铺内容
+Store.hasMany(StoreC, { foreignKey: 'storeId', targetKey: 'id', as: 'StoreC' })	// 列表类关联内容
+
 // 店铺装修管理
 User.hasMany(Shop,   { foreignKey: 'userId', targetKey: 'id', as: 'Shop' })		// 用户关联店铺列表类
 User.hasMany(ShopC,  { foreignKey: 'userId', targetKey: 'id', as: 'ShopC' })	// 用户关联店铺内容
 Shop.hasMany(ShopC,  { foreignKey: 'shopId', targetKey: 'id', as: 'ShopC' })	// 列表类关联内容
+ShopC.hasMany(StoreC,{ foreignKey: 'shopcId', targetKey: 'id', as: 'StoreC' })	// 列表类关联内容
 
-// 商店管理
-User.hasMany(Store,   { foreignKey: 'userId', targetKey: 'id', as: 'Store' })	// 用户关联店铺列表类
-User.hasMany(StoreC,  { foreignKey: 'userId', targetKey: 'id', as: 'StoreC' })	// 用户关联店铺内容
-Store.hasMany(StoreC, { foreignKey: 'shopId', targetKey: 'id', as: 'StoreC' })	// 列表类关联内容
-
-// sequelize.sync()
+sequelize.sync()
 
 exports.User   = User
 exports.Img    = Img

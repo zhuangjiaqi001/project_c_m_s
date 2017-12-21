@@ -42,7 +42,22 @@ module.exports = function(sequelize, DataTypes) {
 		setterMethods: {
 			custemItems: function(val) {
 				return this.setDataValue('custemItems', typeof val !== 'string'? JSON.stringify(val): val)
-			}
+			},
+			modelItems: function(val) {
+				if (typeof val !== 'string') {
+					var mod = []
+					val.map(function(i) { mod.push(typeof i === 'string'? i: i.id) })
+					mod = Tools.unique(mod)
+					val = JSON.stringify(val)
+				}
+				return this.setDataValue('modelItems', val)
+			},
+			header: function(val) {
+				return this.setDataValue('header', val? val.id: '')
+			},
+			footer: function(val) {
+				return this.setDataValue('footer', val? val.id: '')
+			},
 		},
 	})
 

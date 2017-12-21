@@ -36,7 +36,6 @@ module.exports = function(sequelize, DataTypes) {
 		html:        { type: DataTypes.STRING,  comment: 'HTML文档' },
 		js:          { type: DataTypes.STRING,  comment: '脚本' },
 		url:         { type: DataTypes.STRING,  comment: '预览' },
-		description: { type: DataTypes.STRING,  comment: '落地页描述' },
 		active:      { type: DataTypes.BOOLEAN, defaultValue: false, comment: '是否激活' },
 		width:       { type: DataTypes.STRING, defaultValue: '1000', comment: '页面宽度' }
 	}, {
@@ -46,8 +45,20 @@ module.exports = function(sequelize, DataTypes) {
 				return this.setDataValue('custemItems', typeof val !== 'string'? JSON.stringify(val): val)
 			},
 			modelItems: function(val) {
-				return this.setDataValue('modelItems', typeof val !== 'string'? JSON.stringify(val): val)
-			}
+				if (typeof val !== 'string') {
+					var mod = []
+					val.map(function(i) { mod.push(typeof i === 'string'? i: i.id) })
+					mod = Tools.unique(mod)
+					val = JSON.stringify(val)
+				}
+				return this.setDataValue('modelItems', val)
+			},
+			header: function(val) {
+				return this.setDataValue('header', val? val.id: '')
+			},
+			footer: function(val) {
+				return this.setDataValue('footer', val? val.id: '')
+			},
 		},
 	})
 

@@ -127,7 +127,7 @@ router.post('/addPageC', (req, res, next) => {
 	var body   = req.body,
 		userId = req.signedCookies.id,
 		pageId = body.pageId,
-		key    = Date.now() + userId,
+		key    = `pagec_${Date.now()}`,
 		html   = body.html? decodeURIComponent(body.html): '',
 		css    = body.css?  decodeURIComponent(body.css):  '',
 		js     = body.js?   decodeURIComponent(body.js):   '',
@@ -233,11 +233,11 @@ router.post('/copyPageC', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		item = item.dataValues
 		var da = {
-			key:         `${item.key}_copy_${Date.now()}`,
+			key:         `pagec_${Date.now()}`,
 			pageId:      item.pageId,
 			userId:      item.userId,
 			description: item.description,
-			title:       `${item.title}_copy`,
+			title:       `${item.title}_copy_${Date.now()}`,
 			html:        item.html,
 			js:          item.js,
 			css:         item.css,
@@ -269,49 +269,6 @@ router.get('/getPageCList', (req, res, next) => {
 		})
 	})
 })
-
-// 数据过滤
-function datafilter(item, select, res, cb) {
-	Tools.getTempById(item, function(ids, item) {
-		Temp.getTempCByIds(ids, function(items) {
-			var temps = {}, js = [], css = []
-			items.map(function(i) {
-				temps[i.id] = i
-			})
-			if (item.html) temps['body'] = { html: item.html }
-			getAliyunHTML(temps, res, function(temps) {
-				if (item.header) item.header = modelfilter(temps[item.header], js, css)
-				if (item.modelItems) {
-					var mi = []
-					item.modelItems.map(function(i) {
-						mi.push(modelfilter(temps[i], js, css))
-					})
-					item.modelItems = mi
-				}
-				if (item.footer) item.footer = modelfilter(temps[item.footer], js, css)
-				item.js  = Tools.unique(js)
-				item.css = Tools.unique(css)
-				if (temps.body) item.html = temps['body'].html
-				createPage(item, res, cb)
-			})
-		})
-	})
-}
-
-// 模块过滤
-function modelfilter(obj, js, css) {
-	var cis  = obj.custemItems
-	if (cis.length) {
-		cis.map(function(i) {
-			js.push(jsframe[i.name])
-		})
-	}
-	if (obj.css) css.push(obj.css)
-	if (obj.js)  js.push(obj.js)
-	return {
-		html: obj.html
-	}
-}
 
 function uploadAliyun(html, css, js, pathname, body, res, cb) {
 	var len = 0, now = 0
@@ -345,74 +302,6 @@ function uploadAliyun(html, css, js, pathname, body, res, cb) {
 			if (now === len) cb(body)
 		})
 	}
-}
-function getAliyun(body, res, cb) {
-	var len  = 0,
-		now  = 0,
-		html = body.html,
-		css  = body.css,
-		js   = body.js
-	if (html) ++len
-	if (css)  ++len
-	if (js)   ++len
-	if (!len) cb(body)
-
-	if (html) {
-		Aliyun.getFile(html.replace(RP.pn, ''), function(err, result) {
-			if (err) return Tools.errHandle('0105', res)
-			body.html = result
-			++now
-			if (now === len) cb(body)
-		})
-	}
-	if (css) {
-		Aliyun.getFile(css.replace(RP.pn, ''), function(err, result) {
-			if (err) return Tools.errHandle('0106', res)
-			body.css = result
-			++now
-			if (now === len) cb(body)
-		})
-	}
-	if (js) {
-		Aliyun.getFile(js.replace(RP.pn, ''), function(err, result) {
-			if (err) return Tools.errHandle('0107', res)
-			body.js = result
-			++now
-			if (now === len) cb(body)
-		})
-	}
-}
-function getAliyunHTML(temps, res, cb) {
-	var len  = 0,
-		now  = 0
-	for (let p in temps) {
-		if (!temps[p].html) return
-		++len
-		var mt = temps[p].html.replace(RP.pn, '')
-		if (!mt) return
-		Aliyun.getFile(mt, function(err, result) {
-			if (err) return Tools.errHandle('0105', res)
-			temps[p].html = result
-			++now
-			if (now === len) return cb(temps)
-		})
-	}
-	if (!len) return cb(temps)
-}
-// 创建页面
-function createPage(body, res, cb) {
-	var mi = typeof body.modelItems === 'string'? JSON.parse(body.modelItems): body.modelItems
-	var prev = tpl({
-		title:   `${body.title}`,
-		body:    body.html,
-		css:     body.css,
-		js:      body.js,
-		model:   mi,
-		header:  body.header? body.header.html || '': '',
-		footer:  body.footer? body.footer.html || '': '',
-		width:   body.width || '1000'
-	})
-	cb && cb(prev)
 }
 
 module.exports = router

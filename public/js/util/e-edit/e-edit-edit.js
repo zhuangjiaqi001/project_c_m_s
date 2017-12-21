@@ -149,10 +149,10 @@
 		return ac.join(', ')
 	}
 	function update(me, e, cb) {
-		var files = e.target.files
+		var tag   = e.target,
+			files = tag.files
 		if (files && files.length) {
 			var form = new FormData(),
-				file = me.file = e.target,
 				f    = files[0],
 				t    = f.type
 			var size = me.maxSize >= 1024 ? `${me.maxSize / 1024}MB` : `${me.maxSize}KB`
@@ -161,7 +161,7 @@
 				return alert(`上传失败，请上传大小${size}以内的 ${me.e_format.replace(/image\//g, '')} 格式的图片`)
 			}
 			if (f.size > me.maxSize*1024) {
-				e.target.value = ''
+				tag.value = ''
 				return alert(`上传失败，请上传大小${size}以内的 ${me.e_format.replace(/image\//g, '')} 格式的图片`)
 			}
 			form.append('file', f)
@@ -178,15 +178,15 @@
 					} else {
 						alert(d.message)
 					}
-					e.target.value = ''
+					tag.value = ''
 				},
 				error: function(err) {
 					alert('网络错误!')
-					e.target.value = ''
+					tag.value = ''
 				}
 			})
 		} else {
-			e.target.value = ''
+			tag.value = ''
 		}
 	}
 }());

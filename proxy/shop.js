@@ -153,26 +153,11 @@ exports.getShopCById = function (id, cb) {
  */
 exports.addShopC = function (opts, cb) {
 	delete opts.id
-
-	if (opts.modelItems) {
-		var mod = []
-		opts.modelItems.map(function(i) { mod.push(i.id) })
-		opts.modelItems = Tools.unique(mod)
-	}
-	opts.header = opts.header? opts.header.id: ''
-	opts.footer = opts.footer? opts.footer.id: ''
 	return ShopC.create(opts).then(rpc => {
 		cb(!rpc, rpc.dataValues)
 	})
 }
 exports.updateShopC = function (id, opts, cb) {
-	if (opts.modelItems) {
-		var mod = []
-		opts.modelItems.map(function(i) { mod.push(i.id) })
-		opts.modelItems = Tools.unique(mod)
-	}
-	opts.header = opts.header? opts.header.id: ''
-	opts.footer = opts.footer? opts.footer.id: ''
 	return ShopC.update(opts, { where: { id: id } }).then(rp => {
 		cb(!rp, rp[0])
 	})

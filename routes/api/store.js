@@ -128,18 +128,18 @@ router.post('/addStoreC', (req, res, next) => {
 	var body   = req.body,
 		userId = req.signedCookies.id,
 		storeId = body.storeId,
-		shopId  = body.shop.id,
+		shopcId = body.shop.id,
 		key    = `storec_${Date.now() + userId}`,
 		html   = body.html? body.html: '',
 		css    = '',
 		js     = '',
 		pathname = `storec/${key}`
 
-	if (!storeId || !shopId) return Tools.errHandle('0126', res)
+	if (!storeId || !shopcId) return Tools.errHandle('0126', res)
 
 	Public.set.uploadAliyun(body, pathname, res, function(body) {
 		body.userId = userId
-		body.shopId = shopId
+		body.shopcId = shopcId
 		body.key    = key
 
 		Store.addStoreC(body, function (err) {
@@ -153,7 +153,7 @@ router.post('/updateStoreC', (req, res, next) => {
 		id      = body.id,
 		userId  = req.signedCookies.id,
 		storeId = body.storeId,
-		shopId  = body.shop.id,
+		shopcId = body.shop.id,
 		html    = body.html || '',
 		css     = body.css  || '',
 		js      = body.js   || ''
@@ -229,9 +229,9 @@ router.post('/copyStoreC', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		item = item.dataValues
 		var da = {
-			key:         `${item.key}_copy_${Date.now()}`,
+			key:         `storec_${Date.now() + item.userId}`,
 			storeId:     item.storeId,
-			shopId:      item.shopId,
+			shopcId:     item.shopcId,
 			userId:      item.userId,
 			title:       `${item.title}_copy_${Date.now()}`,
 			html:        item.html,
