@@ -187,7 +187,7 @@ router.post('/updateShopC', (req, res, next) => {
 			if (!item) return Tools.errHandle('0163', res)
 			var key      = item.key,
 				pathname = `shopc/${key}`;
-			Tools.uploadAliyun(html, css, js, pathname, body, res, function(body) {
+			Public.set.uploadAliyun(body, pathname, res, function(body) {
 				body.userId = userId
 
 				Shop.updateShopC(id, body, function (err) {
@@ -195,6 +195,8 @@ router.post('/updateShopC', (req, res, next) => {
 					Tools.errHandle('0000', res)
 				})
 			})
+			// Tools.uploadAliyun(html, css, js, pathname, body, res, function(body) {
+			// })
 		})
 	})
 })

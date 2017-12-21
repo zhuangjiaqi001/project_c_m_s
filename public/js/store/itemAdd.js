@@ -5,7 +5,8 @@
 		getShop: '/shop/getC',
 		get:     '/store/get',
 		getC:    '/store/getC',
-		submit:  '/store/addStoreC'
+		submit:  '/store/addStoreC',
+		prev:    '/api/shop/editorShopC',
 	},
 	storeId = CMS.getQueryValue('storeId'),
 	id   = CMS.getQueryValue('id');
@@ -78,6 +79,8 @@
 			mTitle:  '商店列表',
 			isTempC: false,
 			mType: '',
+			jsonEdit: false,
+			iframeSrc: '',
 		},
 		methods: {
 			// 自定义字段
@@ -175,17 +178,22 @@
 				this.iframe = true
 			},
 			closeFrame: function() {
-				var fwin = $('.editor-frame')[0].contentWindow,
-					html = fwin.document.querySelector('#page_content').innerHTML
-				this.formValidate.json = JSON.stringify(fwin.VUE.json)
-				this.formValidate.html = html
-				console.log(html)
+				try {
+					var fwin = $('.editor-frame')[0].contentWindow,
+						html = fwin.document.querySelector('#page_content').innerHTML
+					this.formValidate.json = JSON.stringify(fwin.VUE.json)
+					this.formValidate.html = html
+					console.log(html)
+				} catch (err) {
+					console.log(err)
+				}
 				this.iframe = false
 			},
 			getShop: function(me, shopId) {
 				CMS.http.get(API.getShop, { id: shopId }, function(o) {
 					me.formValidate.shop = o.data
 					me.formValidate.json = o.data.json || ''
+					me.iframeSrc = `${API.prev}?id=${o.data.id}`
 					me.iframe = true
 				}, function(err) {
 					VUE.$Message.warning(err.message)
@@ -205,10 +213,27 @@
 				CMS.http.get(API.getC, { id: id, storeId: storeId }, function(o) {
 					CMS.merge2(me.formValidate, o.data)
 					me.getStore(me)
+					me.iframeSrc = `${API.prev}?id=${o.data.shop.id}`
 				}, function(err) {
 					VUE.$Message.warning(err.message)
 					console.log(err)
 				})
+			},
+			jsonExec: function() {
+				var me = this
+				try {
+					var json = JSON.parse(me.formValidate.json),
+						fwin = $('.editor-frame')[0].contentWindow,
+						html
+					fwin.VUE.$set(fwin.VUE, 'json', json)
+					fwin.VUE.$nextTick(function() {
+						html = fwin.document.querySelector('#page_content').innerHTML
+						me.formValidate.html = html
+					})
+					me.jsonEdit = false
+				} catch (err) {
+					console.log(err)
+				}
 			},
 			load: function() {
 				var me = this
@@ -219,7 +244,7 @@
 					me.getStore(me)
 				}
 			}
-		}
+		},
 	}))
 
 	VUE.$Message.config({ top: 100 })

@@ -152,7 +152,7 @@ exports.getStoreCById = function (id, cb) {
  */
 exports.addStoreC = function (opts, cb) {
 	delete opts.id
-
+	delete opts.shop
 	if (opts.modelItems) {
 		var mod = []
 		opts.modelItems.map(function(i) { mod.push(i.id) })

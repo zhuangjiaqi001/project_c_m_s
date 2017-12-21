@@ -90,7 +90,7 @@ var Public = {
 						temps[i.id] = i
 					})
 					if (item.html) temps['body'] = { html: item.html }
-					Tools.getAliyunHTML(temps, res, function(temps) {
+					me.getAliyunHTML(temps, res, function(temps) {
 						if (item.header) item.header = me.modelfilter(temps[item.header], js, css)
 						if (item.css)  css.push(item.css)
 						if (item.js)   js.push(item.js)
