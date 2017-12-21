@@ -134,6 +134,12 @@ exports.getTempCByQuery = function (query, cb) {
 	})
 }
 
+exports.getTempCById = function (id, cb) {
+	return TempC.findById(id).then(item => {
+		cb(item? item: null)
+	})
+}
+
 exports.getTempCByRpId = function(tempId, select, cb) {
 	TempC.findAndCountAll({
 		where: { tempId: tempId },
@@ -143,17 +149,24 @@ exports.getTempCByRpId = function(tempId, select, cb) {
 	})
 };
 
-exports.getTempCByRpIds = function(ids, select, cb) {
-	TempC.findAndCountAll({
-		where: {
-			id: ids
-		},
-		attributes:  select
+// exports.getTempCByRpIds = function(ids, select, cb) {
+// 	TempC.findAndCountAll({
+// 		where: {
+// 			id: ids
+// 		},
+// 		attributes:  select
+// 	}).then(function(items) {
+// 		cb(items.rows, items.count)
+// 	})
+// };
+
+exports.getTempCByIds = function(ids, cb) {
+	TempC.findAll({
+		where: { id: ids }
 	}).then(function(items) {
-		cb(items.rows, items.count)
+		cb(items)
 	})
 };
-
 
 /**
  * 根据内容创建推荐位

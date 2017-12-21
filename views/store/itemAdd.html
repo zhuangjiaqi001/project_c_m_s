@@ -31,7 +31,7 @@
 				</Form-item>
 
 				<Form-item label="数据JSON" v-if="formValidate.json">
-					<i-input v-model="formValidate.json" type="textarea" :rows="6" placeholder="JSON格式: (不超过1000个字)" :maxlength="1000"></i-input>
+					<i-input v-model="formValidate.json" readonly type="textarea" :rows="8" placeholder="JSON格式: (不超过1000个字)" :maxlength="1000"></i-input>
 				</Form-item>
 
 				<Form-item>
@@ -68,8 +68,8 @@
 	</div>
 </div>
 
-<div class="editor-box" v-if="iframe">
-	<a class="editor-remove" @click="closeFrame"><i class="fa fa-remove"></i></a>
+<div class="editor-box" v-show="iframe">
+	<a class="editor-remove" @click="closeFrame"><Icon type="close-round"></Icon></a>
 	<iframe :src="'/api/shop/editorShopC?id='+formValidate.shop.id" class="editor-frame"></iframe>
 </div>
 
@@ -84,17 +84,28 @@
 	z-index: 1000;
 	width:  100%;
 	height: 100%;
-	background-color: #fff;
 }
 .editor-frame {
 	width:  100%;
 	height: 100%;
+	background-color: #fff;
 }
 .editor-remove {
 	position: absolute;
 	top: 20px;
 	right: 20px;
 	font-size: 20px;
+	display: block;
+	width: 32px;
+	height: 32px;
+	line-height: 32px;
+	text-align: center;
+	color: #fff;
+	background-color: red;
+	border-radius: 100%;
+}
+.editor-remove:hover {
+	color: #fff;
 }
 </style>
 {% endblock %}

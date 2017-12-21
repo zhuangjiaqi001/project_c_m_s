@@ -4,6 +4,7 @@ const Store    = proxy.Store
 const Temp    = proxy.Temp
 const Aliyun  = require('../../common/aliyun')
 const Tools   = require('../../common/tools')
+const Public  = require('../../common/public')
 const Valid   = require('../../common/valid')
 const Edit    = require('../../common/edit')
 const swig    = require('swig')
@@ -98,66 +99,15 @@ router.get('/getStoreList', (req, res, next) => {
 
 
 // 创建推荐位内容
-router.get('/getC', (req, res, next) => {
+router.get('/getC', (req, res) => {
 	var q      = req.query,
 		id     = q.id,
-		userId = req.signedCookies.id,
-		temps  = {}
+		userId = req.signedCookies.id
 
-	Store.getStoreCByQuery({
-		id: id
-	}, function(item) {
-		if (!item) return Tools.errHandle('0128', res)
-		item = item.dataValues
-		Tools.getTempById(item, function(ids, item) {
-			Temp.getTempCByRpIds(ids, ['id', 'title'], function(items, count) {
-				items.map(function(i) {
-					temps[i.id] = i
-				})
-				if (item.header) item.header = temps[item.header]
-				if (item.footer) item.footer = temps[item.footer]
-				if (item.modelItems) {
-					var mi = []
-					item.modelItems.map(function(i) {
-						mi.push(temps[i])
-					})
-					item.modelItems = mi
-				}
-
-				Tools.getAliyun(item, res, function(item) {
-					Tools.errHandle('0000', res, item)
-				})
-			})
-		})
-	})
-})
-router.post('/addStoreC', (req, res, next) => {
-	var body   = req.body,
-		userId = req.signedCookies.id,
-		storeId = body.storeId,
-		key    = `storec_${Date.now() + userId}`,
-		html   = body.html? body.html: '',
-		css    = body.css?  body.css:  '',
-		js     = body.js?   body.js:   '',
-		pathname = `storec/${key}`
-
-	if (!storeId) return Tools.errHandle('0126', res)
-
-	Store.getStoreById(storeId, function(item) {
-		if (!item) return Tools.errHandle('0178', res)
-		Tools.uploadAliyun(html, css, js, pathname, body, res, function(body) {
-			body.userId = userId
-			body.key    = key
-
-			Store.addStoreC(body, function (err) {
-				if (err) return Tools.errHandle('0123', res)
-				Tools.errHandle('0000', res)
-			})
-			// datafilter(item, ['id', 'title', 'html', 'css', 'js', 'json', 'custemItems'], res, function(html) {
-			// 	Aliyun.uploadFile(html, 'ol.html', pathname, function(err, url) {
-			// 		if (err) return Tools.errHandle('0118', res)
-			// 	})
-			// })
+	Store.getStoreCById(id, function(item) {
+		if (!item) return Tools.errHandle('0163', res)
+		Public.get.getTempShop(item, res, function(item) {
+			Tools.errHandle('0000', res, item)
 		})
 	})
 })
@@ -166,53 +116,61 @@ router.get('/prevStoreC', (req, res, next) => {
 		id     = q.id,
 		userId = req.signedCookies.id
 
-	Store.getStoreCByQuery({
-		id: id
-	}, function(item) {
+	Store.getStoreCById(id, function(item) {
 		if (!item) return Tools.errHandle('0163', res)
-		var key      = item.key,
-			pathname = `storec/${key}`;
 
-			datafilter(item, ['id', 'title', 'html', 'css', 'js', 'custemItems'], res, function(html) {
-				res.send(html)
-				// Aliyun.uploadFile(html, 'ol.html', pathname, function(err, url) {
-				// 	if (err) return Tools.errHandle('0118', res)
-				// })
-			})
+		Public.get.getShopRender(item, res, function(html) {
+			res.send(html)
+		})
+	})
+})
+router.post('/addStoreC', (req, res, next) => {
+	var body   = req.body,
+		userId = req.signedCookies.id,
+		storeId = body.storeId,
+		shopId  = body.shop.id,
+		key    = `storec_${Date.now() + userId}`,
+		html   = body.html? body.html: '',
+		css    = '',
+		js     = '',
+		pathname = `storec/${key}`
+
+	if (!storeId || !shopId) return Tools.errHandle('0126', res)
+
+	Public.set.uploadAliyun(body, pathname, res, function(body) {
+		body.userId = userId
+		body.shopId = shopId
+		body.key    = key
+
+		Store.addStoreC(body, function (err) {
+			if (err) return Tools.errHandle('0123', res)
+			Tools.errHandle('0000', res)
+		})
 	})
 })
 router.post('/updateStoreC', (req, res, next) => {
-	var body   = req.body,
-		id     = body.id,
-		userId = req.signedCookies.id,
+	var body    = req.body,
+		id      = body.id,
+		userId  = req.signedCookies.id,
 		storeId = body.storeId,
-		html   = body.html || '',
-		css    = body.css  || '',
-		js     = body.js   || ''
+		shopId  = body.shop.id,
+		html    = body.html || '',
+		css     = body.css  || '',
+		js      = body.js   || ''
 	
 	var bodyFilter = Tools.bodyFilter(storecEdit, body)
 	body = bodyFilter.obj
 
 	Valid.run(res, 'storec', body, function() {
-		Store.getStoreCByQuery({
-			id: id
-		}, function(item) {
+		Store.getStoreCById(id, function(item) {
 			if (!item) return Tools.errHandle('0163', res)
 			var key      = item.key,
 				pathname = `storec/${key}`;
-			Tools.uploadAliyun(html, css, js, pathname, body, res, function(body) {
-				body.userId = userId
-
+			Public.set.uploadAliyun(body, pathname, res, function(body) {
 				Store.updateStoreC(id, body, function (err) {
 					if (err) return Tools.errHandle('0130', res)
 					Tools.errHandle('0000', res)
 				})
-				// datafilter(item, ['id', 'title', 'html', 'css', 'js', 'custemItems'], res, function(html) {
-				// 	Aliyun.uploadFile(html, 'ol.html', pathname, function(err, url) {
-				// 		if (err) return Tools.errHandle('0118', res)
-				// 	})
-				// })
-
 			})
 		})
 	})
@@ -228,6 +186,42 @@ router.post('/removeStoreC', (req, res, next) => {
 		})
 	})
 })
+router.post('/releaseStoreC', (req, res, next) => {
+	var body     = req.body,
+		id       = body.id
+	Store.getStoreCById(id, (item) => {
+		if (!item) return Tools.errHandle('0163', res)
+
+		var pathname = `pagec/${item.key}`
+		Public.get.getShopRender(item, res, function(html) {
+			Aliyun.uploadFile(html, 'ol.html', pathname, function(err, url) {
+				if (err) return Tools.errHandle('0118', res)
+				Store.updateStoreC(id, { active: 1, url: url }, function(err) {
+					if (err) return Tools.errHandle('0170', res)
+					Tools.errHandle('0000', res)
+				})
+			})
+		})
+	})
+})
+router.post('/offlineStoreC', (req, res, next) => {
+	var body = req.body,
+		id   = body.id
+	Store.getStoreCById(id, (item) => {
+		if (!item) return Tools.errHandle('0163', res)
+
+		var mt   = item.url.match(/\/cms.+/),
+			path = mt? mt[0]: ''
+		if (!path) return Tools.errHandle('0130', res)
+		Aliyun.delete(path, function(err, result) {
+			if (err) return Tools.errHandle('0130', res)
+			Store.updateStoreC(id, { active: 0 }, function(err) {
+				if (err) return Tools.errHandle('0130', res)
+				Tools.errHandle('0000', res)
+			})
+		})
+	})
+})
 router.post('/copyStoreC', (req, res, next) => {
 	var body = req.body
 
@@ -236,16 +230,14 @@ router.post('/copyStoreC', (req, res, next) => {
 		item = item.dataValues
 		var da = {
 			key:         `${item.key}_copy_${Date.now()}`,
-			storeId:      item.storeId,
+			storeId:     item.storeId,
+			shopId:      item.shopId,
 			userId:      item.userId,
-			description: item.description,
-			title:       `${item.title}_copy`,
+			title:       `${item.title}_copy_${Date.now()}`,
 			html:        item.html,
-			js:          item.js,
-			css:         item.css,
-			custemItems: item.custemItems,
-			type:        item.type,
-			preview:     item.preview,
+			url:         item.url,
+			json:        item.json,
+			active:      item.active,
 		}
 		Store.addStoreC(da, function (err) {
 			if (err) return Tools.errHandle('0123', res)
@@ -257,7 +249,7 @@ router.post('/copyStoreC', (req, res, next) => {
 // 获取推荐位内容列表
 router.get('/getStoreCList', (req, res, next) => {
 	var query  = req.query
-	var select = ['storeId', 'key', 'title', 'preview', 'createdAt', 'updatedAt']
+	var select = ['storeId', 'key', 'title', 'active', 'url', 'createdAt', 'updatedAt']
 	Store.getStoreCList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
 			list: items,
@@ -266,63 +258,4 @@ router.get('/getStoreCList', (req, res, next) => {
 	})
 })
 
-// 数据过滤
-function datafilter(item, select, res, cb) {
-	Tools.getTempById(item, function(ids, item) {
-		Temp.getTempCByRpIds(ids, ['id', 'title', 'html', 'css', 'js', 'custemItems'], function(items, count) {
-			var temps = {}, js = [], css = []
-			items.map(function(i) {
-				temps[i.id] = i
-			})
-			if (item.html) temps['body'] = { html: item.html }
-			if (item.css) css.push(item.css)
-			if (item.js)  js.push(item.js)
-			Tools.getAliyunHTML(temps, res, function(temps) {
-				if (item.header) item.header = modelfilter(temps[item.header], js, css)
-				if (item.modelItems) {
-					var mi = []
-					item.modelItems.map(function(i) {
-						mi.push(modelfilter(temps[i], js, css))
-					})
-					item.modelItems = mi
-				}
-				if (item.footer) item.footer = modelfilter(temps[item.footer], js, css)
-				item.js  = Tools.unique(js)
-				item.css = Tools.unique(css)
-				if (temps.body) item.html = temps['body'].html
-				createPage(item, res, cb)
-			})
-		})
-	})
-}
-// 模块过滤
-function modelfilter(obj, js, css) {
-	var cis  = obj.custemItems
-	if (cis.length) {
-		cis.map(function(i) {
-			js.push(jsframe[i.name])
-		})
-	}
-	if (obj.css) css.push(obj.css)
-	if (obj.js)  js.push(obj.js)
-	return {
-		html: obj.html
-	}
-}
-// 创建页面
-function createPage(body, res, cb) {
-	var mi = typeof body.modelItems === 'string'? JSON.parse(body.modelItems): body.modelItems
-	body.js.unshift( jsframe.vue_2_2_6, jsframe.jq_1_12_4, '/js/util/e-edit-view.js' )
-	var prev = tpl({
-		title:   `${body.title}`,
-		body:    body.html,
-		css:     body.css,
-		js:      body.js,
-		model:   mi,
-		header:  body.header? body.header.html || '': '',
-		footer:  body.footer? body.footer.html || '': '',
-		width:   body.width || '1000'
-	})
-	cb && cb(prev)
-}
 module.exports = router

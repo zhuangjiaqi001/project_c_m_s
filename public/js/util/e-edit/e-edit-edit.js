@@ -23,7 +23,7 @@
 		methods: {
 			editActive: function(el) {
 				this.size = {
-					width:  el.currentTarget.offsetWidth  + 'px',
+					width:  el.currentTarget.offsetWidth + 40  + 'px',
 					height: el.currentTarget.offsetHeight + 'px'
 				}
 				this.isEdit = this.isFocus = true
@@ -70,17 +70,26 @@
 	})
 	Vue.component('e-image', {
 		props: ['value'],
-		template: `<div class="e-pos-rep e-image">
+		template: `<div class="e-pos-rep e-image" @mouseenter="editOn" @mouseleave="editOff">
 				<img :src="value" :style="value? '': 'opacity: 0'">
-				<div class="e-icon">
+				<div v-if="isEdit" class="e-icon">
 					<a class="e-icon-fa e-update"><i class="fa fa-edit"></i><input class="e-update-file" type="file" @change="update"></a>
 					<a class="e-icon-fa" @click="remove"><i class="fa fa-trash-o"></i></a>
 				</div>
 			</div>`,
 		data: function() {
-			return { e_format: accept(this.format || []), }
+			return {
+				e_format: accept(this.format || []),
+				isEdit: false,
+			}
 		},
 		methods: {
+			editOn: function(el) {
+				this.isEdit = true
+			},
+			editOff: function(el) {
+				this.isEdit = false
+			},
 			update: function(e) {
 				var me = this
 				update(me, e)
@@ -94,17 +103,26 @@
 	})
 	Vue.component('e-bgimage', {
 		props: ['value', 'eClass', 'maxSize', 'format'],
-		template: `<div class="e-pos-rep e-image">
+		template: `<div class="e-pos-rep e-image" @mouseenter="editOn" @mouseleave="editOff">
 				<div :class="eClass" :style="'background-image: url(' + value + ');'"><slot></slot></div>
-				<div class="e-icon">
+				<div v-if="isEdit" class="e-icon">
 					<a class="e-icon-fa e-update"><i class="fa fa-edit"></i><input class="e-update-file" type="file" @change="update"></a>
 					<a class="e-icon-fa" @click="remove"><i class="fa fa-trash-o"></i></a>
 				</div>
 			</div>`,
 		data: function() {
-			return { e_format: accept(this.format || []), }
+			return {
+				e_format: accept(this.format || []),
+				isEdit: false,
+			}
 		},
 		methods: {
+			editOn: function(el) {
+				this.isEdit = true
+			},
+			editOff: function(el) {
+				this.isEdit = false
+			},
 			update: function(e) {
 				var me = this
 				update(me, e)

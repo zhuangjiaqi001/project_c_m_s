@@ -4,6 +4,7 @@ const Page    = proxy.Page
 const Temp    = proxy.Temp
 const Aliyun  = require('../../common/aliyun')
 const Tools   = require('../../common/tools')
+const Public  = require('../../common/public')
 const Valid   = require('../../common/valid')
 const Edit    = require('../../common/edit')
 const swig    = require('swig')
@@ -104,26 +105,21 @@ router.get('/getC', (req, res, next) => {
 		id: id
 	}, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
-		item = item.dataValues
-		Tools.getTempById(item, function(ids, item) {
-			Temp.getTempCByRpIds(ids, ['id', 'title'], function(items, count) {
-				items.map(function(i) {
-					temps[i.id] = i
-				})
-				if (item.header) item.header = temps[item.header]
-				if (item.footer) item.footer = temps[item.footer]
-				if (item.modelItems) {
-					var mi = []
-					item.modelItems.map(function(i) {
-						mi.push(temps[i])
-					})
-					item.modelItems = mi
-				}
+		Public.get.getTempShop(item, res, function(item) {
+			Tools.errHandle('0000', res, item)
+		})
+	})
+})
+router.get('/prevPageC', (req, res, next) => {
+	var q      = req.query,
+		id     = q.id,
+		userId = req.signedCookies.id
 
-				getAliyun(item, res, function(item) {
-					Tools.errHandle('0000', res, item)
-				})
-			})
+	Page.getPageCById(id, function(item) {
+		if (!item) return Tools.errHandle('0163', res)
+
+		Public.get.getShopRender(item, res, function(html) {
+			res.send(html)
 		})
 	})
 })
@@ -196,12 +192,12 @@ router.post('/removePageC', (req, res, next) => {
 })
 router.post('/releasePageC', (req, res, next) => {
 	var body     = req.body,
-		id       = body.id,
-		select   = ['key', 'title', 'width', 'header', 'footer', 'html', 'css', 'js', 'modelItems', 'active']
-	Page.getPageCById(id, select, (item) => {
+		id       = body.id;
+	Page.getPageCById(id, (item) => {
 		if (!item) return Tools.errHandle('0178', res)
+
 		var pathname = `pagec/${item.key}`
-		datafilter(item, ['id', 'title', 'html', 'css', 'js', 'custemItems'], res, function(html) {
+		Public.get.getShopRender(item, res, function(html) {
 			Aliyun.uploadFile(html, 'ol.html', pathname, function(err, url) {
 				if (err) return Tools.errHandle('0118', res)
 				Page.updatePageC(id, { active: 1, url: url }, function(err) {
@@ -277,7 +273,7 @@ router.get('/getPageCList', (req, res, next) => {
 // 数据过滤
 function datafilter(item, select, res, cb) {
 	Tools.getTempById(item, function(ids, item) {
-		Temp.getTempCByRpIds(ids, ['id', 'title', 'html', 'css', 'js', 'custemItems'], function(items, count) {
+		Temp.getTempCByIds(ids, function(items) {
 			var temps = {}, js = [], css = []
 			items.map(function(i) {
 				temps[i.id] = i

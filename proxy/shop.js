@@ -132,25 +132,11 @@ exports.getShopCByQuery = function (query, cb) {
 	})
 }
 
-exports.getShopCByRpId = function(tempId, select, cb) {
-	ShopC.findAndCountAll({
-		where: { tempId: tempId },
-		attributes:  select
-	}).then(function(items) {
-		cb(items.rows, items.count)
+exports.getShopCById = function (id, cb) {
+	ShopC.findById(id).then(item => {
+		cb(item? item: null)
 	})
-};
-
-exports.getShopCByRpIds = function(ids, select, cb) {
-	ShopC.findAndCountAll({
-		where: {
-			id: ids
-		},
-		attributes:  select
-	}).then(function(items) {
-		cb(items.rows, items.count)
-	})
-};
+}
 
 
 /**

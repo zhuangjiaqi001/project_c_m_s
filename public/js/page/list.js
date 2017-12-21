@@ -41,7 +41,8 @@
 						return `<a class="text-blue" href="/page/itemEdit?pageId=${row.pageId}&id=${row.id}">编辑</a>
 								<a class="text-blue" @click="handleModal(`+(row.active? `'refresh'`: `'release'`)+`, row.id)">`+(row.active? `刷新`: `发布`)+`</a>
 								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a>
-								<a class="text-blue" @click="handleModal('copy', row.id)">复制</a>`+
+								<a class="text-blue" @click="handleModal('copy', row.id)">复制</a>
+								<a class="text-blue" target="_blank" href="/api/page/prevPageC?id=${row.id}">预览</a>`+
 								(row.active? ` <a class="text-blue" @click="handleModal('offline', row.id)">下线</a>`: ``) +
 								(row.url? ` <a class="text-blue" target="_blank" href="${row.url}">链接</a>`: ``)
 					}
@@ -64,24 +65,6 @@
 			ModalName: '',
 		},
 		methods: {
-			handleModal (pageId, id) {
-				this.removeModal = true
-				this.pageId = pageId
-				this.id     = id
-			},
-			handleRemove () {
-				CMS.http.post(API.remove, {
-					pageId: this.pageId,
-					id: this.id
-				}, function(o) {
-					console.log(o)
-					VUE.$Message.success('成功!')
-					CMS.getDataList(API.list)
-					VUE.removeModal = false
-				}, function(err) {
-					VUE.$Message.warning(err.message)
-				})
-			},
 			// 页码切换
 			changePage: function(cur) {
 				this.current = cur

@@ -13,7 +13,6 @@
 			formValidate: {
 				tempId:      tempId || '',
 				id:          id     || '',
-				key:         '',
 				name:        '',
 				description: '',
 				custemItems: [],
@@ -23,10 +22,6 @@
 				js:          ''
 			},
 			ruleValidate: {
-				key: [
-					{ required: true, message: 'KEY不能为空', trigger: 'blur' },
-					{ type: 'string', min: 15, message: 'KEY不能少于15字', trigger: 'blur' }
-				],
 				title: [
 					{ required: true, message: '标题不能为空', trigger: 'blur' },
 					{ type: 'string', min: 1, max: 30, message: '不超过30个字', trigger: 'blur' }

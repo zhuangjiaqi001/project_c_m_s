@@ -16,10 +16,6 @@
 				<Form-item label="模板类名称">
 					<span>{{temp.name}}</span>
 				</Form-item>
-				<Form-item label="KEY" prop="key">
-					<span v-if="pageinfo.isEdit">{{formValidate.key}}</span>
-					<i-input v-if="!pageinfo.isEdit" v-model="formValidate.key" type="text" placeholder="模板类KEY (唯一)" :maxlength="100"></i-input>
-				</Form-item>
 				<Form-item label="标题" prop="title">
 					<i-input v-model="formValidate.title" type="text" placeholder="(不超过30个字)" :maxlength="30"></i-input>
 				</Form-item>

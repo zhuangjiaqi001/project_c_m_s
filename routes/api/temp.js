@@ -118,9 +118,9 @@ router.get('/getC', (req, res, next) => {
 })
 router.post('/addTempC', (req, res, next) => {
 	var body   = req.body,
-		id     = req.signedCookies.id,
+		userId = req.signedCookies.id,
 		tempId = body.tempId,
-		key    = body.key,
+		key    = `tempc_${Date.now() + userId}`,
 		html   = body.html? body.html: '',
 		css    = body.css?  body.css:  '',
 		js     = body.js?   body.js:   '',
@@ -135,7 +135,7 @@ router.post('/addTempC', (req, res, next) => {
 	}, function(item) {
 		if (item) return Tools.errHandle('0163', res)
 		uploadAliyun(html, css, js, pathname, body, res, function(body) {
-			body.userId = id
+			body.userId = userId
 			Temp.addTempC(body, function (err) {
 				if (err) return Tools.errHandle('0123', res)
 				Tools.errHandle('0000', res)
@@ -148,11 +148,9 @@ router.post('/updateTempC', (req, res, next) => {
 		id     = body.id,
 		userId = req.signedCookies.id,
 		tempId = body.tempId,
-		key    = body.key,
 		html   = body.html || '',
 		css    = body.css  || '',
-		js     = body.js   || '',
-		pathname = `tempc/${key}`
+		js     = body.js   || ''
 
 	body.custemItems = body.custemItems || []
 	
@@ -160,11 +158,10 @@ router.post('/updateTempC', (req, res, next) => {
 	body = bodyFilter.obj
 
 	Valid.run(res, 'tempc', body, function() {
-		Temp.getTempCByQuery({
-			tempId: tempId,
-			key: key
-		}, function(item) {
+		Temp.getTempCById(id, function(item) {
 			if (!item) return Tools.errHandle('0163', res)
+			var key      = item.key,
+				pathname = `tempc/${key}`;
 			uploadAliyun(html, css, js, pathname, body, res, function(body) {
 				body.userId = userId
 				Temp.updateTempC(id, body, function (err) {

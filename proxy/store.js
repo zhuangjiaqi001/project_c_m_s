@@ -131,26 +131,11 @@ exports.getStoreCByQuery = function (query, cb) {
 		cb(item? item: null)
 	})
 }
-
-exports.getStoreCByRpId = function(tempId, select, cb) {
-	StoreC.findAndCountAll({
-		where: { tempId: tempId },
-		attributes:  select
-	}).then(function(items) {
-		cb(items.rows, items.count)
+exports.getStoreCById = function (id, cb) {
+	return StoreC.findById(id).then(item => {
+		cb(item? item: null)
 	})
-};
-
-exports.getStoreCByRpIds = function(ids, select, cb) {
-	StoreC.findAndCountAll({
-		where: {
-			id: ids
-		},
-		attributes:  select
-	}).then(function(items) {
-		cb(items.rows, items.count)
-	})
-};
+}
 
 
 /**

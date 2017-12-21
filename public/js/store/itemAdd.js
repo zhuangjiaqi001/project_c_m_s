@@ -50,6 +50,7 @@
 				description: '',
 				title:       '',
 				json:        '',
+				html:        '',
 				shop:        {},
 			},
 			ruleValidate: {
@@ -129,7 +130,8 @@
 				CMS.getDataList(me.listAPI, 'pageTempC')
 			},
 			handleSelRemove: function(type) {
-				if (type === 'shop') this.formValidate[type] = {}
+				this.formValidate[type] = {}
+				this.formValidate.json  = ''
 			},
 			selModel: function(item) {
 				var me = this, t = me.mType
@@ -173,8 +175,11 @@
 				this.iframe = true
 			},
 			closeFrame: function() {
-				var fwin = $('.editor-frame')[0].contentWindow
+				var fwin = $('.editor-frame')[0].contentWindow,
+					html = fwin.document.querySelector('#page_content').innerHTML
 				this.formValidate.json = JSON.stringify(fwin.VUE.json)
+				this.formValidate.html = html
+				console.log(html)
 				this.iframe = false
 			},
 			getShop: function(me, shopId) {

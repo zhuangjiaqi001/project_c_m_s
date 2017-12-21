@@ -4,6 +4,7 @@ const Shop    = proxy.Shop
 const Temp    = proxy.Temp
 const Aliyun  = require('../../common/aliyun')
 const Tools   = require('../../common/tools')
+const Public  = require('../../common/public')
 const Valid   = require('../../common/valid')
 const Edit    = require('../../common/edit')
 const swig    = require('swig')
@@ -104,30 +105,10 @@ router.get('/getC', (req, res, next) => {
 		userId = req.signedCookies.id,
 		temps  = {}
 
-	Shop.getShopCByQuery({
-		id: id
-	}, function(item) {
+	Shop.getShopCById(id, function(item) {
 		if (!item) return Tools.errHandle('0128', res)
-		item = item.dataValues
-		Tools.getTempById(item, function(ids, item) {
-			Temp.getTempCByRpIds(ids, ['id', 'title'], function(items, count) {
-				items.map(function(i) {
-					temps[i.id] = i
-				})
-				if (item.header) item.header = temps[item.header]
-				if (item.footer) item.footer = temps[item.footer]
-				if (item.modelItems) {
-					var mi = []
-					item.modelItems.map(function(i) {
-						mi.push(temps[i])
-					})
-					item.modelItems = mi
-				}
-
-				Tools.getAliyun(item, res, function(item) {
-					Tools.errHandle('0000', res, item)
-				})
-			})
+		Public.get.getTempShop(item, res, function(item) {
+			Tools.errHandle('0000', res, item)
 		})
 	})
 })
@@ -135,7 +116,7 @@ router.post('/addShopC', (req, res, next) => {
 	var body   = req.body,
 		userId = req.signedCookies.id,
 		shopId = body.shopId,
-		key    = `shopc_${Date.now() + userId}`,
+		key    = `shopc_${Date.now()}`,
 		html   = body.html? body.html: '',
 		css    = body.css?  body.css:  '',
 		js     = body.js?   body.js:   '',
@@ -143,6 +124,7 @@ router.post('/addShopC', (req, res, next) => {
 
 	if (!shopId) return Tools.errHandle('0126', res)
 
+	debugger
 	Shop.getShopById(shopId, function(item) {
 		if (!item) return Tools.errHandle('0178', res)
 		Tools.uploadAliyun(html, css, js, pathname, body, res, function(body) {
@@ -161,14 +143,13 @@ router.get('/prevShopC', (req, res, next) => {
 		id     = q.id,
 		userId = req.signedCookies.id
 
-	Shop.getShopCByQuery({
-		id: id
-	}, function(item) {
+	Shop.getShopCById(id, function(item) {
 		if (!item) return Tools.errHandle('0163', res)
 		var key      = item.key,
 			pathname = `shopc/${key}`;
 
-			datafilter('preview', item, ['id', 'title', 'html', 'css', 'js', 'custemItems'], res, function(html) {
+			item.dataValues.renderType = 'shop_prev'
+			Public.get.getShopRender(item, res, function(html) {
 				res.send(html)
 			})
 	})
@@ -178,14 +159,13 @@ router.get('/editorShopC', (req, res, next) => {
 		id     = q.id,
 		userId = req.signedCookies.id
 
-	Shop.getShopCByQuery({
-		id: id
-	}, function(item) {
+	Shop.getShopCById(id, function(item) {
 		if (!item) return Tools.errHandle('0163', res)
 		var key      = item.key,
 			pathname = `shopc/${key}`;
 
-		datafilter('editor', item, ['id', 'title', 'html', 'css', 'js', 'custemItems'], res, function(html) {
+		item.dataValues.renderType = 'shop_editor'
+		Public.get.getShopRender(item, res, function(html) {
 			res.send(html)
 		})
 	})
@@ -203,9 +183,7 @@ router.post('/updateShopC', (req, res, next) => {
 	body = bodyFilter.obj
 
 	Valid.run(res, 'shopc', body, function() {
-		Shop.getShopCByQuery({
-			id: id
-		}, function(item) {
+		Shop.getShopCById(id, function(item) {
 			if (!item) return Tools.errHandle('0163', res)
 			var key      = item.key,
 				pathname = `shopc/${key}`;
@@ -216,12 +194,6 @@ router.post('/updateShopC', (req, res, next) => {
 					if (err) return Tools.errHandle('0130', res)
 					Tools.errHandle('0000', res)
 				})
-				// datafilter(item, ['id', 'title', 'html', 'css', 'js', 'custemItems'], res, function(html) {
-				// 	Aliyun.uploadFile(html, 'ol.html', pathname, function(err, url) {
-				// 		if (err) return Tools.errHandle('0118', res)
-				// 	})
-				// })
-
 			})
 		})
 	})
@@ -275,68 +247,4 @@ router.get('/getShopCList', (req, res, next) => {
 	})
 })
 
-// 数据过滤
-function datafilter(type, item, select, res, cb) {
-	Tools.getTempById(item, function(ids, item) {
-		Temp.getTempCByRpIds(ids, ['id', 'title', 'html', 'css', 'js', 'custemItems'], function(items, count) {
-			var temps = {}, js = [], css = []
-			items.map(function(i) {
-				temps[i.id] = i
-			})
-			if (item.html) temps['body'] = { html: item.html }
-			if (item.css) css.push(item.css)
-			if (item.js)  js.push(item.js)
-			Tools.getAliyunHTML(temps, res, function(temps) {
-				if (item.header) item.header = modelfilter(temps[item.header], js, css)
-				if (item.modelItems) {
-					var mi = []
-					item.modelItems.map(function(i) {
-						mi.push(modelfilter(temps[i], js, css))
-					})
-					item.modelItems = mi
-				}
-				if (item.footer) item.footer = modelfilter(temps[item.footer], js, css)
-				item.js  = Tools.unique(js)
-				item.css = Tools.unique(css)
-				if (temps.body) item.html = temps['body'].html
-				createPage(type, item, res, cb)
-			})
-		})
-	})
-}
-// 模块过滤
-function modelfilter(obj, js, css) {
-	var cis  = obj.custemItems
-	if (cis.length) {
-		cis.map(function(i) {
-			js.push(jsframe[i.name])
-		})
-	}
-	if (obj.css) css.push(obj.css)
-	if (obj.js)  js.push(obj.js)
-	return {
-		html: obj.html
-	}
-}
-// 创建页面
-function createPage(type, body, res, cb) {
-	var mi = typeof body.modelItems === 'string'? JSON.parse(body.modelItems): body.modelItems
-	body.js.unshift( jsframe.vue_2_2_6, jsframe.jq_1_12_4 )
-	if (type === 'preview') body.js.push( '/js/util/e-edit/e-edit-view.js' )
-	if (type === 'editor')  {
-		body.css.push( '/js/util/e-edit/e-edit-edit.css', '/js/util/e-edit/fa/fa.css' )
-		body.js.push( '/js/util/e-edit/e-edit-edit.js' )
-	}
-	var prev = tpl({
-		title:   `${body.title}`,
-		body:    body.html,
-		css:     body.css,
-		js:      body.js,
-		model:   mi,
-		header:  body.header? body.header.html || '': '',
-		footer:  body.footer? body.footer.html || '': '',
-		width:   body.width || '1000'
-	})
-	cb && cb(prev)
-}
 module.exports = router

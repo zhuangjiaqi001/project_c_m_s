@@ -33,24 +33,15 @@
 			</div>
 		</div>
 
-		<!-- 确认删除 模态框 -->
-		<Modal v-model="removeModal" width="360">
-			<p slot="header" style="color: #f60; text-align: center">
-				<Icon type="information-circled"></Icon>
-				<span>确定删除该商店吗?</span>
-			</p>
-			<div style="text-align:center">
-				<p>删除该商店后不可恢复</p>
-			</div>
-			<div slot="footer">
-				<i-button type="error" size="large" @click="rpRemoveFn">删除</i-button>
-			</div>
-		</Modal>
 
-		<Modal v-model="copyModal" width="360" @on-ok="rpCopyFn">
-			<div style="text-align:center">
-				<p>确定复制该商店吗?</p>
-			</div>
+		<!-- 确认 删除|发布|下线|链接 模态框 -->
+		<Modal v-model="Modal" @on-ok="handleCtrl">
+			<p v-if="ModalName === 'remove'">确定删除该商店吗?</p>
+			<p v-if="ModalName === 'release'">确认发布该商店吗?</p>
+			<p v-if="ModalName === 'refresh'">确认刷新该商店吗?</p>
+			<p v-if="ModalName === 'offline'">确认下线该商店吗?</p>
+			<p v-if="ModalName === 'copy'">确定复制该商店吗?</p>
+			<p v-if="ModalName === 'link'"><a :href="api" target="_blank">{{api}}</a></p>
 		</Modal>
 
 	</div>

@@ -1,11 +1,21 @@
 (function(global, VM, CMS) {
 	var API = {
-		get:    '/store/get',
-		list:   '/store/getStoreCList',
-		remove: '/store/removeStoreC',
-		copy:   '/store/copyStoreC'
+		get:     '/store/get',
+		list:    '/store/getStoreCList',
+		remove:  '/store/removeStoreC',
+		release: '/store/releaseStoreC',
+		offline: '/store/offlineStoreC',
+		copy:    '/store/copyStoreC'
 	},
 	storeId = CMS.getQueryValue('storeId')
+
+	var Modal = {
+		release: 'handleRelease',
+		refresh: 'handleRelease',
+		remove:  'handleRemove',
+		offline: 'handleOffline',
+		copy:    'handleCopy'
+	}
 
 	var VUE = new Vue(CMS.extend(VM, {
 		data: {
@@ -29,14 +39,15 @@
 					key: '',
 					render: (row, col, idx) => {
 						return `<a class="text-blue" href="/store/itemEdit?storeId=${row.storeId}&id=${row.id}">编辑</a>
-								<a class="text-blue" @click="rpRemove(row.storeId, row.id)">删除</a>
-								<a class="text-blue" @click="rpCopy(row.storeId, row.id)">复制</a>
-								<a class="text-blue" target="_blank" href="/api/store/prevStoreC?id=${row.id}">预览</a>`
+								<a class="text-blue" @click="handleModal(`+(row.active? `'refresh'`: `'release'`)+`, row.id)">`+(row.active? `刷新`: `发布`)+`</a>
+								<a class="text-blue" @click="handleModal('remove', row.id)">删除</a>
+								<a class="text-blue" @click="handleModal('copy', row.id)">复制</a>
+								<a class="text-blue" target="_blank" href="/api/store/prevStoreC?id=${row.id}">预览</a>`+
+								(row.active? ` <a class="text-blue" @click="handleModal('offline', row.id)">下线</a>`: ``) +
+								(row.url? ` <a class="text-blue" target="_blank" href="${row.url}">链接</a>`: ``)
 					}
 				}
 			],
-			removeModal: false,
-			copyModal: false,
 			dataList: [],
 			total: 0,
 			pageSize: 10,
@@ -48,41 +59,56 @@
 			sort: '',
 			storeinfo: {},
 			storeId: storeId || '',
-			id: ''
+			id: '',
+			Modal: false,
+			ModalName: '',
 		},
 		methods: {
-			rpRemove (storeId, id) {
-				this.removeModal = true
-				this.storeId = storeId
-				this.id     = id
+			handleModal: function(name, storeId) {
+				this.ModalName = name
+				this.storeId   = storeId
+				this.Modal     = true
 			},
-			rpCopy (rpId, id) {
-				this.copyModal = true
-				this.storeId = storeId
-				this.id     = id
+			// 模态框操作 (发布|删除|下线)
+			handleCtrl: function() {
+				var fn = this[Modal[this.ModalName]]
+				fn && fn()
 			},
-			rpRemoveFn () {
-				CMS.http.post(API.remove, {
-					storeId: this.storeId,
-					id: this.id
-				}, function(o) {
+			// 发布|刷新
+			handleRelease: function() {
+				CMS.http.post(API.release, { id: this.storeId }, function(o) {
 					console.log(o)
 					VUE.$Message.success('成功!')
 					CMS.getDataList(API.list)
-					VUE.removeModal = false
 				}, function(err) {
 					VUE.$Message.warning(err.message)
 				})
 			},
-			rpCopyFn () {
-				CMS.http.post(API.copy, {
-					storeId: this.storeId,
-					id: this.id
-				}, function(o) {
+			// 删除
+			handleRemove: function() {
+				CMS.http.post(API.remove, { id: this.storeId }, function(o) {
 					console.log(o)
 					VUE.$Message.success('成功!')
 					CMS.getDataList(API.list)
-					VUE.copyModal = false
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+				})
+			},
+			// 下线
+			handleOffline: function() {
+				CMS.http.post(API.offline, { id: this.storeId }, function(o) {
+					console.log(o)
+					VUE.$Message.success('成功!')
+					CMS.getDataList(API.list)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+				})
+			},
+			handleCopy: function() {
+				CMS.http.post(API.copy, { id: this.storeId }, function(o) {
+					console.log(o)
+					VUE.$Message.success('成功!')
+					CMS.getDataList(API.list)
 				}, function(err) {
 					VUE.$Message.warning(err.message)
 				})

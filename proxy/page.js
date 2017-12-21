@@ -134,11 +134,8 @@ exports.getPageCByQuery = function (query, cb) {
 	})
 }
 
-exports.getPageCById = function(id, select, cb) {
-	PageC.findOne({
-		where: { id: id },
-		attributes:  select
-	}).then(item => {
+exports.getPageCById = function(id, cb) {
+	PageC.findById(id).then(item => {
 		cb(item? item: null)
 	})
 };
