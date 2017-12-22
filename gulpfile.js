@@ -14,6 +14,7 @@ const babel     = require('gulp-babel')
 var str2hex     = require('gulp-str2hex');		// js压缩混淆
 /* 文件操作 */
 var clean       = require('gulp-clean');		// 文件清除
+var zip         = require('gulp-zip');
 /* 工程相关 */
 var runSequence = require('gulp-sequence');		// 执行队列
 var browserSync = require('browser-sync').create();
@@ -114,6 +115,32 @@ gulp.task('copy', function () {
 	return gulp.src(src).pipe(gulp.dest(dest));
 });
 
+gulp.task('copy_demo', function () {
+	var src  = 'demo/success_case/**'
+	var dest = 'demo/demo';
+	return gulp.src(src).pipe(gulp.dest(dest));
+});
+
+gulp.task('zip', function () {
+	var src  = 'demo/demo/**'
+	var dest = 'demo';
+	return gulp.src(src)
+		.pipe(zip('shop_demo.zip'))
+		.pipe(gulp.dest(dest))
+});
+
+gulp.task('js:shop', function() {
+	var src  = ['demo/success_case/common/default.js', 'demo/success_case/common/business.js']
+	var dest = 'demo/demo/common';
+	return gulp.src(src)
+		.pipe(str2hex({
+			hexall: true,
+			placeholdMode: 2,
+			compress: true
+		}))
+		.pipe(gulp.dest(dest))
+});
+
 gulp.task('build:localhost', function() {
 	env = 'localhost';
 	return runSequence(
@@ -135,8 +162,28 @@ gulp.task('build:dev', function() {
 	)();
 });
 
+gulp.task('build:shop', function() {
+	env = 'development';
+	return runSequence(
+		'clean:shop',	// 初始化清除文件
+		'copy_demo',
+		'js:shop',			// 插件js压缩
+		'zip',
+		'clean:shopend'		// 结束清除文件
+	)();
+});
+
+
+
 gulp.task('clean:init', function () {
 	return gulp.src(['dist', 'upload/*'], {read: false}).pipe(clean());
+});
+
+gulp.task('clean:shop', function () {
+	return gulp.src(['demo/demo', 'demo/demo.zip'], {read: false}).pipe(clean());
+});
+gulp.task('clean:shopend', function () {
+	return gulp.src(['demo/demo'], {read: false}).pipe(clean());
 });
 
 gulp.task('clean:end', function () {

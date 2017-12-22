@@ -31,7 +31,7 @@
 						return `<a class="text-blue" href="/temp/itemEdit?tempId=${row.tempId}&id=${row.id}">编辑</a>
 								<a class="text-blue" @click="rpRemove(row.tempId, row.id)">删除</a>
 								<a class="text-blue" @click="rpCopy(row.tempId, row.id)">复制</a>
-								${row.preview? '<a class="text-blue" target="_blank" href="'+row.preview+'">预览</a>': ''}`
+								<a class="text-blue" target="_blank" href="/api/temp/prevTempC?id=${row.id}">预览</a>`
 					}
 				}
 			],

@@ -13,6 +13,7 @@ module.exports = function(type, userId, file, res, cb) {
 		url: { $like: `%${name}%` }
 	}, function(item) {
 		if (item) {
+			if (type !== item.type) return cb && cb()
 			if (type === 1) {
 				return Tools.errHandle('0000', res, {
 					id:  item.id,

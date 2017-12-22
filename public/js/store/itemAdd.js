@@ -58,7 +58,10 @@
 				title: [
 					{ required: true, message: '标题不能为空', trigger: 'blur' },
 					{ type: 'string', min: 1, max: 30, message: '不超过30个字', trigger: 'blur' }
-				]
+				],
+				'shop.id': [
+					{ required: true, message: '模板未选择', trigger: 'change' }
+				],
 			},
 			pageTemp: {
 				total: 0,
@@ -135,6 +138,7 @@
 			handleSelRemove: function(type) {
 				this.formValidate[type] = {}
 				this.formValidate.json  = ''
+				this.iframeSrc = ''
 			},
 			selModel: function(item) {
 				var me = this, t = me.mType

@@ -1,5 +1,8 @@
 (function() {
-	var formatObj = { jpg: 1, jpeg: 1, png: 1, gif: 1 }
+	var formatObj = { jpg: 1, jpeg: 1, png: 1, gif: 1 },
+		errMsg = function(str) {
+			alert(str || '本地环境无法执行该操作!')
+		}
 
 	Vue.directive('focus', {
 		inserted: function (el) {
@@ -8,20 +11,24 @@
 	})
 	Vue.component('e-text', {
 		props: ['value'],
-		template: '#e-text',
+		template: `<span class="e-pos-rep" @dblclick="editActive" :class="value === ''? 'e-null': ''">
+				<input class="e-text" v-if="isEdit === true" :style="size" v-model="content" @blur="submit" v-focus="isFocus"></input>
+				<span v-if="isEdit === false">{{value}}</span>
+			</span>`,
 		data: function() {
 			return {
 				content: this.value,
 				isEdit: false,
 				isFocus: false,
-				w: 0,
-				h: 0,
+				size: { width: 0, height: 0 },
 			}
 		},
 		methods: {
 			editActive: function(el) {
-				this.w = el.currentTarget.offsetWidth
-				this.h = el.currentTarget.offsetHeight
+				this.size = {
+					width:  el.currentTarget.offsetWidth + 40  + 'px',
+					height: el.currentTarget.offsetHeight + 'px'
+				}
 				this.isEdit = this.isFocus = true
 			},
 			submit: function() {
@@ -32,21 +39,25 @@
 	})
 	Vue.component('e-textarea', {
 		props: ['value'],
-		template: '#e-textarea',
+		template: `<div class="e-pos-rep" @dblclick="editActive" :class="contentList.length === 1 && contentList[0] === ''? 'e-null': ''">
+				<textarea class="e-textarea" v-if="isEdit === true" :style="size" v-model="content" @blur="submit" v-focus="isFocus"></textarea>
+				<p v-if="isEdit === false" v-for="p in contentList">{{p}}</p>
+			</div>`,
 		data: function() {
 			return {
 				content: this.value,
 				contentList: [],
 				isEdit: false,
 				isFocus: false,
-				w: 0,
-				h: 0,
+				size: { width: 0, height: 0 },
 			}
 		},
 		methods: {
 			editActive: function(el) {
-				this.w = el.currentTarget.offsetWidth
-				this.h = el.currentTarget.offsetHeight
+				this.size = {
+					width:  el.currentTarget.offsetWidth  + 'px',
+					height: el.currentTarget.offsetHeight + 'px'
+				}
 				this.isEdit = this.isFocus = true
 			},
 			submit: function() {
@@ -62,17 +73,31 @@
 	})
 	Vue.component('e-image', {
 		props: ['value'],
-		template: '#e-image',
+		template: `<div class="e-pos-rep e-image" @mouseenter="editOn" @mouseleave="editOff">
+				<img :src="value" :style="value? '': 'opacity: 0'">
+				<div v-if="isEdit" class="e-icon">
+					<a class="e-icon-fa e-update" @click="upload"><i class="fa fa-edit"></i></a>
+					<a class="e-icon-fa" @click="remove"><i class="fa fa-trash-o"></i></a>
+				</div>
+			</div>`,
 		data: function() {
-			return { e_format: accept(this.format || []), }
+			return {
+				e_format: accept(this.format || []),
+				isEdit: false,
+			}
 		},
 		methods: {
-			update: function(e) {
-				var me = this
-				update(me, e)
+			editOn: function() {
+				this.isEdit = true
+			},
+			editOff: function() {
+				this.isEdit = false
+			},
+			upload: function() {
+				errMsg()
 			},
 			remove: function() {
-				this.$emit('input', '')
+				errMsg()
 			}
 		},
 		mounted: function() {
@@ -80,17 +105,31 @@
 	})
 	Vue.component('e-bgimage', {
 		props: ['value', 'eClass', 'maxSize', 'format'],
-		template: '#e-bgimage',
+		template: `<div class="e-pos-rep e-image" @mouseenter="editOn" @mouseleave="editOff">
+				<div :class="eClass" :style="'background-image: url(' + value + ');'"><slot></slot></div>
+				<div v-if="isEdit" class="e-icon">
+					<a class="e-icon-fa e-update" @click="upload"><i class="fa fa-edit"></i></a>
+					<a class="e-icon-fa" @click="remove"><i class="fa fa-trash-o"></i></a>
+				</div>
+			</div>`,
 		data: function() {
-			return { e_format: accept(this.format || []), }
+			return {
+				e_format: accept(this.format || []),
+				isEdit: false,
+			}
 		},
 		methods: {
-			update: function(e) {
-				var me = this
-				update(me, e)
+			editOn: function() {
+				this.isEdit = true
+			},
+			editOff: function() {
+				this.isEdit = false
+			},
+			upload: function() {
+				errMsg()
 			},
 			remove: function() {
-				this.$emit('input', '')
+				errMsg()
 			}
 		},
 		mounted: function() {
@@ -109,46 +148,5 @@
 			if (formatObj[_]) ac.push('image/' + _)
 		})
 		return ac.join(', ')
-	}
-	function update(me, e, cb) {
-		var files = e.target.files
-		if (files && files.length) {
-			var form = new FormData(),
-				file = me.file = e.target,
-				f    = files[0],
-				t    = f.type
-			var size = me.maxSize >= 1024 ? `${me.maxSize / 1024}MB` : `${me.maxSize}KB`
-			if(me.e_format.indexOf(t) < 0){
-				e.target.value = ''
-				return alert(`上传失败，请上传大小${size}以内的 ${me.e_format.replace(/image\//g, '')} 格式的图片`)
-			}
-			if (f.size > me.maxSize*1024) {
-				e.target.value = ''
-				return alert(`上传失败，请上传大小${size}以内的 ${me.e_format.replace(/image\//g, '')} 格式的图片`)
-			}
-			form.append('file', f)
-			$.ajax({
-				url: '/api/file/ue?action=uploadimage',
-				type: 'post',
-				data: form,
-				processData: false,
-				contentType: false,
-				success: function(d) {
-					if (d.state === 'SUCCESS') {
-						if (cb) cb(d.url)
-						else me.$emit('input', d.url)
-					} else {
-						alert(d.message)
-					}
-					e.target.value = ''
-				},
-				error: function(err) {
-					alert('网络错误!')
-					e.target.value = ''
-				}
-			})
-		} else {
-			e.target.value = ''
-		}
 	}
 }());

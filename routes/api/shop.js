@@ -195,8 +195,6 @@ router.post('/updateShopC', (req, res, next) => {
 					Tools.errHandle('0000', res)
 				})
 			})
-			// Tools.uploadAliyun(html, css, js, pathname, body, res, function(body) {
-			// })
 		})
 	})
 })

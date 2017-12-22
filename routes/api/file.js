@@ -86,7 +86,7 @@ router.use('/ue', (req, res, next) => {
 			form.parse(req, function(err, fields) {
 				if (err)  return Tools.errHandle('0101', res)
 				if (!len) return Tools.errHandle('0102', res)
-				validImg(2, userId, file, res, function() {
+				validImg(2, userId, file, res, function(url) {
 					Aliyun.upload(file, function(err, url) {
 						if (err) return Tools.errHandle('0102', res)
 						Img.addUE(url, userId, function(err, file) {

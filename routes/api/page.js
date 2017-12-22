@@ -101,9 +101,7 @@ router.get('/getC', (req, res, next) => {
 		userId = req.signedCookies.id,
 		temps  = {}
 
-	Page.getPageCByQuery({
-		id: id
-	}, function (item) {
+	Page.getPageCById(id, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		Public.get.getTempShop(item, res, function(item) {
 			Tools.errHandle('0000', res, item)
@@ -128,16 +126,16 @@ router.post('/addPageC', (req, res, next) => {
 		userId = req.signedCookies.id,
 		pageId = body.pageId,
 		key    = `pagec_${Date.now()}`,
-		html   = body.html? decodeURIComponent(body.html): '',
-		css    = body.css?  decodeURIComponent(body.css):  '',
-		js     = body.js?   decodeURIComponent(body.js):   '',
+		html   = body.html || '',
+		css    = body.css  || '',
+		js     = body.js   || '',
 		pathname = `pagec/${key}`
 
 	if (!pageId) return Tools.errHandle('0176', res)
 
 	Page.getPageById(pageId, function(item) {
 		if (!item) return Tools.errHandle('0178', res)
-		uploadAliyun(html, css, js, pathname, body, res, function(body) {
+		Public.set.uploadAliyun(body, pathname, res, function(body) {
 			body.userId = userId
 			body.key = key
 			Page.addPageC(body, function (err) {
@@ -153,9 +151,9 @@ router.post('/updatePageC', (req, res, next) => {
 		userId = req.signedCookies.id,
 		key    = body.key,
 		id     = body.id,
-		html   = body.html? decodeURIComponent(body.html): '',
-		css    = body.css?  decodeURIComponent(body.css):  '',
-		js     = body.js?   decodeURIComponent(body.js):   '',
+		html   = body.html || '',
+		css    = body.css  || '',
+		js     = body.js   || '',
 		pathname = `pagec/${key}`
 
 	body.modelItems = body.modelItems || []
@@ -163,12 +161,9 @@ router.post('/updatePageC', (req, res, next) => {
 	body = bodyFilter.obj
 
 	Valid.run(res, 'pagec', body, function() {
-		Page.getPageCByQuery({
-			pageId: pageId,
-			id: id
-		}, function(item) {
+		Page.getPageCById(id, function(item) {
 			if (!item) return Tools.errHandle('0128', res)
-			uploadAliyun(html, css, js, pathname, body, res, function(body) {
+			Public.set.uploadAliyun(body, pathname, res, function(body) {
 				body.userId = userId
 				Page.updatePageC(id, body, function (err) {
 					if (err) return Tools.errHandle('0170', res)
@@ -210,9 +205,8 @@ router.post('/releasePageC', (req, res, next) => {
 })
 router.post('/offlinePageC', (req, res, next) => {
 	var body = req.body,
-		id   = body.id,
-		select = ['title', 'url', 'active']
-	Page.getPageCById(id, select, (item) => {
+		id   = body.id
+	Page.getPageCById(id, (item) => {
 		if (!item) return Tools.errHandle('0128', res)
 		var mt   = item.url.match(/\/cms.+/),
 			path = mt? mt[0]: ''
@@ -236,17 +230,14 @@ router.post('/copyPageC', (req, res, next) => {
 			key:         `pagec_${Date.now()}`,
 			pageId:      item.pageId,
 			userId:      item.userId,
-			description: item.description,
 			title:       `${item.title}_copy_${Date.now()}`,
 			html:        item.html,
 			js:          item.js,
 			css:         item.css,
-			// url:         '',
 			header:      { id: item.header },
 			footer:      { id: item.footer },
 			custemItems: item.custemItems,
 			modelItems:  item.modelItems,
-			type:        item.type,
 			active:      false,
 			width:       item.width
 		}
@@ -270,38 +261,5 @@ router.get('/getPageCList', (req, res, next) => {
 	})
 })
 
-function uploadAliyun(html, css, js, pathname, body, res, cb) {
-	var len = 0, now = 0
-	body.html = body.css = body.js = ''
-	if (html) ++len
-	if (css)  ++len
-	if (js)   ++len
-	if (!len) cb(body)
-
-	if (html) {
-		Aliyun.uploadFile(html, '0.html', pathname, function(err, url) {
-			if (err) return Tools.errHandle('0115', res)
-			body.html = url
-			++now
-			if (now === len) cb(body)
-		})
-	}
-	if (css) {
-		Aliyun.uploadFile(css, '0.css', pathname, function(err, url) {
-			if (err) return Tools.errHandle('0116', res)
-			body.css = url
-			++now
-			if (now === len) cb(body)
-		})
-	}
-	if (js) {
-		Aliyun.uploadFile(js, '0.js', pathname, function(err, url) {
-			if (err) return Tools.errHandle('0117', res)
-			body.js = url
-			++now
-			if (now === len) cb(body)
-		})
-	}
-}
 
 module.exports = router

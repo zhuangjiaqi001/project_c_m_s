@@ -1,3 +1,6 @@
+[v-cloak] {
+	display: none;
+}
 img {
 	display: block;
 }
@@ -5,10 +8,17 @@ img {
 .e-textarea {
 	position: relative;
 	z-index: 1;
+	box-sizing: border-box;
 	font-size: 16px;
 	vertical-align: text-top;
 	outline: none;
 	padding: 10px;
+	border: 0;
+	background-color: rgba(255, 255, 255, .5);
+}
+.e-text {
+	min-width: 100px;
+	text-align: center;
 }
 .e-textarea {
 	min-height: 100px;

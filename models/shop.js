@@ -47,8 +47,7 @@ module.exports = function(sequelize, DataTypes) {
 				if (typeof val !== 'string') {
 					var mod = []
 					val.map(function(i) { mod.push(typeof i === 'string'? i: i.id) })
-					mod = Tools.unique(mod)
-					val = JSON.stringify(val)
+					val = JSON.stringify(Tools.unique(mod))
 				}
 				return this.setDataValue('modelItems', val)
 			},

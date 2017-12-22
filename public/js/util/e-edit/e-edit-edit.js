@@ -69,7 +69,7 @@
 		}
 	})
 	Vue.component('e-image', {
-		props: ['value'],
+		props: ['value', 'maxSize', 'format'],
 		template: `<div class="e-pos-rep e-image" @mouseenter="editOn" @mouseleave="editOff">
 				<img :src="value" :style="value? '': 'opacity: 0'">
 				<div v-if="isEdit" class="e-icon">
@@ -141,7 +141,7 @@
 		return str.split('|*|')
 	}
 	function accept(arr) {
-		var ac = []
+		var ac = typeof arr !== 'string'? []: arr
 		arr = arr.length? arr: ['jpg', 'jpeg', 'png']
 		arr.map(function(_) {
 			if (formatObj[_]) ac.push('image/' + _)
@@ -213,4 +213,4 @@ var VUE
 	} catch (e) {
 		console.log(e)
 	}
-}())
+}());
