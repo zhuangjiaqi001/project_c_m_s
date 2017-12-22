@@ -140,24 +140,29 @@ var Public = {
 			if (!len) cb(body)
 		},
 		getAliyunHTML: function(temps, res, cb) {
-			var len  = 0,
-				now  = 0
+			var len = 0,
+				now = 0,
+				err
 			for (let p in temps) {
 				if (!temps[p].html) return
 				++len
 				var mt = temps[p].html.replace(RP.pn, '')
 				if (!mt) return
 				Aliyun.getFile(mt, function(err, result) {
-					if (err) return Tools.errHandle('0105', res)
+					if (err) err = err
 					temps[p].html = result
 					++now
-					if (now === len) return cb(temps)
+					if (now === len) {
+						if (err) return Tools.errHandle('0105', res)
+						return cb(temps)
+					}
 				})
 			}
 			if (!len) return cb(temps)
 		},
 		// 模块过滤
 		modelfilter: function(obj, js, css) {
+			if (!obj) return ''
 			var cis  = obj.custemItems
 			if (cis.length) {
 				cis.map(function(i) {
@@ -219,6 +224,7 @@ var renderType = {
 	},
 	shop_prev: function(item) {
 		item.js.unshift( jsframe.vue_2_2_6, jsframe.jq_1_12_4 )
+		item.css.push( '/js/util/e-edit/e-edit-view.css' )
 		item.js.push( '/js/util/e-edit/e-edit-view.js' )
 	}
 }

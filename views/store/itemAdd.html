@@ -19,7 +19,7 @@
 				<Form-item label="标题" prop="title">
 					<i-input v-model="formValidate.title" type="text" placeholder="(不超过30个字)" :maxlength="30"></i-input>
 				</Form-item>
-				<Form-item label="店铺模板" prop="shop.id">
+				<Form-item label="店铺模板" prop="shop">
 					<Row>
 						<i-col span="16">
 							<i-button v-if="!formValidate.shop.id" type="ghost" @click="getTemp('shop')">选择</i-button>

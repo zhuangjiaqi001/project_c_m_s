@@ -402,6 +402,7 @@ a:focus {
 .left-side {
 	position: absolute;
 	top: 0;
+	bottom: 0;
 	left: 0;
 	padding-top: 50px;
 	min-height: 100%;
@@ -409,6 +410,8 @@ a:focus {
 	z-index: 810;
 	-webkit-transition: -webkit-transform 0.3s ease-in-out, width 0.3s ease-in-out;
 	transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+	overflow-x: hidden;
+	overflow-y: auto;
 }
 @media (max-width: 767px) {
 	.main-sidebar,

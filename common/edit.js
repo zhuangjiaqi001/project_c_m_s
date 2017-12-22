@@ -87,7 +87,8 @@ module.exports = {
 		html:        1,
 		json:        1,
 		url:         1,
-		stopId:      1,
+		shop:        1,
+		stopcId:     1,
 		active:      1,
 	},
 }

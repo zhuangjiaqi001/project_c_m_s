@@ -43,7 +43,7 @@
 					title: '操作',
 					key: '',
 					render: (row, col, idx) => {
-						if (VUE.isTempC) return `<a class="text-blue" @click="selModel(row)">选择</i></a>`
+						if (VUE.isTempC) return `<a class="text-blue" @click="selModel(row)">选择</i></a> <a class="text-blue" target="_blank" href="/api/temp/prevTempC?id=${row.id}">预览</a>`
 						else return `<a class="text-blue" @click="handleCSel(row)">详情</i></a>`
 					}
 				}

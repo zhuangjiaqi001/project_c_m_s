@@ -32,6 +32,10 @@ module.exports = function(sequelize, DataTypes) {
 			custemItems: function(val) {
 				return this.setDataValue('custemItems', typeof val !== 'string'? JSON.stringify(val): val)
 			},
+			shop: function(val) {
+				if (!val) return
+				return this.setDataValue('shopcId', val.id)
+			},
 			modelItems: function(val) {
 				if (typeof val !== 'string') {
 					var mod = []

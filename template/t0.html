@@ -11,17 +11,10 @@
 <meta name="renderer" content="webkit">
 <link rel="shortcut icon" href="/favicon.ico">
 <style>
-.content {
-	width: 1000px;
-	margin: 30px auto;
-	font-size: 16px
-}
-.content p {
-	margin: 5px 0
-}
-.content img {
-	display: inline
-}
+body { font-family: arial }
+.content { width: 1000px; margin: 30px auto; font-size: 16px }
+.content p { margin: 5px 0 }
+.content img { display: inline }
 </style>
 {% block css %}{% endblock %}
 {% if css %}
@@ -33,7 +26,7 @@
 {% endif %}
 </head>
 <body>
-<section id="v_edit_app">
+<section id="v_edit_app" v-cloak>
 	[[header]]
 
 	<section id="page_content" class="content" style="width: [[width]]px;">[[body]]</section>
