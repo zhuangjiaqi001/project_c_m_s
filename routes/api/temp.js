@@ -120,6 +120,7 @@ router.get('/prevTempC', (req, res, next) => {
 	Temp.getTempCById(id, function(item) {
 		if (!item) return Tools.errHandle('0163', res)
 
+		item.dataValues.renderType = 'temp_prev'
 		Public.get.getShopRender(item, res, function(html) {
 			res.send(html)
 		})
@@ -216,7 +217,7 @@ router.post('/copyTempC', (req, res, next) => {
 // 获取推荐位内容列表
 router.get('/getTempCList', (req, res, next) => {
 	var query  = req.query
-	var select = ['tempId', 'key', 'title', 'preview', 'createdAt', 'updatedAt']
+	var select = ['tempId', 'key', 'title', 'createdAt', 'updatedAt']
 	Temp.getTempCList(query, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
 			list: items,

@@ -44,7 +44,7 @@
 								<a class="text-blue" @click="handleModal('copy', row.id)">复制</a>
 								<a class="text-blue" target="_blank" href="/api/store/prevStoreC?id=${row.id}">预览</a>`+
 								(row.active? ` <a class="text-blue" @click="handleModal('offline', row.id)">下线</a>`: ``) +
-								(row.url? ` <a class="text-blue" target="_blank" href="${row.url}">链接</a>`: ``)
+								(row.active? ` <a class="text-blue" target="_blank" href="${row.url}">链接</a>`: ``)
 					}
 				}
 			],

@@ -212,6 +212,16 @@ var Public = {
 			}
 			if (!len) cb(body)
 		},
+		decodeURIC: function(body) {
+			try {
+				body.html = decodeURIComponent(body.html) || ''
+				body.css  = decodeURIComponent(body.css)  || ''
+				body.js   = decodeURIComponent(body.js)   || ''
+				return body
+			} catch(err) {
+				return false
+			}
+		}
 	},
 }
 
@@ -226,6 +236,9 @@ var renderType = {
 		item.js.unshift( jsframe.vue_2_2_6, jsframe.jq_1_12_4 )
 		item.css.push( '/js/util/e-edit/e-edit-view.css' )
 		item.js.push( '/js/util/e-edit/e-edit-view.js' )
+	},
+	temp_prev: function(item) {
+		item.css.push( '/js/util/t-temp/t-temp-prev.css' )
 	}
 }
 

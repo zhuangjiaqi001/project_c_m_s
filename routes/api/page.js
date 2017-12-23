@@ -126,11 +126,11 @@ router.post('/addPageC', (req, res, next) => {
 		userId = req.signedCookies.id,
 		pageId = body.pageId,
 		key    = `pagec_${Date.now()}`,
-		html   = body.html || '',
-		css    = body.css  || '',
-		js     = body.js   || '',
 		pathname = `pagec/${key}`
 
+	body = Public.set.decodeURIC(body)
+	if (!body) return Tools.errHandle('9999')
+		
 	if (!pageId) return Tools.errHandle('0176', res)
 
 	Page.getPageById(pageId, function(item) {
@@ -151,11 +151,10 @@ router.post('/updatePageC', (req, res, next) => {
 		userId = req.signedCookies.id,
 		key    = body.key,
 		id     = body.id,
-		html   = body.html || '',
-		css    = body.css  || '',
-		js     = body.js   || '',
 		pathname = `pagec/${key}`
 
+	body = Public.set.decodeURIC(body)
+	if (!body) return Tools.errHandle('9999')
 	body.modelItems = body.modelItems || []
 	var bodyFilter = Tools.bodyFilter(pagecEdit, body)
 	body = bodyFilter.obj
@@ -260,6 +259,5 @@ router.get('/getPageCList', (req, res, next) => {
 		})
 	})
 })
-
 
 module.exports = router

@@ -142,9 +142,9 @@
 	}
 	function accept(arr) {
 		var ac = typeof arr !== 'string'? []: arr
-		arr = arr.length? arr: ['jpg', 'jpeg', 'png']
+		arr = arr.length? arr: ['jpg', 'jpeg', 'png', 'gif']
 		arr.map(function(_) {
-			if (formatObj[_]) ac.push('image/' + _)
+			if (formatObj[_]) ac.push('image/' + (_ === 'jpg'? 'jpeg': _))
 		})
 		return ac.join(', ')
 	}

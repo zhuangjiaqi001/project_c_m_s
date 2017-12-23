@@ -40,7 +40,6 @@ router.post('/addShop', (req, res, next) => {
 	Valid.run(res, 'shop', body, function() {
 		Shop.getShopByQuery({
 			'key':  key,
-			'name': name
 		}, function (item) {
 			if (item) return Tools.errHandle('0123', res)
 

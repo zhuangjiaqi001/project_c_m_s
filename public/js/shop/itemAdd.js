@@ -15,6 +15,14 @@
 	global.selModel = function(item) {
 		VUE.selModel(item)
 	}
+	global.jsonCheck = function(rule, val, cb) {
+		try {
+			JSON.parse(val)
+			cb()
+		} catch(err) {
+			cb(new Error(`JSON格式不正确!`))
+		}
+	}
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
 			listAPI: API.templist,
@@ -60,6 +68,9 @@
 				title: [
 					{ required: true, message: '标题不能为空', trigger: 'blur' },
 					{ type: 'string', min: 1, max: 30, message: '不超过30个字', trigger: 'blur' }
+				],
+				json: [
+					{ validator: jsonCheck, trigger: 'blur' }
 				]
 			},
 			pageTemp: {
