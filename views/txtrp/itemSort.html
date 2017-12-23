@@ -1,0 +1,70 @@
+{% extends '../layout/layoutSort.html' %}
+
+{% block body %}
+
+<div class="box">
+	<ul class="clearfix">
+		<draggable :list="list" :move="get" @update="end" :options="{handle:'.li-img'}">
+			<li v-for="(li, _) in list">
+				<div class="li-txt" :d-idx="_"><div>{{li.title}}</div></div>
+			</li>
+		</draggable>
+	</ul>
+
+	<div class="text-center">
+		<a class="btn" :href="'/txtrp/list?rpId=' + rpId">返回</a>
+		<a class="btn btn-info" @click="submit">保存</a>
+	</div>
+</div>
+
+
+{% endblock %}
+
+{% block css %}
+<style>
+.box {
+	padding: 10px;
+}
+ul {
+	display: block;
+	width: 100%;
+}
+ul li {
+	float: left;
+	display: block;
+	padding: 10px;
+	overflow: hidden;
+}
+.li-txt {
+	position: relative;
+	display: table;
+	width:  100px;
+	height: 100px;
+	padding: 5px;
+	border-radius: 8px;
+	border: 1px solid #ccc;
+	overflow: hidden;
+}
+.li-txt div {
+	display: table-cell;
+	width: 100%;
+	vertical-align: middle;
+	text-align: center;
+	word-wrap: break-word;
+}
+.li-txt:before {
+	content: attr(d-idx);
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+	padding: 0 5px;
+	background: rgba(0, 0, 0, .4);
+	color: #fff
+}
+</style>
+{% endblock %}
+
+{% block js %}
+<script src="/js/txtrp/itemSort.js"></script>
+{% endblock %}

@@ -212,13 +212,29 @@ router.post('/copyImgRPC', (req, res, next) => {
 
 // 获取推荐位内容列表
 router.get('/getImgRPCList', (req, res, next) => {
-	var query  = req.query
-	var select = ['rpId', 'title', 'imageUrl', 'createdAt', 'updatedAt']
-	ImgRP.getImgRPCList(query, select, function (items, pageInfo) {
+	var q      = req.query,
+		id     = q.$rpId,
+		select = ['rpId', 'title', 'imageUrl', 'createdAt', 'updatedAt']
+	if (!id) return Tools.errHandle('0128', res)
+	ImgRP.getImgRPCList(q, select, function (items, pageInfo) {
 		Tools.errHandle('0000', res, {
 			list: items,
 			pageInfo: pageInfo
 		})
+	})
+})
+
+router.get('/getImgRPC', (req, res, next) => {
+	var q  = req.query
+	var select = ['id', 'title', 'imageUrl']
+	ImgRP.getImgRPCByRpId(q.id, select, (items) => {
+		Tools.errHandle('0000', res, items)
+	})
+})
+
+router.post('/sortImgRPC', (req, res, next) => {
+	ImgRP.sortImgRPCByRpId(req.body, (items) => {
+		Tools.errHandle('0000', res, items)
 	})
 })
 

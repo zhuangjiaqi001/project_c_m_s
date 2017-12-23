@@ -11,6 +11,7 @@ module.exports = {
 	'/imgrp/list':     '推荐位列表',
 	'/imgrp/itemAdd':  '新建内容',
 	'/imgrp/itemEdit': '编辑内容',
+	'/imgrp/itemSort': '推荐位排序',
 
 	'/txtrp':          '文本推荐位管理',
 	'/txtrp/add':      '新建推荐位',
@@ -18,6 +19,7 @@ module.exports = {
 	'/txtrp/list':     '推荐位列表',
 	'/txtrp/itemAdd':  '新建内容',
 	'/txtrp/itemEdit': '编辑内容',
+	'/txtrp/itemSort': '推荐位排序',
 
 	'/temp':           '模板类管理',
 	'/temp/add':       '新建模板类',

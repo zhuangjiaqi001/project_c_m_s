@@ -16,7 +16,7 @@
 					key: 'imageUrl',
 					render: (row, col, idx) => {
 						return `<div class="upload-list">
-									<img :src="row.imageUrl" style="width: 100%">
+									<div class="bgimg bgimg_100" :style="'background-image: url(${row.imageUrl})'"></div>
 									<div class="upload-list-cover">
 										<Icon type="ios-eye-outline" @click.native="handleView(row.imageUrl)"></Icon>
 									</div>

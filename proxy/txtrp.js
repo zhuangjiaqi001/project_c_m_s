@@ -120,7 +120,7 @@ exports.getTxtRPById = function (id, cb) {
  * @param {Function} cb 回调函数
  */
 exports.getTxtRPCList = function(query, select, cb) {
-	if (!query.sort) query.sort = 'createdAt'
+	if (!query.sort) query.sort = 'sort'
 	var qs = Tools.querySearch(query, select)
 	TxtRPC.findAndCountAll(qs.opts).then(function(items) {
 		cb(items.rows, {
@@ -140,9 +140,30 @@ exports.getTxtRPCByQuery = function (query, cb) {
 exports.getTxtRPCByRpId = function(rpId, select, cb) {
 	TxtRPC.findAndCountAll({
 		where: { rpId: rpId },
+		order: [['sort', 'ASC']],
 		attributes:  select
 	}).then(function(items) {
 		cb(items.rows, items.count)
+	})
+};
+
+exports.sortTxtRPCByRpId = function(opts, cb) {
+	var ids = Object.keys(opts.sort).map(i => i.substr(1)),
+		l = ids.length,
+		n = 0,
+		s = 0;
+	ids.map(i => {
+		TxtRPC.update({ sort: opts.sort[`_${i}`] }, { where: { id: i } }).then(rp => {
+			++n
+			if (rp) ++s
+			if (n === l) {
+				if (s === l) {
+					cb(true)
+				} else {
+					cb(false)
+				}
+			}
+		})
 	})
 };
 

@@ -221,4 +221,18 @@ router.get('/getTxtRPCList', (req, res, next) => {
 	})
 })
 
+router.get('/getTxtRPC', (req, res, next) => {
+	var q  = req.query
+	var select = ['id', 'title']
+	TxtRP.getTxtRPCByRpId(q.id, select, (items) => {
+		Tools.errHandle('0000', res, items)
+	})
+})
+
+router.post('/sortTxtRPC', (req, res, next) => {
+	TxtRP.sortTxtRPCByRpId(req.body, (items) => {
+		Tools.errHandle('0000', res, items)
+	})
+})
+
 module.exports = router

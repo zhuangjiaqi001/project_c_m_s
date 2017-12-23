@@ -54,8 +54,8 @@
 			display: block;
 			width: 100%;
 			height: 100%;
-			background-position: center;
-			background-size: cover;
+			background: center no-repeat;
+			background-size: contain;
 			overflow: hidden;
 			&:hover {
 				span {
@@ -80,19 +80,19 @@
 }
 .photo-list-2 li {
 	width: 50%;
-	height: 200px;
+	height: 200px + 16;
 }
 .photo-list-3 li {
 	width: 33.3333%;
-	height: 150px;
+	height: 150px + 16;
 }
 .photo-list-4 li {
 	width: 25%;
-	height: 100px;
+	height: 100px + 16;
 }
 .photo-list-5 li {
 	width: 20%;
-	height: 80px;
+	height: 80px + 16;
 }
 /*----------------------------------------------
 	UPLOAD LIST
@@ -231,4 +231,14 @@
 }
 .ivu-message {
 	z-index: 1200!important;
+}
+
+.bgimg {
+	display: block;
+	background: center no-repeat;
+	background-size: contain;
+}
+.bgimg_100 {
+	width: 100px;
+	height: 100px;
 }

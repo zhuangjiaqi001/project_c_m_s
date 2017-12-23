@@ -1,0 +1,70 @@
+{% extends '../layout/layoutSort.html' %}
+
+{% block body %}
+
+<div class="box">
+	<ul class="clearfix">
+		<draggable :list="list" :move="get" @update="end" :options="{handle:'.li-img'}">
+			<li v-for="(li, _) in list">
+				<div class="li-img" :style="'background-image: url('+li.imageUrl+')'" :d-idx="_"></div>
+				<p class="li-title" :title="li.title">{{li.title}}</p>
+			</li>
+		</draggable>
+	</ul>
+
+	<div class="text-center">
+		<a class="btn" :href="'/imgrp/list?rpId=' + rpId">返回</a>
+		<a class="btn btn-info" @click="submit">保存</a>
+	</div>
+</div>
+
+
+{% endblock %}
+
+{% block css %}
+<style>
+.box {
+	padding: 10px;
+}
+ul {
+	display: block;
+	width: 100%;
+}
+ul li {
+	float: left;
+	display: block;
+	padding: 10px;
+	overflow: hidden;
+}
+.li-img {
+	position: relative;
+	width:  100px;
+	height: 100px;
+	background: center no-repeat;
+	background-size: contain;
+	border: 1px solid #ccc;
+}
+.li-img:before {
+	content: attr(d-idx);
+	position: absolute;
+	top: 0;
+	left: 0;
+	display: block;
+	padding: 0 5px;
+	background: rgba(0, 0, 0, .4);
+	color: #fff
+}
+.li-title {
+	width: 100%;
+	padding: 5px 0;
+	white-space: nowrap;
+	text-align: center;
+	text-overflow: ellipsis;
+	overflow: hidden;
+}
+</style>
+{% endblock %}
+
+{% block js %}
+<script src="/js/imgrp/itemSort.js"></script>
+{% endblock %}

@@ -33,5 +33,10 @@ router.get('/itemEdit', (req, res, next) => {
 	res.render('imgrp/itemAdd')
 })
 
+// 推荐位内容排序
+router.get('/itemSort', (req, res, next) => {
+	res.render('imgrp/itemSort')
+})
+
 
 module.exports = router

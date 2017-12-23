@@ -120,7 +120,7 @@ exports.getImgRPById = function (id, cb) {
  * @param {Function} cb 回调函数
  */
 exports.getImgRPCList = function(query, select, cb) {
-	if (!query.sort) query.sort = 'createdAt'
+	if (!query.sort) query.sort = 'sort'
 	var qs = Tools.querySearch(query, select)
 	ImgRPC.findAndCountAll(qs.opts).then(function(items) {
 		cb(items.rows, {
@@ -140,9 +140,30 @@ exports.getImgRPCByQuery = function (query, cb) {
 exports.getImgRPCByRpId = function(rpId, select, cb) {
 	ImgRPC.findAndCountAll({
 		where: { rpId: rpId },
+		order: [['sort', 'ASC']],
 		attributes:  select
 	}).then(function(items) {
 		cb(items.rows, items.count)
+	})
+};
+
+exports.sortImgRPCByRpId = function(opts, cb) {
+	var ids = Object.keys(opts.sort).map(i => i.substr(1)),
+		l = ids.length,
+		n = 0,
+		s = 0;
+	ids.map(i => {
+		ImgRPC.update({ sort: opts.sort[`_${i}`] }, { where: { id: i } }).then(rp => {
+			++n
+			if (rp) ++s
+			if (n === l) {
+				if (s === l) {
+					cb(true)
+				} else {
+					cb(false)
+				}
+			}
+		})
 	})
 };
 
