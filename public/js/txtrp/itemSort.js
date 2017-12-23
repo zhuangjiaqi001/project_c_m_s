@@ -1,7 +1,7 @@
 (function(global, VM, CMS) {
 	var API = {
-		get:    '/imgrp/getImgRPC',
-		submit: '/imgrp/sortImgRPC'
+		get:    '/txtrp/getTxtRPC',
+		submit: '/txtrp/sortTxtRPC'
 	},
 	rpId = CMS.getQueryValue('rpId')
 

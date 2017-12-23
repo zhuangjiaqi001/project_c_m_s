@@ -25,7 +25,7 @@
 			ruleValidate: {
 				title: [
 					{ required: true, message: '标题不能为空', trigger: 'blur' },
-					{ type: 'string', min: 1, max: 30, message: '不超过30个字', trigger: 'blur' }
+					{ type: 'string', min: 1, max: 100, message: '不超过100个字', trigger: 'blur' }
 				],
 				url: [
 					{ type: 'url', message: '链接格式错误', trigger: 'blur' }

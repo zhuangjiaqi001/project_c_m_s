@@ -4,9 +4,11 @@
 
 <div class="box">
 	<ul class="clearfix">
-		<draggable :list="list" :move="get" @update="end" :options="{handle:'.li-img'}">
+		<draggable :list="list" :move="get" @update="end" :options="{handle:'.li-txt'}">
 			<li v-for="(li, _) in list">
-				<div class="li-txt" :d-idx="_"><div>{{li.title}}</div></div>
+				<div class="li-txt" :d-idx="_" :title="li.title">
+					<div class="li-txt-out"><div class="li-txt-ins">{{li.title.length > 20? li.title.substr(0, 20) + '...': li.title}}</div></div>
+				</div>
 			</li>
 		</draggable>
 	</ul>
@@ -37,20 +39,25 @@ ul li {
 }
 .li-txt {
 	position: relative;
-	display: table;
 	width:  100px;
 	height: 100px;
 	padding: 5px;
 	border-radius: 8px;
 	border: 1px solid #ccc;
 	overflow: hidden;
+	cursor: default
 }
-.li-txt div {
+.li-txt-out {
+	display: table;
+	width:  100%;
+	height: 100%;
+}
+.li-txt-ins {
 	display: table-cell;
-	width: 100%;
+	width:  100%;
 	vertical-align: middle;
 	text-align: center;
-	word-wrap: break-word;
+	word-break:break-all;
 }
 .li-txt:before {
 	content: attr(d-idx);

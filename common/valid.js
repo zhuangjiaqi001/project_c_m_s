@@ -58,7 +58,7 @@ const RULE = {
 	// 图片推荐位内容标题
 	imgRPCTitle: [
 		{ type: 'string', message: '0132', required: true },
-		{ type: 'string', min: 1, max: 30, message: '0131' }
+		{ type: 'string', min: 1, max: 100, message: '0131' }
 	],
 	// 图片地址
 	imageUrl: [
