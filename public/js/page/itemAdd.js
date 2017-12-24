@@ -75,14 +75,17 @@
 				total: 0,
 				pageSize: 10,
 				current: 1,
-				dataList: []
+				sort: '',
+				dataList: [],
+				api: API.templist
 			},
 			pageTempC: {
 				total: 0,
 				pageSize: 10,
 				current: 1,
+				sort: '',
 				dataList: [],
-				search: {}
+				api: API.tempclist
 			},
 			visible: false,
 			Modal: false,
@@ -156,22 +159,6 @@
 			},
 			handleReturn: function() {
 				this.isTempC = false
-			},
-			// 排序
-			sortList: function(opts) {
-				var me    = this,
-					key   = opts.key === 'levelName'? 'level': opts.key,
-					order = opts.order,
-					arr   = []
-				if (order === 'desc') me.sort = '-' + key
-				else if (order === 'asc') me.sort = key
-				else me.sort = ''
-				CMS.getDataList(me.listAPI)
-			},
-			// 页码切换
-			changePage: function(cur) {
-				this.current = cur
-				CMS.getDataList(this.listAPI)
 			},
 			initHTML: function(da) {
 				if (!da.html) return

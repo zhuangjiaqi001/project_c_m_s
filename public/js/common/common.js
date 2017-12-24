@@ -50,6 +50,16 @@ if (!global.CMS) {
 				{ name: '布尔值', val: 'Boolean' },
 				{ name: '日期', val: 'Date' }
 			],
+			listinfo: {
+				total: 0,
+				pageSize: 1,
+				current: 1,
+				search: {
+					title: ''
+				},
+				sort: '',
+				dataList: []
+			},
 			history_time: new Date()-0
 		},
 		methods: {
@@ -129,7 +139,38 @@ if (!global.CMS) {
 			// 表单重置
 			handleReset: function(name) {
 				this.$refs[name].resetFields()
-			}
+			},
+			/* 表单相关 (结束) */
+			/* 列表查询相关 (开始) */
+			// 排序
+			sortList: function(opts, path) {
+				var data = path? VUE[path]: VUE.listinfo,
+					key  = opts.key === 'levelName'? 'level': opts.key,
+					order = opts.order,
+					arr  = []
+				if (order === 'desc') data.sort = '-' + key
+				else if (order === 'asc') data.sort = key
+				else data.sort = ''
+				CMS.getDataList(data.api, path)
+			},
+			// 每页展示数据量切换
+			changePageSize: function(size, path) {
+				var data = path? VUE[path]: VUE.listinfo
+				data.pageSize = size
+				CMS.getDataList(data.api, path)
+			},
+			// 页码切换
+			changePage: function(cur, path) {
+				var data = path? VUE[path]: VUE.listinfo
+				data.current = cur
+				CMS.getDataList(data.api, path)
+			},
+			// 列表搜索
+			searchList: function(e, path) {
+				var data = path? VUE[path]: VUE.listinfo
+				CMS.getDataList(data.api, path)
+			},
+			/* 列表查询相关 (结束) */
 		},
 		mounted() {
 			var me = this
@@ -250,8 +291,9 @@ if (!global.CMS) {
 		},
 		// 获取列表
 		getDataList: function(api, path) {
+			if (typeof api !== 'string') return
 			var me = this,
-				data = path? VM.data[path]: VM.data,
+				data = path? VM.data[path]: VM.data.listinfo,
 				da = {
 					page: data.current || 1,
 					pageSize: data.pageSize || 10,

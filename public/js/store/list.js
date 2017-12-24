@@ -17,7 +17,7 @@
 		copy:    'handleCopy'
 	}
 
-	var VUE = new Vue(CMS.extend(VM, {
+	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
 			columns: [
 				{
@@ -48,15 +48,12 @@
 					}
 				}
 			],
-			dataList: [],
-			total: 0,
-			pageSize: 10,
-			current: 1,
-			search: {
-				$storeId: storeId,
-				title: ''
+			listinfo: {
+				search: {
+					$storeId: storeId,
+				},
+				api: API.list
 			},
-			sort: '',
 			storeinfo: {},
 			storeId: storeId || '',
 			id: '',
@@ -145,6 +142,7 @@
 			getData: function(me) {
 				CMS.http.get(API.get, { id: storeId }, function(o) {
 					me.storeinfo = o.data
+					CMS.getDataList(API.list)
 				}, function(err) {
 					VUE.$Message.warning(err.message)
 					console.log(err)
@@ -152,7 +150,6 @@
 			},
 			load: function() {
 				var me = this
-				CMS.getDataList(API.list)
 				me.getData(me)
 			}
 		}

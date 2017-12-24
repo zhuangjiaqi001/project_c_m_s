@@ -47,19 +47,19 @@
 		<Modal v-model="Modal" :title="mTitle" @on-ok="handleCtrl" :width="720">
 			<div class="row form-group">
 				<div v-if="!isTempC" class="col-md-12">
-					<i-table :columns="columns" :data="pageTemp.dataList" @on-sort-change="sortList"></i-table>
+					<i-table :columns="columns" :data="pageTemp.dataList"></i-table>
 					<div style="margin: 10px;overflow: hidden">
 						<div style="float: right;">
-							<Page :total="pageTemp.total" :page-size="pageTemp.pageSize" :current="pageTemp.current" @on-change="changePage" show-total></Page>
+							<Page :total="pageTemp.total" :page-size="pageTemp.pageSize" :current="pageTemp.current" @on-change="changePage($event, 'pageTemp')" show-total></Page>
 						</div>
 					</div>
 				</div>
 				<div v-if="isTempC" class="col-md-12">
-					<i-table :columns="columns" :data="pageTempC.dataList" @on-sort-change="sortList"></i-table>
+					<i-table :columns="columns" :data="pageTempC.dataList"></i-table>
 					<div style="margin: 10px;overflow: hidden">
 						<i-button type="ghost" @click="handleReturn">返回</i-button>
 						<div style="float: right;">
-							<Page :total="pageTemp.total" :page-size="pageTemp.pageSize" :current="pageTemp.current" @on-change="changePage" show-total></Page>
+							<Page :total="pageTempC.total" :page-size="pageTempC.pageSize" :current="pageTempC.current" @on-change="changePage($event, 'pageTempC')" show-total></Page>
 						</div>
 					</div>
 				</div>

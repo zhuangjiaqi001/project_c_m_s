@@ -1,0 +1,22 @@
+#model_001 { display: block; }
+
+
+<div id="model_001">model_001</div>
+
+
+(function() {
+	var dom = document.querySelector('#model_001')
+	console.log(dom.innerHTML)
+}());
+
+<div id="model_001">
+	<e-bgimage v-model="json.bg" max-size="150">
+		<p><e-text v-model="json.text"></e-text></p>
+		<p><e-textarea v-model="json.textarea"></e-textarea></p>
+		<p><e-image v-model="json.img"></e-image></p>
+	</e-bgimage>
+</div>
+
+
+
+{"text":"庄家琪","textarea":"好帅","bg": "","img": ""}

@@ -52,15 +52,13 @@
 			ModalName: '',
 			ctrlName: '',
 			api: '',
-			dataList: [],
-			total: 0,
-			pageSize: 10,
-			current: 1,
-			search: {
-				name: '',
-				key: ''
+			listinfo: {
+				search: {
+					name: '',
+					key: ''
+				},
+				api: API.list
 			},
-			sort: '',
 			shopId: ''
 		},
 		methods: {

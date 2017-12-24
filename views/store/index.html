@@ -15,10 +15,10 @@
 		</div>
 		<div class="row form-group">
 			<div class="col-md-3">
-				<i-input v-model="search.name" placeholder="商店列表名称" @on-enter="searchList"></i-input>
+				<i-input v-model="listinfo.search.name" placeholder="商店列表名称" @on-enter="searchList"></i-input>
 			</div>
 			<div class="col-md-3">
-				<i-input v-model="search.key" placeholder="商店列表KEY" @on-enter="searchList"></i-input>
+				<i-input v-model="listinfo.search.key" placeholder="商店列表KEY" @on-enter="searchList"></i-input>
 			</div>
 			<div class="col-md-2">
 				<i-button type="warning" @click="searchList"><i class="fa fa-search"></i></i-button>
@@ -26,10 +26,10 @@
 		</div>
 		<div class="row form-group">
 			<div class="col-md-12">
-				<i-table :columns="columns" :data="dataList" @on-sort-change="sortList"></i-table>
+				<i-table :columns="columns" :data="listinfo.dataList" @on-sort-change="sortList"></i-table>
 				<div style="margin: 10px;overflow: hidden">
 					<div style="float: right;">
-						<Page :total="total" :page-size="pageSize" :current="current" @on-change="changePage" @on-page-size-change="changePageSize" show-total></Page>
+						<Page :total="listinfo.total" :page-size="listinfo.pageSize" :current="listinfo.current" @on-change="changePage" @on-page-size-change="changePageSize" show-total></Page>
 					</div>
 				</div>
 			</div>

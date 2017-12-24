@@ -7,7 +7,7 @@
 	},
 	rpId = CMS.getQueryValue('rpId')
 
-	var VUE = new Vue(CMS.extend(VM, {
+	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
 			columns: [
 				{
@@ -36,15 +36,12 @@
 			],
 			removeModal: false,
 			copyModal: false,
-			dataList: [],
-			total: 0,
-			pageSize: 10,
-			current: 1,
-			search: {
-				$rpId: rpId,
-				title: ''
+			listinfo: {
+				search: {
+					$rpId: rpId,
+				},
+				api: API.list
 			},
-			sort: '',
 			rpinfo: {},
 			rpId: rpId || '',
 			id: ''
@@ -86,38 +83,10 @@
 					VUE.$Message.warning(err.message)
 				})
 			},
-			// 页码切换
-			changePage: function(cur) {
-				this.current = cur
-				CMS.getDataList(API.list)
-			},
-			// 每页展示数据量切换
-			changePageSize: function(size) {
-				this.pageSize = size
-				CMS.getDataList(API.list)
-			},
-			// 列表搜索
-			searchList: function() {
-				this.current = 1
-				CMS.getDataList(API.list)
-			},
-			// 排序
-			sortList: function(opts) {
-				var key   = opts.key === 'levelName'? 'level': opts.key,
-					order = opts.order,
-					arr   = []
-				if (order === 'asc') {
-					this.sort = key
-				} else if (order === 'desc') {
-					this.sort = '-' + key
-				} else {
-					this.sort = ''
-				}
-				CMS.getDataList(API.list)
-			},
 			getData: function(me) {
 				CMS.http.get(API.get, { id: rpId }, function(o) {
 					me.rpinfo = o.data
+					CMS.getDataList(API.list)
 				}, function(err) {
 					VUE.$Message.warning(err.message)
 					console.log(err)
@@ -125,7 +94,6 @@
 			},
 			load: function() {
 				var me = this
-				CMS.getDataList(API.list)
 				me.getData(me)
 			}
 		}

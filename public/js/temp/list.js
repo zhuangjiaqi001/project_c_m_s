@@ -7,7 +7,7 @@
 	},
 	tempId = CMS.getQueryValue('tempId')
 
-	var VUE = new Vue(CMS.extend(VM, {
+	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
 			columns: [
 				{
@@ -37,15 +37,12 @@
 			],
 			removeModal: false,
 			copyModal: false,
-			dataList: [],
-			total: 0,
-			pageSize: 10,
-			current: 1,
-			search: {
-				$tempId: tempId,
-				title: ''
+			listinfo: {
+				search: {
+					$tempId: tempId,
+				},
+				api: API.list
 			},
-			sort: '',
 			tempinfo: {},
 			tempId: tempId || '',
 			id: ''
@@ -119,6 +116,7 @@
 			getData: function(me) {
 				CMS.http.get(API.get, { id: tempId }, function(o) {
 					me.tempinfo = o.data
+					CMS.getDataList(API.list)
 				}, function(err) {
 					VUE.$Message.warning(err.message)
 					console.log(err)
@@ -126,7 +124,6 @@
 			},
 			load: function() {
 				var me = this
-				CMS.getDataList(API.list)
 				me.getData(me)
 			}
 		}

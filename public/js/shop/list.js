@@ -7,7 +7,7 @@
 	},
 	shopId = CMS.getQueryValue('shopId')
 
-	var VUE = new Vue(CMS.extend(VM, {
+	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
 			columns: [
 				{
@@ -37,15 +37,12 @@
 			],
 			removeModal: false,
 			copyModal: false,
-			dataList: [],
-			total: 0,
-			pageSize: 10,
-			current: 1,
-			search: {
-				$shopId: shopId,
-				title: ''
+			listinfo: {
+				search: {
+					$shopId: shopId,
+				},
+				api: API.list
 			},
-			sort: '',
 			shopinfo: {},
 			shopId: shopId || '',
 			id: ''
@@ -87,38 +84,10 @@
 					VUE.$Message.warning(err.message)
 				})
 			},
-			// 页码切换
-			changePage: function(cur) {
-				this.current = cur
-				CMS.getDataList(API)
-			},
-			// 每页展示数据量切换
-			changePageSize: function(size) {
-				this.pageSize = size
-				CMS.getDataList(API)
-			},
-			// 列表搜索
-			searchList: function() {
-				this.current = 1
-				CMS.getDataList(API)
-			},
-			// 排序
-			sortList: function(opts) {
-				var key   = opts.key === 'levelName'? 'level': opts.key,
-					order = opts.order,
-					arr   = []
-				if (order === 'asc') {
-					this.sort = key
-				} else if (order === 'desc') {
-					this.sort = '-' + key
-				} else {
-					this.sort = ''
-				}
-				CMS.getDataList(API.list)
-			},
 			getData: function(me) {
 				CMS.http.get(API.get, { id: shopId }, function(o) {
 					me.shopinfo = o.data
+					CMS.getDataList(API.list)
 				}, function(err) {
 					VUE.$Message.warning(err.message)
 					console.log(err)
@@ -126,7 +95,6 @@
 			},
 			load: function() {
 				var me = this
-				CMS.getDataList(API.list)
 				me.getData(me)
 			}
 		}
