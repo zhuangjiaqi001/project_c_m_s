@@ -60,7 +60,7 @@ User.hasMany(ShopC,  { foreignKey: 'userId', targetKey: 'id', as: 'ShopC' })	// 
 Shop.hasMany(ShopC,  { foreignKey: 'shopId', targetKey: 'id', as: 'ShopC' })	// 列表类关联内容
 ShopC.hasMany(StoreC,{ foreignKey: 'shopcId', targetKey: 'id', as: 'StoreC' })	// 列表类关联内容
 
-// sequelize.sync()
+sequelize.sync()
 
 exports.User   = User
 exports.Img    = Img

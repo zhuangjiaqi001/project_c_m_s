@@ -52,7 +52,7 @@ if (!global.CMS) {
 			],
 			listinfo: {
 				total: 0,
-				pageSize: 1,
+				pageSize: 10,
 				current: 1,
 				search: {
 					title: ''
@@ -346,6 +346,11 @@ if (!global.CMS) {
 		},
 		ueditor: function(id) {
 			return global.UE? global.UE.getEditor(id): ''
+		},
+		// 分页信息初始化
+		pageInfoCopy: function(opts) {
+			var i = JSON.parse(JSON.stringify(VM.data.listinfo))
+			return this.extend(i, opts)
 		}
 	}
 }

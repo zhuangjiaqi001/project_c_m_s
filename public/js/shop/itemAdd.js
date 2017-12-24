@@ -67,28 +67,14 @@
 			ruleValidate: {
 				title: [
 					{ required: true, message: '标题不能为空', trigger: 'blur' },
-					{ type: 'string', min: 1, max: 30, message: '不超过30个字', trigger: 'blur' }
+					{ type: 'string', min: 1, max: 100, message: '不超过100个字', trigger: 'blur' }
 				],
 				json: [
 					{ validator: jsonCheck, trigger: 'blur' }
 				]
 			},
-			pageTemp: {
-				total: 0,
-				pageSize: 10,
-				current: 1,
-				sort: '',
-				dataList: [],
-				api: API.templist
-			},
-			pageTempC: {
-				total: 0,
-				pageSize: 10,
-				current: 1,
-				sort: '',
-				dataList: [],
-				api: API.tempclist
-			},
+			pageTemp: CMS.pageInfoCopy({ api: API.templist }),
+			pageTempC: CMS.pageInfoCopy({ api: API.tempclist }),
 			visible: false,
 			Modal: false,
 			mTitle: '模板列表',

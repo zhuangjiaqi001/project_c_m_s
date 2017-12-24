@@ -101,35 +101,6 @@
 					VUE.$Message.warning(err.message)
 				})
 			},
-			// 页码切换
-			changePage (cur) {
-				this.current = cur
-				CMS.getDataList(API.list)
-			},
-			// 每页展示数据量切换
-			changePageSize (size) {
-				this.pageSize = size
-				CMS.getDataList(API.list)
-			},
-			// 列表搜索
-			searchList () {
-				this.current = 1
-				CMS.getDataList(API.list)
-			},
-			// 排序
-			sortList (opts) {
-				var key   = opts.key === 'levelName'? 'level': opts.key,
-					order = opts.order,
-					arr   = []
-				if (order === 'asc') {
-					this.sort = key
-				} else if (order === 'desc') {
-					this.sort = '-' + key
-				} else {
-					this.sort = ''
-				}
-				CMS.getDataList(API.list)
-			}
 		}
 	}))
 

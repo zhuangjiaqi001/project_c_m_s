@@ -17,7 +17,7 @@
 					<span>{{shop.name}}</span>
 				</Form-item>
 				<Form-item label="标题" prop="title">
-					<i-input v-model="formValidate.title" type="text" placeholder="(不超过30个字)" :maxlength="30"></i-input>
+					<i-input v-model="formValidate.title" type="text" placeholder="(不超过100个字)" :maxlength="100"></i-input>
 				</Form-item>
 				<Form-item label="CSS">
 					<i-input v-model="formValidate.css" type="textarea" :rows="6" placeholder="(不超过10000个字)" :maxlength="10000"></i-input>

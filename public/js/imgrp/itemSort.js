@@ -23,7 +23,7 @@
 			getData: function(me) {
 				CMS.http.get(API.get, { id: rpId }, function(o) {
 					me.list = o.data
-					VUE.list.map((i, _) => { me.sort[`_${i.id}`] = _ })
+					VUE.list.map((i, _) => { me.sort[`_${_}`] = i.id })
 				}, function(err) {
 					VUE.$Message.warning(err.message)
 					console.log(err)
@@ -35,7 +35,7 @@
 			end:function(e){
 				console.clear()
 				// console.log(`${e.oldIndex} 拖动到 ${e.newIndex}`)
-				VUE.list.map((i, _) => { this.sort[`_${i.id}`] = _ })
+				VUE.list.map((i, _) => { this.sort[`_${_}`] = i.id })
 				console.log(this.sort)
 			},
 			load: function() {

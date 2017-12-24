@@ -148,12 +148,13 @@ exports.getTxtRPCByRpId = function(rpId, select, cb) {
 };
 
 exports.sortTxtRPCByRpId = function(opts, cb) {
-	var ids = Object.keys(opts.sort).map(i => i.substr(1)),
-		l = ids.length,
+	var sort = opts.sort,
+		l = 0,
 		n = 0,
 		s = 0;
-	ids.map(i => {
-		TxtRPC.update({ sort: opts.sort[`_${i}`] }, { where: { id: i } }).then(rp => {
+	for (let p in sort) {
+		++l
+		TxtRPC.update({ sort: p }, { where: { id: sort[p] } }).then(rp => {
 			++n
 			if (rp) ++s
 			if (n === l) {
@@ -164,7 +165,8 @@ exports.sortTxtRPCByRpId = function(opts, cb) {
 				}
 			}
 		})
-	})
+	}
+	if (!l) cb(true)
 };
 
 

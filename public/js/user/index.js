@@ -51,35 +51,6 @@
 			sort: ''
 		},
 		methods: {
-			// 页码切换
-			changePage: function(cur) {
-				this.current = cur;
-				CMS.getDataList(API);
-			},
-			// 每页展示数据量切换
-			changePageSize: function(size) {
-				this.pageSize = size;
-				CMS.getDataList(API);
-			},
-			// 列表搜索
-			searchList: function() {
-				this.current = 1;
-				CMS.getDataList(API);
-			},
-			// 排序
-			sortList: function(opts) {
-				var key   = opts.key === 'levelName'? 'level': opts.key,
-					order = opts.order,
-					arr   = [];
-				if (order === 'asc') {
-					this.sort = key;
-				} else if (order === 'desc') {
-					this.sort = '-' + key;
-				} else {
-					this.sort = '';
-				}
-				CMS.getDataList(API);
-			}
 		}
 	}));
 

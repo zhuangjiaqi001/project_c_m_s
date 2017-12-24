@@ -148,12 +148,13 @@ exports.getImgRPCByRpId = function(rpId, select, cb) {
 };
 
 exports.sortImgRPCByRpId = function(opts, cb) {
-	var ids = Object.keys(opts.sort).map(i => i.substr(1)),
-		l = ids.length,
+	var sort = opts.sort,
+		l = 0,
 		n = 0,
 		s = 0;
-	ids.map(i => {
-		ImgRPC.update({ sort: opts.sort[`_${i}`] }, { where: { id: i } }).then(rp => {
+	for (let p in sort) {
+		++l
+		ImgRPC.update({ sort: p }, { where: { id: sort[p] } }).then(rp => {
 			++n
 			if (rp) ++s
 			if (n === l) {
@@ -164,7 +165,8 @@ exports.sortImgRPCByRpId = function(opts, cb) {
 				}
 			}
 		})
-	})
+	}
+	if (!l) cb(true)
 };
 
 

@@ -13,7 +13,7 @@ module.exports = function(sequelize, DataTypes) {
 		startTime:    { type: DataTypes.STRING, comment: '开始时间' },
 		endTime:      { type: DataTypes.STRING, comment: '结束时间' },
 		custemItems:  { type: DataTypes.STRING(1000), comment: '自定义字段' },
-		sort:         { type: DataTypes.BIGINT(11), defaultValue: -1 },
+		sort:         { type: DataTypes.STRING, defaultValue: '_' },
 	}, {
 		freezeTableName: false,
 		setterMethods: {
