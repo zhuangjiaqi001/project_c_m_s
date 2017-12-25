@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<title></title>
+<link rel="stylesheet" href="/js/util/showdown/showdown.css">
+<style>
+.markdown {
+	width: 900px;
+	margin: 0 auto;
+	padding: 45px;
+	word-wrap: break-word;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+}
+img {
+	max-width: 100%;
+	box-shadow: 6px 6px 5px rgba(0, 0, 0, .2)
+}
+</style>	
+</head>
+<body>
+
+<div style="text-align: center;"><h1 class="title"></h1></div>
+<article class="main markdown"></article>
+
+<script src="/js/lib/jquery.min.js"></script>
+<script src="/js/util/showdown/showdown.min.js"></script>
+<script>
+(function(global) {
+	function getQueryValue(key) {
+		var r = global.location.search.match(new RegExp('[\\?|\\&]' + key + '=([^\\&]*)', 'i'))
+		return r? decodeURIComponent(r[1]): ''
+	}
+	var cov  = new showdown.Converter(),
+		file = getQueryValue('md')
+	if (!file) return
+	$('.title').html(file)
+	document.title = file
+	$.get(`/file/tutorial/${file}.md`, function(d) {
+		$('.markdown').html(cov.makeHtml(d))
+	})
+})(window);
+</script>
+</body>
+</html>

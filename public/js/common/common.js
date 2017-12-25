@@ -25,7 +25,8 @@ if (!global.CMS) {
 			// 菜单切换变量
 			drop: {
 				user: false,
-				notice: false
+				notice: false,
+				help: false,
 			},
 			pageinfo: {
 				isEdit: /(e|E)dit$/.test(location.pathname)
@@ -60,7 +61,8 @@ if (!global.CMS) {
 				sort: '',
 				dataList: []
 			},
-			history_time: new Date()-0
+			history_time: new Date()-0,
+			helpList: ['推荐位说明', '店铺模板说明']
 		},
 		methods: {
 			// 菜单切换

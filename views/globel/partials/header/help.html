@@ -1,0 +1,12 @@
+<li class="dropdown notifications-menu" :class="{ open: drop.help }" @click="handleMenuDrop('help')">
+	<a href="javascript:;">帮助</a>
+	<ul class="dropdown-menu">
+		<li>
+			<ul class="menu">
+				<li v-for="n in helpList">
+					<a target="_blank" :href="'/other/tutorial.html?md=' + n">{{n}}</a>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</li>
