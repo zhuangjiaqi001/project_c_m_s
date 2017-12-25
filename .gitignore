@@ -1,7 +1,7 @@
 .vscode
 common/aliyun.js
 config.js
-demo/*
+demo/*.zip
 dist
 node_modules
 npm-debug.log
