@@ -279,7 +279,7 @@ if (!global.CMS) {
 			}
 			return org
 		},
-		merge: function(org, now) {
+		merge:  function(org, now) {
 			for (var v in org) {
 				if (org[v]) now[v] = org[v]
 			}
@@ -288,6 +288,14 @@ if (!global.CMS) {
 			for (var v in org) {
 				if (now[v]) org[v] = now[v]
 			}
+		},
+		// 取第二个对象跟第一个的差异
+		diffByObj2: function(obj1, obj2) {
+			var o = {}
+			for (var p in obj2) {
+				if (obj2[p] !== obj1[p]) o[p] = obj2[p]
+			}
+			return o
 		},
 		// 获取列表
 		getDataList: function(api, path) {

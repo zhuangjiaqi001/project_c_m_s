@@ -158,9 +158,11 @@ exports.addShopC = function (opts, cb) {
 	})
 }
 exports.updateShopC = function (id, opts, cb) {
-	opts.header = opts.header || ''
-	opts.footer = opts.footer || ''
-	opts.modelItems = opts.modelItems || '[]'
+	if (opts.active === undefined) {
+		opts.header = opts.header || ''
+		opts.footer = opts.footer || ''
+		opts.modelItems = opts.modelItems || '[]'
+	}
 	return ShopC.update(opts, { where: { id: id } }).then(rp => {
 		cb(!rp, rp[0])
 	})

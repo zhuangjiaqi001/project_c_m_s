@@ -160,9 +160,11 @@ exports.addPageC = function (opts, cb) {
 	})
 }
 exports.updatePageC = function (id, opts, cb) {
-	opts.header = opts.header || ''
-	opts.footer = opts.footer || ''
-	opts.modelItems = opts.modelItems || '[]'
+	if (opts.active === undefined) {
+		opts.header = opts.header || ''
+		opts.footer = opts.footer || ''
+		opts.modelItems = opts.modelItems || '[]'
+	}
 	return PageC.update(opts, { where: { id: id } }).then(rp => {
 		cb(!rp, rp[0])
 	})

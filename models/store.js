@@ -37,6 +37,7 @@ module.exports = function(sequelize, DataTypes) {
 				return this.setDataValue('shopcId', val.id)
 			},
 			modelItems: function(val) {
+				val = val == null? '[]': val
 				if (typeof val !== 'string') {
 					var mod = []
 					val.map(function(i) { mod.push(typeof i === 'string'? i: i.id) })

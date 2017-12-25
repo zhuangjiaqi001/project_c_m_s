@@ -16,6 +16,7 @@
 		VUE.selModel(item)
 	}
 	global.jsonCheck = function(rule, val, cb) {
+		if (val === '') return cb()
 		try {
 			JSON.parse(val)
 			cb()
