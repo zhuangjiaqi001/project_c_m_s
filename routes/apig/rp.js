@@ -6,7 +6,7 @@ const config  = require('../../config')
 router.get('*', (req, res, next) => {
 	var RP  = /localhost|mjmobi\.com|weimob\.(com|net)|luodibao\.com\.cn/,
 		ORG = req.headers.origin
-	res.header('Access-Control-Allow-Origin',  (RP.test(ORG) || config.env !== 'production')? ORG: '')
+	res.header('Access-Control-Allow-Origin',  (RP.test(ORG) || config.env !== 'production')? '*': '')
 	res.header('Access-Control-Allow-Methods', 'GET')
 	res.header('Access-Control-Allow-Headers', 'x-requested-with')
 	res.header('Access-Control-Allow-Credentials', true)

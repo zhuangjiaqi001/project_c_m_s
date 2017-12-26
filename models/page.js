@@ -17,14 +17,8 @@ module.exports = function(sequelize, DataTypes) {
 	// 落地页内容
 	const Pagec = sequelize.define('cms_page_c', {
 		id:          { type: DataTypes.BIGINT(11), primaryKey : true, autoIncrement: true, unique : true },
-		userId:      {
-			type: DataTypes.BIGINT(11),
-			comment: '用户ID'
-		},
-		pageId:      {
-			type: DataTypes.BIGINT(11),
-			comment: '落地页类ID'
-		},
+		userId:      { type: DataTypes.BIGINT(11), comment: '用户ID' },
+		pageId:      { type: DataTypes.BIGINT(11), comment: '落地页类ID' },
 		key:         { type: DataTypes.STRING(100), unique : true, comment: '落地页内容KEY' },
 		title:       { type: DataTypes.STRING,  comment: '标题' },
 		header:      { type: DataTypes.STRING,  comment: '头部' },

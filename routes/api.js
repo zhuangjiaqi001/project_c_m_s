@@ -2,12 +2,14 @@ const router  = require('express').Router()
 const Tools   = require('../common/tools')
 
 router.all('*', (req, res, next) => {
-	console.log(req.originalUrl)
-	if (/zjq_reg/.test(req.originalUrl)) return next()
+	var url = req.originalUrl
+	if (/zjq_reg/.test(url)) return next()
 	var token     = req.signedCookies.token,
-		id        = req.signedCookies.id,
+		userId    = req.signedCookies.id,
 		loginname = req.signedCookies.loginname
-	if (token && id && loginname) {
+	if (token && userId && loginname) {
+		req.userId = userId
+		req.loginname = loginname
 		next()
 	} else {
 		return Tools.errHandle('0006', res)
@@ -23,5 +25,6 @@ router.use('/temp',  require('./api/temp'))
 router.use('/shop',  require('./api/shop'))
 router.use('/page',  require('./api/page'))
 router.use('/store', require('./api/store'))
+router.use('/log',   require('./api/log'))
 
 module.exports = router

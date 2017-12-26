@@ -4,6 +4,8 @@ const Code    = require('./code')
 const config  = require('../config')
 const Mapping = require('./mapping')
 
+var Public
+
 moment.locale('zh-cn'); // 使用中文
 
 var RP = {
@@ -148,9 +150,15 @@ var Tools = {
 	},
 	// 错误处理
 	errHandle: function(code, res, data) {
+		var me = this
 		code = Code[code]? code: '9999'
-		this.sendHandle(code, data)
-		res.send(this.sendHandle(code, data))
+		me.sendHandle(code, data)
+		if (code === '0000') {
+			if (!Public) Public = require('./public')
+			Public.set.log(res.req, function() {
+				res.send(me.sendHandle(code, data))
+			})
+		}
 	},
 	sendHandle: function(code, data) {
 		code = Code[code]? code: '9999'

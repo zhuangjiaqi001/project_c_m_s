@@ -9,8 +9,8 @@ const Tools   = require('./tools')
 const Shop    = proxy.Shop
 const Store   = proxy.Store
 const Temp    = proxy.Temp
+const Log     = proxy.Log
 const swig    = require('swig')
-
 const jsframe = Tools.getJSFrame()
 const tpl     = swig.compileFile('template/t0.html', { autoescape: false })
 const tprev   = swig.compileFile('template/tp.html', { autoescape: false })
@@ -22,7 +22,14 @@ var alifmat   = {
 	json: '0107',
 }
 var RP = {
-	pn: /\S+cms\/[a-z]{2}\//
+	pn:      /\S+cms\/[a-z]{2}\//,
+}
+var typeRP = {
+	update:  /\/update/,
+	add:     /\/add/,
+	remove:  /\/remove/,
+	release: /\/release/,
+	offline: /\/offline/,
 }
 
 var Public = {
@@ -221,10 +228,41 @@ var Public = {
 			} catch(err) {
 				return false
 			}
-		}
+		},
+		log: function(req, cb) {
+			if (req.method !== 'POST') return cb && cb();
+			var url  = req.originalUrl,
+				type = logType.get(url),
+				opts = {
+					userId: req.userId,
+					directive: type[0],
+					loginname: req.loginname,
+				}
+			if (type[1]) logType.set(type[1], opts, req.body)
+			Log.addLog(opts, function() {
+				cb && cb()
+			})
+		},
 	},
 }
 
+var logType = {
+	get: function(url) {
+		for (var i in typeRP) {
+			if (typeRP[i].test(url)) break;
+		}
+		var ma = url.match(/api\/(.+)\//)
+		return [i, ma? ma[1]: '']
+	},
+	set: function(name, opts, body) {
+		if (body[`${name}Id`]) {
+			opts.type = `${name}c`
+		} else {
+			opts.type = `${name}`
+		}
+		opts.findId  = body.id
+	}
+}
 
 var renderType = {
 	shop_editor: function(item) {
