@@ -76,6 +76,7 @@ router.post('/removeShop', (req, res, next) => {
 		if (item.active)  return Tools.errHandle('0134', res)
 		Shop.removeShop(id, function (err) {
 			if (err) return Tools.errHandle('0130', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -204,6 +205,7 @@ router.post('/removeShopC', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		Shop.removeShopC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -230,6 +232,7 @@ router.post('/copyShopC', (req, res, next) => {
 		}
 		Shop.addShopC(da, function (err) {
 			if (err) return Tools.errHandle('0123', res)
+			req.body = da
 			Tools.errHandle('0000', res)
 		})
 	})

@@ -76,6 +76,7 @@ router.post('/removeTemp', (req, res, next) => {
 		if (item.active)  return Tools.errHandle('0134', res)
 		Temp.removeTemp(id, function (err) {
 			if (err) return Tools.errHandle('0130', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -185,6 +186,7 @@ router.post('/removeTempC', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		Temp.removeTempC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -208,6 +210,7 @@ router.post('/copyTempC', (req, res, next) => {
 		}
 		Temp.addTempC(da, function (err) {
 			if (err) return Tools.errHandle('0123', res)
+			req.body = da
 			Tools.errHandle('0000', res)
 		})
 	})

@@ -14,7 +14,7 @@
 		},
 		methods: {
 			submit: function() {
-				CMS.http.post(API.submit, { sort: this.sort }, function(o) {
+				CMS.http.post(API.submit, { id: rpId, sort: this.sort }, function(o) {
 					VUE.$Message.success(o.message)
 				}, function(err) {
 					VUE.$Message.warning(err.message)

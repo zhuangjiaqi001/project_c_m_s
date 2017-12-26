@@ -30,6 +30,7 @@ var typeRP = {
 	remove:  /\/remove/,
 	release: /\/release/,
 	offline: /\/offline/,
+	sort:    /\/sort/,
 }
 
 var Public = {
@@ -248,19 +249,34 @@ var Public = {
 
 var logType = {
 	get: function(url) {
+		var p = 'add'
 		for (var i in typeRP) {
-			if (typeRP[i].test(url)) break;
+			if (typeRP[i].test(url)) {
+				p = i
+				break;
+			}
 		}
 		var ma = url.match(/api\/(.+)\//)
-		return [i, ma? ma[1]: '']
+		return [p, ma? ma[1]: '']
 	},
 	set: function(name, opts, body) {
-		if (body[`${name}Id`]) {
+		// if (body[`${name}Id`]) {
+		// 	opts[`${name}cId`] = body.id
+		// } else {
+		// 	opts[`${name}Id`] = body.id
+		// }
+
+		if (body[`${name}Id`] || body[`rpId`]) {
 			opts.type = `${name}c`
+			opts.desc = `${body.name || ''},${body.title || ''}`
 		} else {
-			opts.type = `${name}`
+			opts.type = name
+			if (name === 'file') {
+				opts.desc = body.fileUrl || ''
+			} else {
+				opts.desc = body.name || ''
+			}
 		}
-		opts.findId  = body.id
 	}
 }
 

@@ -152,12 +152,13 @@ var Tools = {
 	errHandle: function(code, res, data) {
 		var me = this
 		code = Code[code]? code: '9999'
-		me.sendHandle(code, data)
 		if (code === '0000') {
 			if (!Public) Public = require('./public')
 			Public.set.log(res.req, function() {
 				res.send(me.sendHandle(code, data))
 			})
+		} else {
+			res.send(me.sendHandle(code, data))
 		}
 	},
 	sendHandle: function(code, data) {

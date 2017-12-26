@@ -73,6 +73,7 @@ router.post('/removePage', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		Page.removePage(id, function (err) {
 			if (err) return Tools.errHandle('0130', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -180,6 +181,7 @@ router.post('/removePageC', (req, res, next) => {
 		if (item.active)  return Tools.errHandle('0174', res)
 		Page.removePageC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -196,6 +198,7 @@ router.post('/releasePageC', (req, res, next) => {
 				if (err) return Tools.errHandle('0118', res)
 				Page.updatePageC(id, { active: 1, url: url }, function(err) {
 					if (err) return Tools.errHandle('0170', res)
+					req.body = item
 					Tools.errHandle('0000', res)
 				})
 			})
@@ -214,6 +217,7 @@ router.post('/offlinePageC', (req, res, next) => {
 			if (err) return Tools.errHandle('0130', res)
 			Page.updatePageC(id, { active: 0 }, function(err) {
 				if (err) return Tools.errHandle('0130', res)
+				req.body = item
 				Tools.errHandle('0000', res)
 			})
 		})
@@ -242,6 +246,7 @@ router.post('/copyPageC', (req, res, next) => {
 		}
 		Page.addPageC(da, function (err) {
 			if (err) return Tools.errHandle('0173', res)
+			req.body = da
 			Tools.errHandle('0000', res)
 		})
 	})

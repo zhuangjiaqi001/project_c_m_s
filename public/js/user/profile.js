@@ -1,5 +1,9 @@
 (function(global, VM, CMS) {
-	var API = '/user/getUserList'
+	var API = {
+		submit: '/user/update',
+		getLog: '/log/getLogList',
+		getImg: '/img/list',
+	}
 
 	global.VUE = new Vue(CMS.extend(VM, {
 		data: {
@@ -28,7 +32,31 @@
 			uploadList: [],
 			visible: false,
 			visibleImg: false,
-			imgPrev: ''
+			imgPrev: '',
+			timeline: [],
+			tType: {
+				file:   '图片',
+				imgrp:  '图片推荐位列表',
+				imgrpc: '推荐位',
+				txtrp:  '文字推荐位列表',
+				txtrpc: '推荐位',
+				temp:   '模块列表',
+				tempc:  '模块',
+				page:   '落地页列表',
+				pagec:  '落地页',
+				shop:   '店铺模板列表',
+				shopc:  '店铺模板',
+				store:  '店铺页列表',
+				storec: '店铺页',
+			},
+			tDirective: {
+				add:     '添加',
+				update:  '更新',
+				remove:  '删除',
+				release: '发布',
+				offline: '下线',
+				sort:    '排序',
+			},
 		},
 		methods: {
 			// 表单相关
@@ -39,7 +67,7 @@
 				this.$refs[name].validate((valid) => {
 					if (valid) {
 						this.formValidate.birthday = this.birthday
-						CMS.http.post('/user/update', this.formValidate, function(o) {
+						CMS.http.post(API.submit, this.formValidate, function(o) {
 							console.log(o)
 							CMS.getUserInfo()
 							VUE.$Message.success('提交成功!')
@@ -53,7 +81,7 @@
 				})
 			},
 			handleImgList () {
-				CMS.http.get('/img/list', function(o) {
+				CMS.http.get(API.getImg, function(o) {
 					console.log(o)
 					VUE.imgs = o.data.list
 				}, function(err) {
@@ -64,6 +92,18 @@
 			handleView (url) {
 				this.imgPrev = url
 				this.visibleImg = true
+			},
+			getLog (me) {
+				CMS.http.get(API.getLog, function(o) {
+					me.timeline = o.data.list
+					console.log(o)
+				}, function(err) {
+					VUE.$Message.warning(err.message)
+					console.log(err)
+				})
+			},
+			load: function() {
+				this.getLog(this)
 			}
 		}
 	}))

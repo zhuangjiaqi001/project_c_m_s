@@ -77,6 +77,7 @@ router.post('/removeStore', (req, res, next) => {
 		if (item.active)  return Tools.errHandle('0134', res)
 		Store.removeStore(id, function (err) {
 			if (err) return Tools.errHandle('0130', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -182,6 +183,7 @@ router.post('/removeStoreC', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		Store.removeStoreC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -198,6 +200,7 @@ router.post('/releaseStoreC', (req, res, next) => {
 				if (err) return Tools.errHandle('0118', res)
 				Store.updateStoreC(id, { active: 1, url: url }, function(err) {
 					if (err) return Tools.errHandle('0170', res)
+					req.body = item
 					Tools.errHandle('0000', res)
 				})
 			})
@@ -217,6 +220,7 @@ router.post('/offlineStoreC', (req, res, next) => {
 			if (err) return Tools.errHandle('0130', res)
 			Store.updateStoreC(id, { active: 0 }, function(err) {
 				if (err) return Tools.errHandle('0130', res)
+				req.body = item
 				Tools.errHandle('0000', res)
 			})
 		})
@@ -241,6 +245,7 @@ router.post('/copyStoreC', (req, res, next) => {
 		}
 		Store.addStoreC(da, function (err) {
 			if (err) return Tools.errHandle('0123', res)
+			req.body = da
 			Tools.errHandle('0000', res)
 		})
 	})

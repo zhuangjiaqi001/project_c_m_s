@@ -7,6 +7,7 @@ const Img     = proxy.Img
 const Aliyun  = require('../../common/aliyun')
 const Code    = require('../../common/code')
 const Tools   = require('../../common/tools')
+const Public  = require('../../common/public')
 const uejson  = require('../../ue.config.js')
 const formidable = require('formidable')
 const validImg   = require('../../common/validImg')
@@ -91,9 +92,12 @@ router.use('/ue', (req, res, next) => {
 						if (err) return Tools.errHandle('0102', res)
 						Img.addUE(url, userId, function(err, file) {
 							if (err) return Tools.errHandle('0103', res)
-							res.send({
-								url: file.url,
-								state: 'SUCCESS'
+							req.body.fileUrl = file.url
+							Public.set.log(req, function() {
+								res.send({
+									url: file.url,
+									state: 'SUCCESS'
+								})
 							})
 						})
 					})

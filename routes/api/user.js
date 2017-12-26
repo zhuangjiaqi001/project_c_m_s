@@ -122,7 +122,6 @@ router.get('/getRes', (req, res, next) => {
 	}, function (user) {
 		if (!user) return Tools.errHandle('0011', res)
 		for (var p in user.dataValues) {
-			debugger
 			user.dataValues[p] = user.dataValues[p].length
 		}
 		Tools.errHandle('0000', res, user.dataValues)

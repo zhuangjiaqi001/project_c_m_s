@@ -68,6 +68,7 @@ router.post('/removeTxtRP', (req, res, next) => {
 		if (item.active)  return Tools.errHandle('0134', res)
 		TxtRP.removeTxtRP(id, function (err) {
 			if (err) return Tools.errHandle('0130', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -87,6 +88,7 @@ router.post('/releaseTxtRP', (req, res, next) => {
 				},
 				cb: (e, o) => {
 					if (e) return Tools.errHandle('0142', res)
+					req.body = item
 					Tools.errHandle('0000', res)
 				}
 			})
@@ -103,6 +105,7 @@ router.post('/offlineTxtRP', (req, res, next) => {
 		TxtRP.updateTxtRP(id, { active: 0 })
 		Cache.del({ key: key, db: 2, cb: (e, o) => {
 			if (e) return Tools.errHandle('0142', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		}})
 	})
@@ -181,6 +184,7 @@ router.post('/removeTxtRPC', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		TxtRP.removeTxtRPC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -201,6 +205,7 @@ router.post('/copyTxtRPC', (req, res, next) => {
 			endTime:     item.endTime,
 			custemItems: item.custemItems,
 		}
+		req.body = da
 		TxtRP.addTxtRPC(da, function (item) {
 			if (!item) return Tools.errHandle('0123', res)
 			Tools.errHandle('0000', res)
@@ -230,8 +235,14 @@ router.get('/getTxtRPC', (req, res, next) => {
 })
 
 router.post('/sortTxtRPC', (req, res, next) => {
-	TxtRP.sortTxtRPCByRpId(req.body, (items) => {
-		Tools.errHandle('0000', res, items)
+	var body = req.body,
+		id   = body.id
+	TxtRP.getTxtRPById(id, function(item) {
+		if (!item) return Tools.errHandle('0128', res)
+		TxtRP.sortTxtRPCByRpId(body, (items) => {
+			req.body = item
+			Tools.errHandle('0000', res, items)
+		})
 	})
 })
 

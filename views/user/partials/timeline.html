@@ -1,4 +1,34 @@
-暂时看不了^_^
+<div v-if="!timeline.length">暂时看不了^_^</div>
+<ul class="timeline timeline-inverse" v-if="timeline.length">
+	<div v-for="i in timeline">
+		<li class="time-label">
+			<span class="bg-gray-light">{{i.createdAt}}</span>
+		</li>
+		<li>
+			<i class="fa fa-photo bg-yellow" v-if="i.type == 'imgrp' || i.type == 'imgrpc'"></i>
+			<i class="fa fa-font bg-blue" v-if="i.type == 'txtrp' || i.type == 'txtrpc'"></i>
+			<i class="fa fa-th bg-aqua" v-if="i.type == 'temp'  || i.type == 'tempc'"></i>
+			<i class="fa fa-file-code-o bg-red" v-if="i.type == 'page'  || i.type == 'pagec'"></i>
+			<i class="fa fa-shopping-bag bg-green" v-if="i.type == 'shop'  || i.type == 'shopc'"></i>
+			<i class="fa fa-file-video-o bg-fuchsia" v-if="i.type == 'store' || i.type == 'storec'"></i>
+			<i class="fa fa-camera bg-purple" v-if="i.type == 'file'"></i>
+			<div class="timeline-item">
+				<div class="timeline-body" v-if="i.type != 'file'">
+					{{i.loginname}} {{tDirective[i.directive]}} {{tType[i.type]}} {{ i.desc.split(',')[1] || i.desc.split(',')[0] || '' }}
+				</div>
+				<div class="timeline-body" v-if="i.type == 'file'">
+					{{i.loginname}} {{tType[i.type]}} {{tDirective[i.directive]}}<br>
+					<div class="bgimg bgimg_100" :style="'background-image: url('+i.desc+');'"></div>
+				</div>
+			</div>
+		</li>
+	</div>
+	<li>
+		<i class="fa fa-clock-o bg-gray"></i>
+	</li>
+</ul>
+
+
 <!-- <ul class="timeline timeline-inverse">
 	<li class="time-label">
 		<span class="bg-red">10 Feb. 2014</span>

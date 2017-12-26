@@ -1809,20 +1809,20 @@ a:focus {
 	margin: 0;
 	border-radius: 2px;
 }
-.timeline > li {
+.timeline li {
 	position: relative;
 	margin-right: 10px;
 	margin-bottom: 15px;
 }
-.timeline > li:before,
-.timeline > li:after {
+.timeline li:before,
+.timeline li:after {
 	content: " ";
 	display: table;
 }
-.timeline > li:after {
+.timeline li:after {
 	clear: both;
 }
-.timeline > li > .timeline-item {
+.timeline li > .timeline-item {
 	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
 	border-radius: 3px;
@@ -1834,13 +1834,13 @@ a:focus {
 	padding: 0;
 	position: relative;
 }
-.timeline > li > .timeline-item > .time {
+.timeline li > .timeline-item > .time {
 	color: #999;
 	float: right;
 	padding: 10px;
 	font-size: 12px;
 }
-.timeline > li > .timeline-item > .timeline-header {
+.timeline li > .timeline-item > .timeline-header {
 	margin: 0;
 	color: #555;
 	border-bottom: 1px solid #f4f4f4;
@@ -1848,16 +1848,16 @@ a:focus {
 	font-size: 16px;
 	line-height: 1.1;
 }
-.timeline > li > .timeline-item > .timeline-header > a {
+.timeline li > .timeline-item > .timeline-header > a {
 	font-weight: 600;
 }
-.timeline > li > .timeline-item > .timeline-body,
-.timeline > li > .timeline-item > .timeline-footer {
+.timeline li > .timeline-item > .timeline-body,
+.timeline li > .timeline-item > .timeline-footer {
 	padding: 10px;
 }
-.timeline > li > .fa,
-.timeline > li > .glyphicon,
-.timeline > li > .ion {
+.timeline li > .fa,
+.timeline li > .glyphicon,
+.timeline li > .ion {
 	width: 30px;
 	height: 30px;
 	font-size: 15px;
@@ -1870,20 +1870,20 @@ a:focus {
 	left: 18px;
 	top: 0;
 }
-.timeline > .time-label > span {
+.timeline .time-label > span {
 	font-weight: 600;
 	padding: 5px;
 	display: inline-block;
 	background-color: #fff;
 	border-radius: 4px;
 }
-.timeline-inverse > li > .timeline-item {
+.timeline-inverse li .timeline-item {
 	background: #f0f0f0;
 	border: 1px solid #ddd;
 	-webkit-box-shadow: none;
 	box-shadow: none;
 }
-.timeline-inverse > li > .timeline-item > .timeline-header {
+.timeline-inverse li .timeline-item > .timeline-header {
 	border-bottom-color: #ddd;
 }
 /*
@@ -3668,7 +3668,7 @@ table.text-center th {
 	background-color: #d2d6de !important;
 }
 .bg-gray-light {
-	background-color: #f7f7f7;
+	background-color: #f7f7f7 !important;
 }
 .bg-black {
 	background-color: #111111 !important;

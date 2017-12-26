@@ -68,6 +68,7 @@ router.post('/removeImgRP', (req, res, next) => {
 		if (item.active)  return Tools.errHandle('0134', res)
 		ImgRP.removeImgRP(id, function (err) {
 			if (err) return Tools.errHandle('0130', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -87,6 +88,7 @@ router.post('/releaseImgRP', (req, res, next) => {
 				},
 				cb: (e, o) => {
 					if (e) return Tools.errHandle('0142', res)
+					req.body = item
 					Tools.errHandle('0000', res)
 				}
 			})
@@ -103,6 +105,7 @@ router.post('/offlineImgRP', (req, res, next) => {
 		ImgRP.updateImgRP(id, { active: 0 })
 		Cache.del({ key: key, db: 2, cb: (e, o) => {
 			if (e) return Tools.errHandle('0142', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		}})
 	})
@@ -181,6 +184,7 @@ router.post('/removeImgRPC', (req, res, next) => {
 		if (!item) return Tools.errHandle('0128', res)
 		ImgRP.removeImgRPC(body.id, function (err) {
 			if (err) return Tools.errHandle('0133', res)
+			req.body = item
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -204,6 +208,7 @@ router.post('/copyImgRPC', (req, res, next) => {
 		}
 		ImgRP.addImgRPC(da, function (item) {
 			if (!item) return Tools.errHandle('0123', res)
+			req.body = da
 			Tools.errHandle('0000', res)
 		})
 	})
@@ -233,8 +238,14 @@ router.get('/getImgRPC', (req, res, next) => {
 })
 
 router.post('/sortImgRPC', (req, res, next) => {
-	ImgRP.sortImgRPCByRpId(req.body, (items) => {
-		Tools.errHandle('0000', res, items)
+	var body = req.body,
+		id   = body.id
+	ImgRP.getImgRPById(id, function(item) {
+		if (!item) return Tools.errHandle('0128', res)
+		ImgRP.sortImgRPCByRpId(body, (items) => {
+			req.body = item
+			Tools.errHandle('0000', res, items)
+		})
 	})
 })
 

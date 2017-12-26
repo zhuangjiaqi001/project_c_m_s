@@ -130,6 +130,13 @@ exports.getTxtRPCList = function(query, select, cb) {
 		})
 	})
 }
+
+exports.getTxtRPCById = function (id, cb) {
+	TxtRP.findById(id).then(item => {
+		cb(item? item: null)
+	})
+}
+
 // 根据条件查找推荐位内容
 exports.getTxtRPCByQuery = function (query, cb) {
 	return TxtRPC.findOne({ where: query }).then(item => {

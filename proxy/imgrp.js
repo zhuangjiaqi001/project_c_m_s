@@ -130,6 +130,13 @@ exports.getImgRPCList = function(query, select, cb) {
 		})
 	})
 }
+
+exports.getImgRPCById = function (id, cb) {
+	ImgRP.findById(id).then(item => {
+		cb(item? item: null)
+	})
+}
+
 // 根据条件查找推荐位内容
 exports.getImgRPCByQuery = function (query, cb) {
 	return ImgRPC.findOne({ where: query }).then(item => {
