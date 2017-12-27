@@ -14,8 +14,8 @@ module.exports = {
 			db  = opts.db || 0,
 			cb  = opts.cb
 		if (key && cb) {
-			console.log('===================== KEY =====================')
-			console.log(key)
+			// console.log('===================== KEY =====================')
+			// console.log(key)
 			client[db].get(key, function (err, data) {
 				if (err) {
 					console.log('查询信息失败!')
@@ -24,8 +24,8 @@ module.exports = {
 				if (data) {
 					console.log('查询 "'+key+'" 信息成功!')
 					data = JSON.parse(data)
-					console.log('===================== DATA =====================')
-					console.log(data)
+					// console.log('===================== DATA =====================')
+					// console.log(data)
 					return cb && cb(null, data)
 				} else {
 					console.log('"'+key+'" 信息不存在!')
@@ -43,7 +43,7 @@ module.exports = {
 			obj = {}
 		if (key && cb) {
 			console.log('===================== KEY =====================')
-			console.log(key)
+			// console.log(key)
 			client[db].mget(key, function (err, data) {
 				if (err) {
 					console.log('查询信息失败!')

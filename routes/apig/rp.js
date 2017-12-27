@@ -31,7 +31,6 @@ router.get('/img', (req, res, next) => {
 	} else {
 		key = 'imgrp_' + key
 	}
-	console.log(key)
 	Cache[get]({
 		key: key, db: 2,
 		cb: function(e, o) {
