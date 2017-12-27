@@ -48,6 +48,7 @@
 				shopc:  '店铺模板',
 				store:  '店铺页列表',
 				storec: '店铺页',
+				user:   '用户',
 			},
 			tDirective: {
 				add:     '添加',

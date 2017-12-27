@@ -27,6 +27,7 @@ function updateRedis(req, res, id, token, aToken, remember) {
 				res.cookie('loginname', user.loginname, cookieCtrl)
 				res.cookie('id', user.id, cookieCtrl)
 				res.cookie('rem', remember, cookieCtrl)
+				req.body = user
 				Tools.errHandle('0000', res)
 			}
 		})

@@ -274,7 +274,7 @@ var logType = {
 			if (name === 'file') {
 				opts.desc = body.fileUrl || ''
 			} else {
-				opts.desc = body.name || ''
+				opts.desc = body.name || body.loginname || ''
 			}
 		}
 	}
