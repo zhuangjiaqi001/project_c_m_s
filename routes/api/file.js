@@ -57,7 +57,7 @@ router.post('/uploadAvatar', (req, res, next) => {
 
 		Img.addAvatar(url, id, function(err, file) {
 			if (err) return Tools.errHandle('0113', res)
-			
+			req.body.fileUrl = file.url
 			Tools.errHandle('0000', res, {
 				id:  file.id,
 				url: file.url

@@ -1,7 +1,11 @@
-const co        = require('co')
 const Sequelize = require('sequelize')
 const config    = require('../config')
 const mysql     = config.mysql
+const Op        = Sequelize.Op
+
+mysql.opts.operatorsAliases = {
+	$like: Op.like,
+}
 
 const sequelize = new Sequelize(mysql.database, mysql.user, mysql.pass, mysql.opts)
 

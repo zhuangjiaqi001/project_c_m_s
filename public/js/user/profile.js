@@ -123,7 +123,7 @@
 
 	// 用户头像上传
 	$('.profile-avatar-input').CropAvatar(function(o) {
-		CMS.http.post('/user/update', {
+		CMS.http.post(API.submit, {
 			avatar: o.data.url
 		}, function(o) {
 			console.log(o)
