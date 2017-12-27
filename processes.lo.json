@@ -6,9 +6,7 @@
     "ignore_watch": ["node_modules","public","views","upload","log","npm-debug.log",".git"],
     "log_date_format": "YYYY-MM-DD HH:mm Z",
     "exec_mode": "cluster",
-    "instances" : "max",
-    "max_restarts": 30,
-    "error_file": "./log/pm2-error.log",
+    "instances" : 0,
     "env": {
       "NODE_ENV": "localhost"
     }
