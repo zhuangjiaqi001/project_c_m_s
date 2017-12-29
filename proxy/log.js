@@ -54,8 +54,8 @@ exports.removeLog = function (id, cb) {
  * @param {String} id 用户ID
  * @param {Function} cb 回调函数
  */
-exports.getLogById = function (id, opts, cb) {
-	Log.findById(id, opts).then(item => {
+exports.getLogById = function (id, cb) {
+	Log.findById(id).then(item => {
 		cb(item? item: null)
 	})
 }

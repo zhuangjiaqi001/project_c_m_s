@@ -195,11 +195,12 @@ router.post('/copyTxtRPC', (req, res, next) => {
 	TxtRP.getTxtRPCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		item = item.dataValues
-		var da = {
-			key:         item.key,
+		var nd = Date.now(),
+			da = {
+			key:         `txtrpc_${nd}`,
 			rpId:        item.rpId,
 			userId:      item.userId,
-			title:       `${item.title}_copy`,
+			title:       `${item.title}_copy_${nd}`,
 			url:         item.url,
 			startTime:   item.startTime,
 			endTime:     item.endTime,

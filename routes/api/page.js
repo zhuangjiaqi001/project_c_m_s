@@ -229,11 +229,12 @@ router.post('/copyPageC', (req, res, next) => {
 	Page.getPageCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		item = item.dataValues
-		var da = {
-			key:         `pagec_${Date.now()}`,
+		var nd = Date.now(),
+			da = {
+			key:         `pagec_${nd}`,
 			pageId:      item.pageId,
 			userId:      item.userId,
-			title:       `${item.title}_copy_${Date.now()}`,
+			title:       `${item.title}_copy_${nd}`,
 			html:        item.html,
 			js:          item.js,
 			css:         item.css,

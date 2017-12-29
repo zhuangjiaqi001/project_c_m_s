@@ -2,7 +2,7 @@
   "apps": [{
     "name": "mjcms.mjmobi.com",
     "script": "bin/www",
-    "watch": true,
+    "watch": false,
     "ignore_watch": ["node_modules","public","views","upload/*"],
     "log_date_format": "YYYY-MM-DD HH:mm Z",
     "env": {

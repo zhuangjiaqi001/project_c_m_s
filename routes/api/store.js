@@ -232,12 +232,13 @@ router.post('/copyStoreC', (req, res, next) => {
 	Store.getStoreCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		item = item.dataValues
-		var da = {
-			key:         `storec_${Date.now() + item.userId}`,
+		var nd = Date.now(),
+			da = {
+			key:         `storec_${nd}`,
 			storeId:     item.storeId,
 			shopcId:     item.shopcId,
 			userId:      item.userId,
-			title:       `${item.title}_copy_${Date.now()}`,
+			title:       `${item.title}_copy_${nd}`,
 			html:        item.html,
 			url:         item.url,
 			json:        item.json,

@@ -197,11 +197,12 @@ router.post('/copyTempC', (req, res, next) => {
 	Temp.getTempCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		item = item.dataValues
-		var da = {
-			key:         `tempc_${Date.now()}`,
+		var nd = Date.now(),
+			da = {
+			key:         `tempc_${nd}`,
 			tempId:      item.tempId,
 			userId:      item.userId,
-			title:       `${item.title}_copy_${Date.now()}`,
+			title:       `${item.title}_copy_${nd}`,
 			html:        item.html,
 			js:          item.js,
 			css:         item.css,

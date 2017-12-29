@@ -216,11 +216,12 @@ router.post('/copyShopC', (req, res, next) => {
 	Shop.getShopCByQuery(body, function (item) {
 		if (!item) return Tools.errHandle('0128', res)
 		item = item.dataValues
-		var da = {
-			key:         `shopc_${Date.now()}`,
+		var nd = Date.now(),
+			da = {
+			key:         `shopc_${nd}`,
 			shopId:      item.shopId,
 			userId:      item.userId,
-			title:       `${item.title}_copy_${Date.now()}`,
+			title:       `${item.title}_copy_${nd}`,
 			header:      { id: item.header },
 			footer:      { id: item.footer },
 			html:        item.html,
