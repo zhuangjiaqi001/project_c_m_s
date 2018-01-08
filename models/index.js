@@ -6,7 +6,7 @@ const Op        = Sequelize.Op
 if (Op) {
 	mysql.opts.operatorsAliases = {
 		$like: Op.like,
-	}	
+	}
 }
 
 const sequelize = new Sequelize(mysql.database, mysql.user, mysql.pass, mysql.opts)

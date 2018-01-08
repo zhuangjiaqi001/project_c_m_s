@@ -3,7 +3,6 @@ const config  = require('../config')
 const Cache   = require('../models/cache')
 
 router.get('/', (req, res, next) => {
-	var aToken = req.signedCookies.aToken
 	res.clearCookie('token')
 	res.clearCookie('aToken')
 	res.clearCookie('loginname')

@@ -9,7 +9,6 @@ const User    = proxy.User
 router.get('/', User.isNotLogin)
 router.get('/', (req, res, next) => {
 	res.render('index', {
-		title: '登录',
 		message: req.flash('indexErr')
 	})
 })

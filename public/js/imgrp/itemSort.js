@@ -24,7 +24,7 @@
 			getData: function(me) {
 				CMS.http.get(API.get, { id: rpId }, function(o) {
 					me.list = o.data
-					VUE.list.map((i, _) => { me.sort[`_${_}`] = i.id })
+					VUE.list.map((i, _) => { me.sort[`_${addPreZero(_)}`] = i.id })
 					sortInit = JSON.parse(JSON.stringify(me.sort))
 				}, function(err) {
 					VUE.$Message.warning(err.message)
@@ -38,7 +38,7 @@
 				var me = this
 				console.clear()
 				// console.log(`${e.oldIndex} 拖动到 ${e.newIndex}`)
-				VUE.list.map((i, _) => { me.sort[`_${_}`] = i.id })
+				VUE.list.map((i, _) => { me.sort[`_${addPreZero(_)}`] = i.id })
 				me.sort = CMS.diffByObj2(sortInit, me.sort)
 				console.log(me.sort)
 			},
@@ -49,5 +49,8 @@
 		}
 	}))
 
+	function addPreZero(num) {
+		return ('000' + num).slice(-3)
+	}
 
 }(window, window.VM, window.CMS))
