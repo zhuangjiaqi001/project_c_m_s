@@ -5,8 +5,6 @@
     "watch": false,
     "ignore_watch": ["node_modules","public","views","upload/*"],
     "log_date_format": "YYYY-MM-DD HH:mm Z",
-    "exec_mode": "cluster",
-    "instances" : 0,
     "env": {
       "NODE_ENV": "production"
     }
