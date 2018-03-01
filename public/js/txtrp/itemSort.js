@@ -39,7 +39,7 @@
 				console.clear()
 				// console.log(`${e.oldIndex} 拖动到 ${e.newIndex}`)
 				VUE.list.map((i, _) => { me.sort[`_${addPreZero(_)}`] = i.id })
-				me.sort = CMS.diffByObj2(sortInit, me.sort)
+				// me.sort = CMS.diffByObj2(sortInit, me.sort)
 				console.log(me.sort)
 			},
 			load: function() {

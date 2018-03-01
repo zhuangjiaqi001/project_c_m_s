@@ -46,10 +46,10 @@ module.exports = [
 		url:  '/txtrp',
 		icon: 'font'
 	},
-	// {
-	// 	type: 0,
-	// 	name: '页面管理'
-	// },
+	{
+		type: 0,
+		name: '页面管理'
+	},
 	// {
 	// 	type: 1,
 	// 	key:  'temp',
@@ -64,18 +64,18 @@ module.exports = [
 	// 	url:  '/shop',
 	// 	icon: 'shopping-bag'
 	// },
-	// {
-	// 	type: 1,
-	// 	key:  'page',
-	// 	name: '落地页管理',
-	// 	url:  '/page',
-	// 	icon: 'file-code-o'
-	// },
-	// {
-	// 	type: 1,
-	// 	key:  'store',
-	// 	name: '店铺页管理',
-	// 	url:  '/store',
-	// 	icon: 'file-video-o'
-	// },
+	{
+		type: 1,
+		key:  'page',
+		name: '落地页管理',
+		url:  '/page',
+		icon: 'file-code-o'
+	},
+	{
+		type: 1,
+		key:  'store',
+		name: '店铺页管理',
+		url:  '/store',
+		icon: 'file-video-o'
+	},
 ];
