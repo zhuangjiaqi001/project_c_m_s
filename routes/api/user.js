@@ -135,11 +135,10 @@ router.post('/zjq_reg', (req, res, next) => {
 	var body      = req.body,
 		loginname = body.loginname,
 		password  = body.password,
-		email     = body.email,
-		admin     = body.admin
+		email     = body.email
 
 	body.passwordR = password
-	if (admin != config.admin) return Tools.errHandle('0028', res)
+	// if (admin != config.admin) return Tools.errHandle('0028', res)
 
 	Valid.run(res, 'reg', body, function() {
 		// 检查用户名是否已经存在
@@ -147,8 +146,7 @@ router.post('/zjq_reg', (req, res, next) => {
 			'loginname': loginname,
 			'email': email
 		}, function(user) {
-			var url = config.link.index
-			if (user) return Tools.errFlash(req, res, 'indexErr', '0026', url)
+			if (user) return Tools.errHandle('0026', res)
 			User.addUser(loginname, password, email, function (err) {
 				if (err) return Tools.errHandle('0027', res)
 				return Tools.errHandle('0000', res)

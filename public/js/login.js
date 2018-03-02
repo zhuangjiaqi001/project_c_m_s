@@ -62,8 +62,8 @@
 			registerSubmit: function(e, me) {
 				e.preventDefault()
 				var msg  = ''
-				var emailRE    = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/,
-					nameRE     = /^([a-zA-Z0-9_-])+$/,
+				var emailRE    = /^([a-zA-Z0-9_-|\.])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/,
+					nameRE     = /^([a-zA-Z0-9_-|\.])+$/,
 					phoneRE    = /^1(3|4|5|7|8)\d{9}$/,
 					passwordRE = /^[A-Za-z0-9]{6,20}$/,		// 6-20位字母数字组合
 					isLetter   = /[A-Za-z]+/,
